@@ -1,4 +1,9 @@
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Specification
+
+<Disclaimer />
+<br />
 
 Here you will find the IF specification. 
 

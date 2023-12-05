@@ -9,3 +9,10 @@
   height: 200px;
   width: 200px;
 }
+
+.disclaimer {
+  padding: 1.25em;
+  background-color: #EBF2D7;
+  font-size: small;
+  text-align: center;
+}

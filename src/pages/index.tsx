@@ -3,9 +3,10 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import { HomepageFeatures } from '@site/src/components/HomepageFeatures';
 
 import styles from './index.module.css';
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
@@ -30,14 +31,18 @@ function HomepageHeader() {
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <Layout
-      title={`Welcome to ${siteConfig.title}`}
-      description="Documentation for the Impact Framework />"
-    >
-      <HomepageHeader />
-      <main>
-        <HomepageFeatures />
-      </main>
-    </Layout>
+    <>
+      <Layout
+        title={`Welcome to ${siteConfig.title}`}
+        description="Documentation for the Impact Framework />"
+      >
+        <Disclaimer />
+        <HomepageHeader />
+        <main>
+          <HomepageFeatures />
+        </main>
+      </Layout>
+    </>
   );
 }
+

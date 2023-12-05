@@ -1,4 +1,9 @@
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Model Plugin Configuration
+
+<Disclaimer />
+<br />
 
 > **WARNING**: this material is not fully implemented in the alpha release. It signals future upgrades on the roadmap for future releases.
 

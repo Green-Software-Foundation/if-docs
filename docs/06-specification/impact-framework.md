@@ -1,4 +1,11 @@
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Impact Framework
+
+<Disclaimer />
+<br />
+
+
 
 A Framework to **M**odel, **M**easure, si**M**ulate and **M**onitor the environmental impacts of software.
 

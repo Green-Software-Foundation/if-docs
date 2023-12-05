@@ -2,7 +2,13 @@
 author: Asim Hussain (@jawache)
 abstract: Why granularity is important to impact graphing and the two main types of granularity you can add.
 ---
+
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Granularity
+
+<Disclaimer />
+<br />
 
 A [Graph](graph.md) (graph) can be created that is very coarse-grained, a single top-level component, with a single input of long duration.
 

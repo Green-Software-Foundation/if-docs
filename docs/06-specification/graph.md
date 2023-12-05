@@ -2,7 +2,13 @@
 author: Asim Hussain (@jawache)
 abstract: An impact graph is the core construct in an Impact Framework through which all the other components interact.
 ---
+
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Graph
+
+<Disclaimer />
+<br />
 
 ## Introduction
 

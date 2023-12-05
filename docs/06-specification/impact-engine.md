@@ -1,4 +1,10 @@
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Impact Engine
+
+<Disclaimer />
+<br />
+
 
 ## Introduction
 

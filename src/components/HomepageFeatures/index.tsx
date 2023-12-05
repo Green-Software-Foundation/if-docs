@@ -49,7 +49,7 @@ function Feature({ title, Svg, description }: FeatureItem) {
   );
 }
 
-export default function HomepageFeatures(): JSX.Element {
+export function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
@@ -60,5 +60,16 @@ export default function HomepageFeatures(): JSX.Element {
         </div>
       </div>
     </section>
+  );
+}
+
+
+export function Disclaimer() {
+  return (
+    <>
+      <div className={styles.disclaimer}>
+        This project is an <b>incubation project</b> being run inside the Green Software Foundation; as such, we DON’T recommend using it in any critical use case. Incubation projects are experimental, offer no support guarantee, have minimal governance and process, and may be retired at any moment. This project may one day Graduate, in which case this disclaimer will be removed.
+      </div>
+    </>
   );
 }

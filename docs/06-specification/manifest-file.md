@@ -2,7 +2,13 @@
 author: Asim Hussain (@jawache)
 abstract: Describes the structure and purpose of Impact YAML, a file format to represent a Graph.
 ---
+
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Manifest File
+
+<Disclaimer />
+<br />
 
 - An Impact Manifest is a file format based on [yaml](https://circleci.com/blog/what-is-yaml-a-beginner-s-guide/) to represent a [Graph](graph.md), it's also sometimes called Impact YAML or IMPL. 
 - Just like a Graph, an IMPL is a calculation manifest containing everything you want to measure and how you want to measure it. 

@@ -2,9 +2,16 @@
 author: Asim Hussain (@jawache)
 abstract: How to process the outputs of an impact graph calculation, enriching it with grid emissions data, factoring in the functional unit, and time slicing to return a time series of SCI values.
 ---
+
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Computation Pipeline
 
-## Introduction
+<Disclaimer />
+<br />
+
+
+
 
 The execution of a  graph involves 4 phases:
 

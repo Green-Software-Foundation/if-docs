@@ -1,8 +1,13 @@
 ---
 description: Describes Observations in the context of a Graph.
 ---
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
 
 # Observations
+
+<Disclaimer />
+<br />
+
 
 `Observations` are a core component of a [Graph](graph.md) (graph), and they form the primary `inputs` and `outputs` of an [Model Plugin](model-plugin.md) (model).
 
@@ -86,7 +91,7 @@ Models expect parameters to be passed in using the standard name and are express
 
 :::
 
-| Name | Unit                      |
+| Name      | Unit                      |
 | --------- | ------------------------- |
 | CPU       | Percentage Utilized       |
 | MEM       | Percentage Full           |

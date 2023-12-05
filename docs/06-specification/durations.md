@@ -2,7 +2,14 @@
 author: Asim Hussain (@jawache)
 abstract: A core component of impact graphing is the concept of time and specifically a duration of time. This document describes the core concept of duration as related to the calculation of an impact graph.
 ---
+
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Durations
+
+<Disclaimer />
+<br />
+
 
 > **WARNING** Much of the following material is not yet implemented in the alpha releae, but is on the roadmap for future releases.
 

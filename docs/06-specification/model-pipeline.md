@@ -2,7 +2,12 @@
 author: Asim Hussain (@jawache)
 abstract: How models are chained together into a pipeline in order to compute the impacts of
 ---
+import { Disclaimer } from '@site/src/components/HomepageFeatures';
+
 # Model Pipeline
+
+<Disclaimer />
+<br />
 
 ## Introduction
 
