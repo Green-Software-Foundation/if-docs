@@ -163,7 +163,7 @@ Now, you can see what happened inside `calculateEnergy()`. `reduce` is applied o
 
 You will likely want add some input data validation here too.
 
-Finally, if your model used any fields in `inputs` or created new `outputs` that have nopt been used in the Impact Framework before, then you should add them to `units.yaml` and `units.ts`. 
+Finally, if your model used any fields in `inputs` or created new `outputs` that have not been used in the Impact Framework before, then you should add them to `units.yaml` and `units.ts`. 
 
 `Units.yaml` can be found at the path `src/config/units.yaml`.
 
@@ -180,11 +180,11 @@ This information allows `impact-engine` to programmatically make decisions about
 
 You should add your new data, giving a name, defining a unit and short description. The `aggregation` field determines how the value is treated when some manipulation has to be done to spread the value over time or aggregate it. 
 
-For absolute metrics like carbon, the right value is `sum` because you would want to add carbon emissions from each timestep when you aggregate over time. For proportional metrics, the right value is `avg`. 
+For absolute metrics like carbon, the right value is `sum` because you would want to add carbon emissions from each timestep when you aggregate over time. 
 
-For example, you would want to calculate the average `cpu-utilization` - it would not make sense to sum it when aggregating over multiple timesteps.
+For proportional metrics, the right value is `avg`. For example, you would want to calculate the average `cpu-utilization` - it would not make sense to sum it when aggregating over multiple timesteps.
 
-Finally, constants or names that should always be presented identically regardless of any aggregation, such as names or global constants, should be given the `aggregation-method` value `none`.
+Finally, values that should always be presented identically regardless of any aggregation, such as names or global constants, should be given the `aggregation-method` value `none`.
 
 
 `units.ts` can be found at the path `src/types/units.ts`.
