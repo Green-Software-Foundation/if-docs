@@ -1,21 +1,21 @@
 # Building model plugins
 
 The IF is designed to be as composable as possible. This means you can develop your own models and use them in a model pipeline. 
-To help developers write Typescript models to integrate easily into IF, we provide the `IOutputModelInterface` interface. Here's an overview of the stages you need to follow to integrate your model:
+To help developers write Typescript models to integrate easily into IF, we provide the `ModelPluginInterface` interface. Here's an overview of the stages you need to follow to integrate your model:
 
-- create a Typescript file that implements the `IOutputModelInterface`
+- create a Typescript file that implements the `ModelPluginInterface`
 - provide the path to the model to the IF command line tool.
 
 ## The model interface
 
-The `IOutputModelInterface` is structured as follows:
+The `ModelPluginInterface` is structured as follows:
 
 ```ts
-export interface IOutputModelInterface {
+export interface ModelPluginInterface {
 
   configure(
     staticParams: object | undefined
-  ): Promise<IOutputModelInterface>;
+  ): Promise<ModelPluginInterface>;
 
   authenticate(authParams: object): void;
 
@@ -30,7 +30,7 @@ There are three required methods:
   - **Params**:
     - `staticParams`: the model config data 
   - **Returns**: 
-    - an instance of `IOutputModelInterface`
+    - an instance of `ModelPluginInterface`
 - `authenticate()`
   - This method completes any authorization, such as handling API keys or generating tokens
   - **Params**: 
@@ -52,7 +52,7 @@ To demonstrate how to build a model that conforms to this interface, let's exami
 The model itself is an exported class conforming to the `IOutputmodelInterface`, so the model code can start with the class definition. You can call the class `SciEModel`, and inside the body you can add the method signatures for each of the required methods. This will look as follows:  
 
 ```typescript
-export class SciEModel implements IOutputModelInterface {
+export class SciEModel implements ModelPluginInterface {
   authParams: object | undefined;
   name: string | undefined;
 
@@ -62,7 +62,7 @@ export class SciEModel implements IOutputModelInterface {
 
   async configure(
     staticParams: object | undefined = undefined
-  ): Promise<IOutputModelInterface> {
+  ): Promise<ModelPluginInterface> {
 
   }
 
@@ -86,7 +86,7 @@ The `configure()` method simply has to load config data into the class variables
 ```ts
   async configure(
     staticParams: object | undefined = undefined
-  ): Promise<IOutputModelInterface> {
+  ): Promise<ModelPluginInterface> {
     this.staticParams = staticParams;
 
     if (staticParams === undefined) {
@@ -165,7 +165,7 @@ For example, for a model saved in `github.com/my-repo/my-model` you can do the f
 npm install https://github.com/my-repo/my-model
 ```
 
-Then, in your `impl`, provide the path in the model instantiation. You also need to specify which class the model instantiates. In this case you are using the IOutputModelInterface, so you can specify `OutputModel`. 
+Then, in your `impl`, provide the path in the model instantiation. You also need to specify which class the model instantiates. In this case you are using the ModelPluginInterface, so you can specify `OutputModel`. 
 
 ```yaml
 name: model-demo
