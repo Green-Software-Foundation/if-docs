@@ -119,7 +119,9 @@ export class SciEModel implements ModelPluginInterface {
   }
 ```
 
-our model now has the basic structuire required for IF integration. Your next task is to add code to the bnody of each method to enable the actual model logic to be implemented. For `sci-e` there is no global configuration required. Everything that the model needs to run is provided in each individual set of `input` data - there are no global constants or names to define during moidel instantiation. This means you can leave the `configure()` method as it is. It returns an instance of the `SCIEmodel` class.
+our model now has the basic structure required for IF integration. Your next task is to add code to the body of each method to enable the actual model logic to be implemented. 
+
+For `sci-e` there is no global configuration required. Everything that the model needs to run is provided in each individual set of `input` data - there are no global constants or names to define during model instantiation. This means you can leave the `configure()` method as it is. It returns an instance of the `SciEmodel` class.
 
 However, the `execute` function *does* require some additional code. 
 
@@ -140,14 +142,13 @@ The snippet below shows an updated `execute()` method that includes a `map` over
   }
 ```
 
-Now, you can see what happened inside `calculateEnergy()`. First, you can validate the input data by passing it to a `validateInput` method, which is an IF built-in feature that checks data conforms to soem expected patterns. Then `reduce` is applied over the object, accumulating tha values of any fields that appear in the `energyMetrics` array. The sum is returned.
+Now, you can see what happened inside `calculateEnergy()`. `reduce` is applied over the object, accumulating tha values of any fields that appear in the `energyMetrics` array. The sum is returned.
 
 ```ts
   /**
    * Calculates the sum of the energy components.
    */
   private calculateEnergy(input: ModelParams) {
-    this.validateSingleInput(input);
 
     const energyMetrics = ['energy-cpu', 'energy-memory', 'energy-network'];
 
@@ -159,6 +160,8 @@ Now, you can see what happened inside `calculateEnergy()`. First, you can valida
   }
 }
 ```
+
+You will likely want add some input data validation here too.
 
 Finally, if your model used any fields in `inputs` or created new `outputs` that have nopt been used in the Impact Framework before, then you should add them to `units.yaml` and `units.ts`. 
 
