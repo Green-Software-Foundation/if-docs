@@ -217,7 +217,7 @@ You can simply save your model in a public Github repository and pass the path t
 
 For example, for a model saved in `github.com/my-repo/my-model` you can do the following:
 
-`npm` install your model:
+npm install your model:
 
 ```
 npm install https://github.com/my-repo/my-model
