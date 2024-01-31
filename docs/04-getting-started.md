@@ -18,7 +18,6 @@ Navigate to that directory and initialize an npm project
 cd if-project && npm init
 ```
 
-
 ## 1: Install Impact Framework
 
 Install the Impact Framework. This includes the `impact-engine` command line tool.
@@ -48,19 +47,19 @@ initialize:
   models:
     - name: teads-curve
       model: TeadsCurveModel
-      path: "@grnsft/if-unofficial-models"
+      path: '@grnsft/if-unofficial-models'
     - name: sci-e
       model: SciEModel
-      path: "@grnsft/if-models"
+      path: '@grnsft/if-models'
     - name: sci-m
-      path: "@grnsft/if-models"
+      path: '@grnsft/if-models'
       model: SciMModel
     - name: sci-o
       model: SciOModel
-      path: "@grnsft/if-models"
+      path: '@grnsft/if-models'
     - name: sci
       model: SciModel
-      path: "@grnsft/if-models"
+      path: '@grnsft/if-models'
 graph:
   children:
     child: # an advanced grouping node
@@ -76,20 +75,20 @@ graph:
         sci-m:
           total-embodied-emissions: 251000 # gCO2eq
           time-reserved: 3600 # 1 hour in s
-          expected-lifespan: 126144000 # 4 years in seconds    
-          resources-reserved: 1 
-          total-resources: 1 
+          expected-lifespan: 126144000 # 4 years in seconds
+          resources-reserved: 1
+          total-resources: 1
         sci-o:
           grid-carbon-intensity: 457 # gCO2/kwh
         sci:
-          functional-unit-duration: 1 
+          functional-unit-time: 1 minute
           functional-duration-time: ''
           functional-unit: requests # factor to convert per time to per f.unit
       inputs:
         - timestamp: '2023-07-06T00:00'
           duration: 10
           cpu-util: 50
-          e-net: 0.000811 #kwh     
+          e-net: 0.000811 #kwh
           requests: 380
 ```
 
@@ -102,8 +101,6 @@ Run the pipeline by passing the path to your manifest file to the `impact-engine
 ```sh
 impact-engine --impl <path-to-your-impl>
 ```
-
-
 
 :tada:**Congratulations** :tada:! You have just used the Impact Framework to compute a software carbon intensity score!
 
@@ -157,7 +154,7 @@ graph:
         sci-o:
           grid-carbon-intensity: 457
         sci:
-          functional-unit-duration: 1
+          functional-unit-time: 1 minute
           functional-duration-time: ''
           functional-unit: requests
       inputs:
@@ -179,14 +176,13 @@ graph:
           resources-reserved: 1
           total-resources: 1
           grid-carbon-intensity: 457
-          functional-unit-duration: 1
+          functional-unit-time: 1 minute
           functional-duration-time: ''
           functional-unit: requests
           energy-cpu: 0.00013541666666666666
           energy: 0.00013541666666666666
-          embodied-carbon: 7.16324200913242
+          embodied-carbon: 0.01989789446981228
           operational-carbon: 0.061885416666666665
-          carbon: 0.7225127425799086
-          sci: 0.001901349322578707
-
+          carbon: 0.008178331113647894
+          sci: 0.001291315438997036
 ```
