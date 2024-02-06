@@ -82,7 +82,6 @@ graph:
           grid-carbon-intensity: 457 # gCO2/kwh
         sci:
           functional-unit-time: 1 minute
-          functional-duration-time: ''
           functional-unit: requests # factor to convert per time to per f.unit
       inputs:
         - timestamp: '2023-07-06T00:00'
@@ -155,7 +154,6 @@ graph:
           grid-carbon-intensity: 457
         sci:
           functional-unit-time: 1 minute
-          functional-duration-time: ''
           functional-unit: requests
       inputs:
         - timestamp: 2023-07-06T00:00
@@ -177,7 +175,6 @@ graph:
           total-resources: 1
           grid-carbon-intensity: 457
           functional-unit-time: 1 minute
-          functional-duration-time: ''
           functional-unit: requests
           energy-cpu: 0.00013541666666666666
           energy: 0.00013541666666666666
