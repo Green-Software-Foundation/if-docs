@@ -15,16 +15,15 @@ Add the following config to your manifest (this example is for aggregating "cpu/
 ```yaml
 aggregation:
   metrics:
-    - "cpu/utilization"
+    - 'cpu/utilization'
   type: both
 ```
 
 [Read more on aggregate](../major-concepts/aggregation.md)
 
-
 ## Explainer
 
-The explainer lists out all the parameters, their units and aggregation method for each plugin instance created in a manifest.
+The explainer lists the unit, description, aggregation method, and plugins of the parameter that is used in the manifest.
 
 ### How to configure
 
