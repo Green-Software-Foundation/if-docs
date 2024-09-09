@@ -180,7 +180,7 @@ Now create an instance of `Multiply` that will calculate the product of `energy`
 
 At this stage you have two separate sources of carbon emissions treated separately in your `inputs`: `embodied-carbon` anf `operational-carbon`. To account for the total carbon emissions for your application, you need to add these two sources together.
 
-Add the following instance of the `Sum` plugin to your `initialize: plugins:` block. It will sum `carbon-operational` and `carbon-embodied` and append the result to `inputs` as `carbon`.
+Add the following instance of the `Sum` plugin to your `initialize: plugins:` block. It will sum `carbon-operational` and `embodied-carbon` and append the result to `inputs` as `carbon`.
 
 ```yaml
 sum-carbon:
@@ -189,7 +189,7 @@ sum-carbon:
     global-config:
     input-parameters:
         - carbon-operational
-        - carbon-embodied
+        - embodied-carbon
     output-parameter: carbon
 ```
 
@@ -337,7 +337,7 @@ initialize:
       global-config:
         input-parameters:
           - carbon-operational
-          - carbon-embodied
+          - embodied-carbon
         output-parameter: carbon
     sci:
       path: builtin
@@ -472,7 +472,7 @@ tree:
           vcpu-ratio: 4
           cpu/energy: 0.000005208333333333333
           energy: 0.000006208333333333333
-          carbon-embodied: 0.000004051243023845763
+          embodied-carbon: 0.000004051243023845763
           carbon-operational: 0.004966666666666666
           carbon: 0.004970717909690512
           sci: 0.004970717909690512
@@ -499,7 +499,7 @@ tree:
           vcpu-ratio: 4
           cpu/energy: 0.00001484375
           energy: 0.00001584375
-          carbon-embodied: 0.000020256215119228814
+          embodied-carbon: 0.000020256215119228814
           carbon-operational: 0.012674999999999999
           carbon: 0.012695256215119228
           sci: 0.012695256215119228
@@ -526,7 +526,7 @@ tree:
           vcpu-ratio: 4
           cpu/energy: 0.000018168402777777778
           energy: 0.000019168402777777778
-          carbon-embodied: 0.00002835870116692034
+          embodied-carbon: 0.00002835870116692034
           carbon-operational: 0.015334722222222222
           carbon: 0.015363080923389142
           sci: 0.015363080923389142
@@ -553,7 +553,7 @@ tree:
           vcpu-ratio: 4
           cpu/energy: 0.00007786458333333334
           energy: 0.00007886458333333333
-          carbon-embodied: 0.0001215372907153729
+          embodied-carbon: 0.0001215372907153729
           carbon-operational: 0.06309166666666667
           carbon: 0.06321320395738204
           sci: 0.06321320395738204

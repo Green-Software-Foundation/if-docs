@@ -113,7 +113,7 @@ plugins:
       global-config:
       input-parameters:
           - carbon-operational
-          - carbon-embodied
+          - embodied-carbon
       output-parameter: carbon
       parameter-metadata:
       inputs:
@@ -121,7 +121,7 @@ plugins:
           description: "carbon emitted due to an application's execution"
           unit: "gCO2eq"
           aggregation-method: 'sum',
-          carbon-embodied:
+          embodied-carbon:
           description: "carbon emitted during the production, distribution and disposal of a hardware component, scaled by the fraction of the component's lifespan being allocated to the application under investigation"
           unit: "gCO2eq"
           aggregation-method: 'sum'

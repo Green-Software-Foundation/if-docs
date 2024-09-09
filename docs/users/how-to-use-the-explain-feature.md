@@ -37,51 +37,62 @@ Plugins are expected to ship with default values for their parameter metadata in
 
 ```Typescript
 export const SciEmbodied = (
-  parametersMetadata: PluginParametersMetadata
+  config: ConfigParams = {},
+  parametersMetadata: PluginParametersMetadata,
+  mapping: MappingParams
 ): ExecutePlugin => {
   const metadata = {
     kind: 'execute',
-    inputs: parametersMetadata?.inputs || {
-      'device/emissions-embodied': {
-        description: 'total embodied emissions of some component',
-        unit: 'gCO2e',
-        'aggregation-method': 'sum',
-      },
-      'device/expected-lifespan': {
-        description: 'Total Expected Lifespan of the Component in Seconds',
-        unit: 'seconds',
-        'aggregation-method': 'none',
-      },
-      'resources-reserved': {
-        description: 'resources reserved for an application',
-        unit: 'resources',
-        'aggregation-method': 'sum',
-      },
-      'resources-total': {
-        description: 'total resources available',
-        unit: 'resources',
-        'aggregation-method': 'sum',
-      },
-      'vcpus-allocated': {
-        description: 'number of vcpus allocated to particular resource',
-        unit: 'vcpus',
-        'aggregation-method': 'sum',
-      },
-      'vcpus-total': {
-        description: 'total number of vcpus available on a particular resource',
-        unit: 'vcpus',
-        'aggregation-method': 'sum',
-      },
+    inputs: {
+      ...({
+        vCPUs: {
+          description: 'number of CPUs allocated to an application',
+          unit: 'CPUs',
+          'aggregation-method': 'copy',
+        },
+        memory: {
+          description: 'RAM available for a resource, in GB',
+          unit: 'GB',
+          'aggregation-method': 'copy',
+        },
+        ssd: {
+          description: 'number of SSDs available for a resource',
+          unit: 'SSDs',
+          'aggregation-method': 'copy',
+        },
+        hdd: {
+          description: 'number of HDDs available for a resource',
+          unit: 'HDDs',
+          'aggregation-method': 'copy',
+        },
+        gpu: {
+          description: 'number of GPUs available for a resource',
+          unit: 'GPUs',
+          'aggregation-method': 'copy',
+        },
+        'usage-ratio': {
+          description:
+            'a scaling factor that can be used to describe the ratio of actual resource usage comapred to real device usage, e.g. 0.25 if you are using 2 out of 8 vCPUs, 0.1 if you are responsible for 1 out of 10 GB of storage, etc',
+          unit: 'dimensionless',
+          'aggregation-method': 'copy',
+        },
+        time: {
+          description:
+            'a time unit to scale the embodied carbon by, in seconds. If not provided,time defaults to the value of the timestep duration.',
+          unit: 'seconds',
+          'aggregation-method': 'copy',
+        },
+      } as ParameterMetadata),
+      ...parametersMetadata?.inputs,
     },
     outputs: parametersMetadata?.outputs || {
-      'carbon-embodied': {
-        description: 'embodied emissions of the component',
+      'embodied-carbon': {
+        description: 'embodied carbon for a resource, scaled by usage',
         unit: 'gCO2e',
         'aggregation-method': 'sum',
       },
     },
   };
-}
 ```
 
 However, there are cases where a plugin might not have parameter metadata in its source code, either because it was omitted, it was not knowable in advance, or the plugin was built before we shipped the `explain` feature. Sometimes, you might want to override the hard-coded defaults and use alternative metadata. In these cases, you can define new plugin metadata in the manifest file. It is considered best-practice to ensure all plugin instances have a complete set of plugin metadata.
@@ -127,59 +138,60 @@ explainer: true
 initialize:
   plugins:
     sci-embodied:
-      path: "builtin"
+      path: 'builtin'
       method: SciEmbodied
-    "sum-carbon":
-      path: "builtin"
+    'sum-carbon':
+      path: 'builtin'
       method: Sum
-      global-config:
+      config:
         input-parameters:
           - carbon-operational
-          - carbon-embodied
+          - embodied-carbon
         output-parameter: carbon
       parameter-metadata:
         inputs:
           carbon-operational:
             description: "carbon emitted due to an application's execution"
-            unit: "gCO2eq"
-            aggregation-method: 'sum',
-          carbon-embodied:
+            unit: 'gCO2eq'
+            aggregation-method: 'sum'
+          embodied-carbon:
             description: "carbon emitted during the production, distribution and disposal of a hardware component, scaled by the fraction of the component's lifespan being allocated to the application under investigation"
-            unit: "gCO2eq"
+            unit: 'gCO2eq'
             aggregation-method: 'sum'
         outputs:
           carbon:
             description: "total carbon emissions attributed to an application's usage as the sum of embodied and operational carbon"
-            unit: "gCO2eq"
+            unit: 'gCO2eq'
             aggregation-method: 'sum'
     sci:
       kind: plugin
       method: Sci
-      path: "builtin"
-      global-config:
+      path: 'builtin'
+      config:
         functional-unit: requests
       parameter-metadata:
         inputs:
           carbon:
             description: "total carbon emissions attributed to an application's usage as the sum of embodied and operational carbon"
-            unit: "gCO2eq"
+            unit: 'gCO2eq'
             aggregation-method: 'sum'
           requests:
-            description: "number of requests made to application in the given timestep"
-            unit: "requests"
+            description: 'number of requests made to application in the given timestep'
+            unit: 'requests'
             aggregation-method: 'sum'
         outputs:
           sci:
-            description: "software carbon intensity expressed as a rate of carbon emission per request"
-            unit: "gCO2eq/request"
+            description: 'software carbon intensity expressed as a rate of carbon emission per request'
+            unit: 'gCO2eq/request'
             aggregation-method: 'sum'
 tree:
   children:
     child:
       pipeline:
-        - sci-embodied
-        - sum-carbon
-        - sci
+        compute:
+          - sci-embodied
+          - sum-carbon
+          - sci
       defaults:
         device/emissions-embodied: 1533.120 # gCO2eq
         time-reserved: 3600 # 1hr in seconds
@@ -192,85 +204,104 @@ tree:
           energy: 5
           carbon-operational: 5
           requests: 100
-
 ```
 
 When we execute this manifest, the following `explain` block is added to the output file:
 
 ```yaml
 explain:
-  device/emissions-embodied:
-    plugins:
-      - sci-embodied
-    description: total embodied emissions of some component
-    unit: gCO2e
-    aggregation-method: 'sum'
-  device/expected-lifespan:
-    plugins:
-      - sci-embodied
-    description: Total Expected Lifespan of the Component in Seconds
-    unit: seconds
-    aggregation-method: 'none'
-  resources-reserved:
-    plugins:
-      - sci-embodied
-    description: resources reserved for an application
-    unit: resources
-    aggregation-method: 'sum'
-  resources-total:
-    plugins:
-      - sci-embodied
-    description: total resources available
-    unit: resources
-    aggregation-method: 'sum'
-  vcpus-allocated:
-    plugins:
-      - sci-embodied
-    description: number of vcpus allocated to particular resource
-    unit: vcpus
-    aggregation-method: 'sum'
-  vcpus-total:
-    plugins:
-      - sci-embodied
-    description: total number of vcpus available on a particular resource
-    unit: vcpus
-    aggregation-method: 'sum'
-  carbon-embodied:
-    plugins:
-      - sci-embodied
-      - sum-carbon
-    description: embodied emissions of the component
-    unit: gCO2e
-    aggregation-method: 'sum'
-  carbon-operational:
-    plugins:
-      - sum-carbon
-    unit: gCO2eq
-    description: carbon emitted due to an application's execution
-    aggregation-method: 'sum'
-  carbon:
-    plugins:
-      - sum-carbon
-      - sci
-    unit: gCO2eq
-    description: >-
-      total carbon emissions attributed to an application's usage as the sum
-      of embodied and operational carbon
-    aggregation-method: 'sum'
-  requests:
-    plugins:
-      - sci
-    unit: requests
-    description: number of requests made to application in the given timestep
-    aggregation-method: 'sum'
+  sci-embodied:
+    method: SciEmbodied
+    path: builtin
+    inputs:
+      vCPUs:
+        description: number of CPUs allocated to an application
+        unit: CPUs
+        aggregation-method: copy
+      memory:
+        description: RAM available for a resource, in GB
+        unit: GB
+        aggregation-method: copy
+      ssd:
+        description: number of SSDs available for a resource
+        unit: SSDs
+        aggregation-method: copy
+      hdd:
+        description: number of HDDs available for a resource
+        unit: HDDs
+        aggregation-method: copy
+      gpu:
+        description: number of GPUs available for a resource
+        unit: GPUs
+        aggregation-method: copy
+      usage-ratio:
+        description: >-
+          a scaling factor that can be used to describe the ratio of actual
+          resource usage comapred to real device usage, e.g. 0.25 if you are
+          using 2 out of 8 vCPUs, 0.1 if you are responsible for 1 out of 10 GB
+          of storage, etc
+        unit: dimensionless
+        aggregation-method: copy
+      time:
+        description: >-
+          a time unit to scale the embodied carbon by, in seconds. If not
+          provided,time defaults to the value of the timestep duration.
+        unit: seconds
+        aggregation-method: copy
+    outputs:
+      embodied-carbon:
+        description: embodied carbon for a resource, scaled by usage
+        unit: gCO2e
+        aggregation-method: sum
+  sum-carbon:
+    method: Sum
+    path: builtin
+    inputs:
+      carbon-operational:
+        unit: gCO2eq
+        description: carbon emitted due to an application's execution
+        aggregation-method: sum
+      embodied-carbon:
+        unit: gCO2eq
+        description: >-
+          carbon emitted during the production, distribution and disposal of a
+          hardware component, scaled by the fraction of the component's lifespan
+          being allocated to the application under investigation
+        aggregation-method: sum
+    outputs:
+      carbon:
+        unit: gCO2eq
+        description: >-
+          total carbon emissions attributed to an application's usage as the sum
+          of embodied and operational carbon
+        aggregation-method: sum
   sci:
-    plugins:
-      - sci
-    unit: gCO2eq/request
-    description: >-
-      software carbon intensity expressed as a rate of carbon emission per
-      request
-    aggregation-method: 'sum'
+    method: Sci
+    path: builtin
+    inputs:
+      carbon:
+        unit: gCO2eq
+        description: >-
+          total carbon emissions attributed to an application's usage as the sum
+          of embodied and operational carbon
+        aggregation-method: sum
+      functional-unit:
+        description: >-
+          the name of the functional unit in which the final SCI value should be
+          expressed, e.g. requests, users
+        unit: none
+        aggregation-method: sum
+      requests:
+        unit: requests
+        description: number of requests made to application in the given timestep
+        aggregation-method: sum
+    outputs:
+      sci:
+        unit: gCO2eq/request
+        description: >-
+          software carbon intensity expressed as a rate of carbon emission per
+          request
+        aggregation-method: sum
 ```
 
 ## When _not_ to use `explainer`
