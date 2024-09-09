@@ -180,7 +180,7 @@ output-parameter:
 
 ### SciEmbodied
 
-The `SciEmbodied` plugin is used once. Its purpose is to calculate the embodied emissions of the server running our application and apportion the totalembodied carbon to the fraction that we are responsible (i.e. scale it based on the application only using a fraction of the available resources and a fraction of the server lifespan). We do not scale by resource allocation in this example, only time.
+The `SciEmbodied` plugin is used once. Its purpose is to calculate the embodied emissions of the server running our application and apportion the total embodied carbon to the fraction that we are responsible (i.e. scale it based on the application only using a fraction of the available resources and a fraction of the server lifespan). We do not scale by resource allocation in this example, only time.
 
 #### config
 
