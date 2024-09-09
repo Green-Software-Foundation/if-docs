@@ -93,7 +93,7 @@ pipeline:
 
 ### Interpolate
 
-The `interpolate` plugin is used once. The instance is named `interpolate`. It is used to interpolate the curve relating CPU utilization and thermal-design-power factor so that the right value canb be retrived for the observed CPU utilization at each timestep.
+The `interpolate` plugin is used once. The instance is named `interpolate`. It is used to interpolate the curve relating CPU utilization and thermal-design-power factor so that the right value can be retrieved for the observed CPU utilization at each timestep.
 
 #### config
 
