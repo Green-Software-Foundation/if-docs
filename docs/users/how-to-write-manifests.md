@@ -217,7 +217,7 @@ initialize:
       global-config:
         input-parameters:
           - carbon-operational
-          - carbon-embodied
+          - embodied-carbon
         output-parameter: carbon
     'time-sync':
       method: TimeSync
