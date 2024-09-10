@@ -294,7 +294,7 @@ initialize:
       config:
         input-parameters:
           - carbon-operational
-          - carbon-embodied
+          - embodied-carbon
         output-parameter: carbon
     sci:
       path: builtin
