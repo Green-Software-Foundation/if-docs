@@ -62,7 +62,7 @@ Read more on [explainer](../users/how-to-use-the-explain-feature.md)
 
 ## Inline Arithmetic Expressions
 
-Inline arithmetic expressions enable the inclusion of basic mathematical operations directly within `config` parameters or `inputs` values in manifest files. These expressions allow dynamic calculations using constants or other variables from the input, streamlining the definition of parameters without requiring manual pre-calculation.
+Inline arithmetic expressions allow basic mathematical operations to be embedded directly within `config` parameters and `inputs` values in manifest files. This enables dynamic calculations using constants or input variables, eliminating the need for manual pre-calculation of parameters.
 
 ### Supported Symbols and Operations:
 
@@ -75,13 +75,13 @@ Inline arithmetic expressions enable the inclusion of basic mathematical operati
   ```yaml
   'input-parameter': '= 2 * carbon'
   ```
-  This expression evaluates the multiplication of `2` by the value of the `carbon` parameter.
+  This expression evaluates the multiplication of `2` by the value of the `carbon` parameter from the input.
 - Arithmetic operations between two constants can also be defined without using the equal sign (`=`):
   ```yaml
   coefficient: 2 * 2
   ```
   This expression evaluates the multiplication of `2` by `2` directly.
-- If the parameter's name contains symbols, it should be placed in the quotes. The expresion should look like:
+- If the parameter name contains symbols, it should be placed in the quotes. The expresion should look like:
   ```yaml
   output-parameter: '= 2 * "carbon-product"'
   ```
@@ -97,5 +97,6 @@ config:
 inputs:
   - timestamp: 2023-08-06T00:00
     duration: 3600 * 60
-    carbon: 30
+    carbon: = 10 * "other-param
+    other-param: 3
 ```
