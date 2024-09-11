@@ -2,87 +2,91 @@
 sidebar-position: 1
 ---
 
-# Instance metadata pipeline
+# Grabbing instance metadata from a CSV file
+
+## Observations
+
+This manifest requires the following observations:
+
+- name of the specific cloud instance being used
+
+## Impacts
+
+This pipeline looks up metadata associated with the given cloud instance. It does not generate impacts per se, it just retrieves additional data from an external file using the given instance name as a search key.
+
+## Scope
+
+This pipeline is likely to be used as part of a larger pipeline. All we are doing here is retrieving metadata from an external file. Typicaly, this metadata will be used to feed further plugind to support impactestimates.
+
+
+## Description
 
 The instance metadata pipeline simply looks up a metadata for a given virtual machine instance name using the `csv-lookup` plugin from the IF standard library. However, the target dataset can return multiple processor names for a given VM instance where there are multiple possibilitiers. This means we need to create a pipeline that includes the `regex` plugin so parse out just one of the possible values.
 
-For this demo we'll just extract the first value if there are m,ultiple available for the `processor-name`.
+For this demo we'll just extract the first value if there are multiple available for the `processor-name`.
 
-Start by creating a manifest and adding the following boilerplate code:
 
-```yaml
-name: metadata-demo
-description:
-tags:
-initialize:
-  plugins:
-tree:
-  children:
-    child:
-      pipeline:
-        observe:
-        regroup:
-        compute:
-      inputs:
-```
+## Tags
 
-## Step 1: grab metadata using csv-lookup
+csv, instance-metadata, regex
 
-There is a cloud instance metadata file in the `if-data` Github repository. You can use the `csv-lookup` plugin to grab data from that file. You do not need to have a local copy of the file, you can simply provide the URL of the remote file.
 
-You can create an instance of `CSVLookup` and name it `cloud-instance-metadata` and add it to the `initialize` block in your manifest file. 
+## Common Patterns
 
-The lookup query is configured in `global-config`. You provide the parameters you want to use as selectors, and the selector value is a field from your `inputs` array. You also provide the target columns you want to return data from (we'll use a wildcard and grab everything).
+The lookup process described on this page will likely be a common pattern used in other pipelines.
 
-You want to retrieve all available data where `instance-class` is equal to `Standard_A1_v2`. So you need to make sure that `Standard_A1_v2` is available in your `inputs` array - we'll put it there with the key `cloud/instance-type`.
 
-Add the following data to your `inputs` array:
+## Assumptions and limitations
+
+The following are assumed to be true in this manifest:
+
+- the target dataset is up to date
+- where there are multiple possible processors associated with an instance name, it is appropriate to select the first in the list.
+
+
+## Components
+
+There is only one component in this example. It represents the entire application. The component pipeline looks as follows:
 
 ```yaml
-- timestamp: 2023-08-06T00:00
-    duration: 3600
-    cpu/energy: 0.001
-    cloud/instance-type: Standard_A1_v2
+pipeline:
+  compute:
+    - cloud-instance-metadata
+    - extract-processor-name
 ```
 
-Now, add the `CSVLookup` instance to your `initialize` block. Configure your query so that you select your row based on the value in the `instance-class` column. The value should be `cloud/instance-type`. You want data from all the other rows, so `output` can be a wildcard `"*"`.
 
+## Plugins
 
-```yaml
-name: csv-demo
-description:
-tags:
-initialize:
-  plugins:
-    cloud-instance-metadata:
-      method: CSVLookup
-      path: "builtin"
-      global-config:
-        filepath: https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
-        query:
-          instance-class: "cloud/instance-type"
-        output: "*"
+### csv-lookup
+
+The `csv-lookup` plugin is used once. The instance is named `cloud-instance-metadata`. It targets a csv file in our `if-data` repository. 
+
+#### config
+
+```
+cloud-instance-metadata:
+filepath: https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
+query: instance-class: "cloud/instance-type"
+output: "*"
 ```
 
-The CSV lookup can return multiple values for the processor name, because the same instance can use different processors in different circumstances. Multiple values are returned as a single string, separated using commas. Therefore, you can easily parse out the first individual value by selecting the entire string up to the first comma. This is a simple regex task.
 
-Create an instance of your `regex` plugin, and select all characters up to the first comma, by adding the following to your `initialize` block:
+### regex
+
+The `regex` plugin is used once. The instance is named `extract-processor-name`. It parses the response from the csv lookup plugin and extracts the first entry from the returned list.
+
+#### config
 
 ```
 extract-processor-name:
-    method: Regex
-    path: "builtin"
-    global-config:
-    parameter: cpu-model-name
-    match: /^([^,])+/g
-    output: cpu/name
+parameter: cpu-model-name
+match: /^([^,])+/g
+output: cpu/name
 ```
 
-That's it! 
 
-## Run the manifest
-
-Here's the complete manifest:
+## Manifest
 
 ```yaml
 name: instance-metadata
