@@ -145,7 +145,11 @@ output-parameter:
 
 ### Divide
 
-The `Divide` plugin is used once in this manifest. The instance is named `wattage-to-energy-kwh`. It is used to convert energy in W/duration to kWh.
+The `Divide` plugin is used several times in this manifest. The instances are:  
+
+- `wattage-to-energy-kwh`. used to convert energy in W/duration to kWh.
+- `calculate-vcpu-ratio`: used to calculate the ratio of allocated vCPUs to total vCPUS
+- `correct-cpu-energy-for-vcpu-ratio`: used to scale the CPU energy by the vCPU ratio
 
 #### config
 
@@ -154,6 +158,17 @@ wattage-to-energy-kwh:
 numerator: cpu-wattage-times-duration
 denominator: 3600000
 output: cpu-energy-raw
+
+calculate-vcpu-ratio:
+numerator: vcpus-total
+denominator: vcpus-allocated
+output: vcpu-ratio
+
+correct-cpu-energy-for-vcpu-ratio:
+numerator: cpu-energy-raw
+denominator: vcpu-ratio
+output: cpu/energy
+
 ```
 
 
