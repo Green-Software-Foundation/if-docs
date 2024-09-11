@@ -12,8 +12,8 @@ These walkthroughs will help you to understand how complex operations can be imp
 
 The pipeline guides include:
 
-- [Teads CPU energy](./teads.md)
-- [Cloud instance metadata](./instance-metadata.md)
-- [Software Carbon Intensity](./sci.md)
+- [CPU utilization -> carbon emissions](./cpu-to-carbon.md)
+- [Basic observations -> Software Carbon Intensity](./sci.md)
+- [Grabbing cloud instance metadata from csv file](./instance-metadata.md)
 
 You can find the manifests themselves in your copy of IF in `manifests/examples` or find them on our [Github](https://github.com/Green-Software-Foundation/if/tree/main/manifests/examples).
