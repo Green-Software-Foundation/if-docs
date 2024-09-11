@@ -36,7 +36,7 @@ The research underpinning the curve was summarized in a pair of blog posts:
 [TEADS Engineering: Buildiong an AWS EC2 Carbon Emissions Dataset](https://medium.com/teads-engineering/building-an-aws-ec2-carbon-emissions-dataset-3f0fd76c98ac)
 [Teads Engineering: Estimating AWS EC2 Instances Power Consumption](https://medium.com/teads-engineering/estimating-aws-ec2-instances-power-consumption-c9745e347959)
 
-The curve has become very widely used as a general purpose utilization-to-wattage converter for CPUs, despite the fact that it does not geenralize well.
+The curve has become very widely used as a general purpose utilization-to-wattage converter for CPUs, despite the fact that it does not generalize well.
 
 The wattage can be transformed into energy by doing the following:
 
