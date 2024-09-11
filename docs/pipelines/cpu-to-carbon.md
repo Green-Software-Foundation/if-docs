@@ -25,7 +25,7 @@ This pipeline takes the observations described above, and generates carbon emiss
 
 ## Scope
 
-This pipeline takes into account the operational carbon of the server running our application. This includes the energy used to run the application, calculated from CPU and memory utilization. It does not account for any embodied carbon, nor networking energy, nor anythign related to the end user. In real applications, the pipeline described here will be part of a much larger manifest that considers other parts of the system. 
+This pipeline takes into account the operational carbon of the server running our application. This includes the energy used to run the application, calculated from CPU and memory utilization. It does not account for any embodied carbon, nor networking energy, nor anything related to the end user. In real applications, the pipeline described here will be part of a much larger manifest that considers other parts of the system. 
 
 ## Description
 
