@@ -108,23 +108,27 @@ You can also add information to the plugin's initialize section about parameter 
 ```yaml
 plugins:
   "sum-carbon":
-      path: "builtin"
-      method: Sum
-      global-config:
+    path: "builtin"
+    method: Sum
+    global-config:
       input-parameters:
-          - carbon-operational
-          - embodied-carbon
+        - carbon-operational
+        - embodied-carbon
       output-parameter: carbon
-      parameter-metadata:
+    parameter-metadata:
       inputs:
-          carbon-operational:
+        carbon-operational:
           description: "carbon emitted due to an application's execution"
           unit: "gCO2eq"
-          aggregation-method: 'sum',
-          embodied-carbon:
+          aggregation-method:
+            time: sum
+            component: sum
+        embodied-carbon:
           description: "carbon emitted during the production, distribution and disposal of a hardware component, scaled by the fraction of the component's lifespan being allocated to the application under investigation"
           unit: "gCO2eq"
-          aggregation-method: 'sum'
+          aggregation-method:
+            time: sum
+            component: sum
 ```
 
 #### Execution (auto-generated)
@@ -161,25 +165,31 @@ explain:
   carbon:
     plugins:
       - sci
-    unit: gCO2eq
-    description: >-
-      total carbon emissions attributed to an application's usage as the sum
-      of embodied and operational carbon
-    aggregation-method: 'sum'
+        unit: gCO2eq
+        description: >-
+          total carbon emissions attributed to an application's usage as the sum
+          of embodied and operational carbon
+        aggregation-method:
+          time: sum
+          component: sum
   requests:
     plugins:
       - sci
-    unit: requests
-    description: number of requests made to application in the given timestep
-    aggregation-method: 'sum'
+        unit: requests
+        description: number of requests made to application in the given timestep
+        aggregation-method:
+          time: sum
+          component: sum
   sci:
     plugins:
       - sci
-    unit: gCO2eq/request
-    description: >-
-      software carbon intensity expressed as a rate of carbon emission per
-      request
-    aggregation-method: 'sum'
+        unit: gCO2eq/request
+        description: >-
+          software carbon intensity expressed as a rate of carbon emission per
+          request
+        aggregation-method:
+          time: sum
+          component: sum
 ```
 
 ### Tree

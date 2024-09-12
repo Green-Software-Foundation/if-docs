@@ -51,11 +51,15 @@ plugins:
           carbon-operational:
           description: "carbon emitted due to an application's execution"
           unit: "gCO2eq"
-          aggregation-method: 'sum',
+          aggregation-method:
+            time: sum
+            component: sum,
           carbon-embodied:
           description: "carbon emitted during the production, distribution and disposal of a hardware component, scaled by the fraction of the component's lifespan being allocated to the application under investigation"
           unit: "gCO2eq"
-          aggregation-method: 'sum'
+          aggregation-method:
+            time: sum
+            component: sum
 ```
 
 Read more on [explainer](../users/how-to-use-the-explain-feature.md)
