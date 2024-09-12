@@ -66,8 +66,7 @@ const config = {
         },
         items: [
           {
-            type: "docSidebar",
-            sidebarId: "tutorialSidebar",
+            to: "/intro",
             position: "left",
             label: "Documentation",
           },
@@ -75,6 +74,11 @@ const config = {
             href: "https://explorer.if.greensoftware.foundation/",
             position: "left",
             label: "Plugins",
+          },
+          {
+            to: "/users/quick-start",
+            position: "left",
+            label: "Quick Start",
           },
           {
             href: "https://github.com/Green-Software-Foundation/if",
