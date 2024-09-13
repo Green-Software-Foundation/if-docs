@@ -71,14 +71,19 @@ const config = {
             label: "Documentation",
           },
           {
-            to: "/users/quick-start",
+            to: "/pipelines",
             position: "left",
-            label: "Quick Start",
+            label: "Pipelines",
           },
           {
             to: "/community",
             position: "left",
             label: "Community",
+          },
+          {
+            to: "/users/quick-start",
+            position: "left",
+            label: "Quick Start",
           },
           {
             href: "https://explorer.if.greensoftware.foundation/",
