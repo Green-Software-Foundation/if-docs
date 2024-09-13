@@ -11,4 +11,4 @@ To contribute to these docs, you can raise pull requests against our [Github rep
 
 In general, you can consider any ticket on our [issue board](https://github.com/Green-Software-Foundation/if/issues) open for community contributions if it does not have the core-only tag. We tag suitable introductory issues as good-first-issue - these are great places to get started.
 
-You can also contribute by participating in discussions on our mailing list at [if-community@greensoftware.foundation](https://groups.google.com/u/1/a/greensoftware.foundation/g/if-community). We send out weekly updates that includes what we've shipped, what we're working on and how you can get involved each week.
+You can also contribute by participating in discussions on our mailing list at [if-community@greensoftware.foundation](https://groups.google.com/u/1/a/greensoftware.foundation/g/if-community). We send out weekly updates that includes what we've shipped, what we're working on and how you can get involved each week. 
