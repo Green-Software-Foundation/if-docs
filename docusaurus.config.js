@@ -66,10 +66,24 @@ const config = {
         },
         items: [
           {
-            type: "docSidebar",
-            sidebarId: "tutorialSidebar",
+            to: "/intro",
             position: "left",
             label: "Documentation",
+          },
+          {
+            to: "/pipelines",
+            position: "left",
+            label: "Pipelines",
+          },
+          {
+            to: "/community",
+            position: "left",
+            label: "Community",
+          },
+          {
+            to: "/users/quick-start",
+            position: "left",
+            label: "Quick Start",
           },
           {
             href: "https://explorer.if.greensoftware.foundation/",
