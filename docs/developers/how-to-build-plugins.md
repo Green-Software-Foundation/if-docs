@@ -46,22 +46,22 @@ export type ExecutePlugin = {
 
 The interface requires an execute function where your plugin logic is implemented. It should also return metadata. This can include any relevant metadata you want to include, with a minimum requirement being `kind: execute`.
 
-### Global config
+### Config
 
-Global config is passed as an argument to the plugin. In your plugin code you can handle it as follows:
+Config is passed as an argument to the plugin. In your plugin code you can handle it as follows:
 
 ```ts
-// Here's the function definition - notice that global config is passed in here!
+// Here's the function definition - notice that config is passed in here!
 export const Plugin = (
-  globalConfig: YourConfig,
+  config: YourConfig,
   parametersMetadata: PluginParametersMetadata,
   mapping: MappingParams
 ): ExecutePlugin => {
-  // in here you have access to globalConfig[your-params]
+  // in here you have access to config[your-params]
 };
 ```
 
-The parameters available to you in `globalConfig` depends upon the parameters you pass in the manifest file. For example, the `Sum` plugin has access to `input-parameters` and `output-parameter` in its global config, and it is defined in the `Initialize` block in the manifest file as follows:
+The parameters available to you in `config` depends upon the parameters you pass in the manifest file. For example, the `Sum` plugin has access to `input-parameters` and `output-parameter` in its config, and it is defined in the `Initialize` block in the manifest file as follows:
 
 ```yaml
 initialize:
@@ -69,14 +69,14 @@ initialize:
     sum:
       method: Sum
       path: 'builtin'
-      global-config:
+      config:
         input-parameters: ['cpu/energy', 'network/energy']
         output-parameter: 'energy'
 ```
 
 ### Parameter metadata
 
-The `parameter-metadata` is passed as an argument to the plugin as the global config. It contains information about the `description`, `unit` and `aggregation-method` of the parameters of the inputs and outputs that defined in the manifest.
+The `parameter-metadata` is passed as an argument to the plugin as the config. It contains information about the `description`, `unit` and `aggregation-method` of the parameters of the inputs and outputs that defined in the manifest.
 
 ```yaml
 initialize:
@@ -84,7 +84,7 @@ initialize:
     sum:
       method: Sum
       path: 'builtin'
-      global-config:
+      config:
         input-parameters: ['cpu/energy', 'network/energy']
         output-parameter: 'energy-sum'
       parameter-metadata:
@@ -112,14 +112,13 @@ initialize:
 
 ### Mapping
 
-The `mapping` is an optional argument passed to the plugin. Its purpose is to rename the arguments expected or returned from the plugin as part of the plugin's execution, avoiding the need to use additional plugins to rename parameters. 
+The `mapping` is an optional argument passed to the plugin. Its purpose is to rename the arguments expected or returned from the plugin as part of the plugin's execution, avoiding the need to use additional plugins to rename parameters.
 
 For example, your plugin might expect `cpu/energy` and your input data has the parameter `cpu-energy` returned from another plugin. Instead of using an additional plugin to rename the parameter and add a new one, you can use `mapping` to:
 
 a) rename the output from the first plugin so that `cpu/energy` is returned instead of the default `cpu-energy`
 
 b) instruct the second plugin to accept `cpu-energy` instead of the default `cpu/energy`
-
 
 The `mapping` config is an object with key-value pairs, where the `key` is the 'original' parameter name that the plugin uses, and the `value` is the 'new' name that you want to use instead.
 The `mapping` block is an optional and allows mapping the input and output parameters of the plugin. The structure of the `mapping` block is:
@@ -220,7 +219,7 @@ initialize:
     new-plugin:
       method: YourFunctionName
       path: 'new-plugin'
-      global-config:
+      config:
         something: true
 ```
 
@@ -263,7 +262,6 @@ initialize:
 tree:
   children:
     child:
-      config:
       inputs:
 ```
 
@@ -296,8 +294,8 @@ To demonstrate how to build a plugin that conforms to the `ExecutePlugin`, let's
 
 The `sum` plugin implements the following logic:
 
-- sum whatever is provided in the `input-parameters` field from `globalConfig`.
-- append the result to each element in the output array with the name provided as `output-parameter` in `globalConfig`.
+- sum whatever is provided in the `input-parameters` field from `config`.
+- append the result to each element in the output array with the name provided as `output-parameter` in `config`.
 
 Let's look at how you would implement this from scratch:
 
@@ -305,7 +303,7 @@ The plugin must be a function conforming to `ExecutePlugin`. You can call the fu
 
 ```typescript
 export const Sum = (
-  globalConfig: SumConfig,
+  config: SumConfig,
   parametersMetadata: PluginParametersMetadata
 ): ExecutePlugin => {
   const errorBuilder = buildErrorMessage(Sum.name);
@@ -329,15 +327,15 @@ export const Sum = (
 
 Your plugin now has the basic structure required for IF integration. Your next task is to add code to the body of `execute` to enable the actual plugin logic to be implemented.
 
-The `execute` function should grab the `input-parameters` (the values to sum) from `globalConfig`. it should then iterate over the `inputs` array, get the values for each of the `input-parameters` and append them to the `inputs` array, using the name from the `output-parameter` value in `globalConfig`. Here's what this can look like, with the actual calculation pushed to a separate function, `calculateSum`.
+The `execute` function should grab the `input-parameters` (the values to sum) from `config`. it should then iterate over the `inputs` array, get the values for each of the `input-parameters` and append them to the `inputs` array, using the name from the `output-parameter` value in `config`. Here's what this can look like, with the actual calculation pushed to a separate function, `calculateSum`.
 
 ```ts
 /**
  * Calculate the sum of each input.
  */
 const execute = async (inputs: PluginParams[]): Promise<PluginParams[]> => {
-  const inputParameters = globalConfig['input-parameters'];
-  const outputParameter = globalConfig['output-parameter'];
+  const inputParameters = config['input-parameters'];
+  const outputParameter = config['output-parameter'];
 
   return inputs.map((input) => {
     return {

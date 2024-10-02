@@ -105,7 +105,7 @@ initialize:
     'interpolate':
       method: Interpolation
       path: 'builtin'
-      global-config:
+      config:
         method: linear
         x: [0, 10, 50, 100]
         y: [0.12, 0.32, 0.75, 1.02]
