@@ -119,11 +119,15 @@ plugins:
         carbon-operational:
           description: "carbon emitted due to an application's execution"
           unit: 'gCO2eq'
-          aggregation-method: 'sum'
+          aggregation-method:
+            time: sum
+            component: sum
         embodied-carbon:
           description: "carbon emitted during the production, distribution and disposal of a hardware component, scaled by the fraction of the component's lifespan being allocated to the application under investigation"
           unit: 'gCO2eq'
-          aggregation-method: 'sum'
+          aggregation-method:
+            time: sum
+            component: sum
 ```
 
 #### Execution (auto-generated)
@@ -160,25 +164,31 @@ explain:
   carbon:
     plugins:
       - sci
-    unit: gCO2eq
-    description: >-
-      total carbon emissions attributed to an application's usage as the sum
-      of embodied and operational carbon
-    aggregation-method: 'sum'
+        unit: gCO2eq
+        description: >-
+          total carbon emissions attributed to an application's usage as the sum
+          of embodied and operational carbon
+        aggregation-method:
+          time: sum
+          component: sum
   requests:
     plugins:
       - sci
-    unit: requests
-    description: number of requests made to application in the given timestep
-    aggregation-method: 'sum'
+        unit: requests
+        description: number of requests made to application in the given timestep
+        aggregation-method:
+          time: sum
+          component: sum
   sci:
     plugins:
       - sci
-    unit: gCO2eq/request
-    description: >-
-      software carbon intensity expressed as a rate of carbon emission per
-      request
-    aggregation-method: 'sum'
+        unit: gCO2eq/request
+        description: >-
+          software carbon intensity expressed as a rate of carbon emission per
+          request
+        aggregation-method:
+          time: sum
+          component: sum
 ```
 
 ### Tree
