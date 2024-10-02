@@ -19,7 +19,7 @@ initialize:
     sum:
       path: builtin
       method: Sum
-      global-config:
+      config:
         input-parameters:
           - cpu/energy
           - network/energy
@@ -81,8 +81,6 @@ tree:
         regroup:
         compute:
           - sum
-      config:
-        sum: null
       inputs:
         - timestamp: 2023-08-06T00:00
           duration: 3600

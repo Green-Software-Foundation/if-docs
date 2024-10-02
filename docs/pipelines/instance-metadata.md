@@ -18,23 +18,19 @@ This pipeline looks up metadata associated with the given cloud instance. It doe
 
 This pipeline is likely to be used as part of a larger pipeline. All we are doing here is retrieving metadata from an external file. Typicaly, this metadata will be used to feed further plugind to support impactestimates.
 
-
 ## Description
 
 The instance metadata pipeline simply looks up a metadata for a given virtual machine instance name using the `csv-lookup` plugin from the IF standard library. However, the target dataset can return multiple processor names for a given VM instance where there are multiple possibilitiers. This means we need to create a pipeline that includes the `regex` plugin so parse out just one of the possible values.
 
 For this demo we'll just extract the first value if there are multiple available for the `processor-name`.
 
-
 ## Tags
 
 csv, instance-metadata, regex
 
-
 ## Common Patterns
 
 The lookup process described on this page will likely be a common pattern used in other pipelines.
-
 
 ## Assumptions and limitations
 
@@ -42,7 +38,6 @@ The following are assumed to be true in this manifest:
 
 - the target dataset is up to date
 - where there are multiple possible processors associated with an instance name, it is appropriate to select the first in the list.
-
 
 ## Components
 
@@ -55,12 +50,11 @@ pipeline:
     - extract-processor-name
 ```
 
-
 ## Plugins
 
 ### csv-lookup
 
-The `csv-lookup` plugin is used once. The instance is named `cloud-instance-metadata`. It targets a csv file in our `if-data` repository. 
+The `csv-lookup` plugin is used once. The instance is named `cloud-instance-metadata`. It targets a csv file in our `if-data` repository.
 
 #### config
 
@@ -71,7 +65,6 @@ query: instance-class: "cloud/instance-type"
 output: "*"
 ```
 
-
 ### regex
 
 The `regex` plugin is used once. The instance is named `extract-processor-name`. It parses the response from the csv lookup plugin and extracts the first entry from the returned list.
@@ -80,11 +73,13 @@ The `regex` plugin is used once. The instance is named `extract-processor-name`.
 
 ```
 extract-processor-name:
-parameter: cpu-model-name
-match: /^([^,])+/g
-output: cpu/name
+  method: Regex
+  path: "builtin"
+  config:
+    parameter: cpu-model-name
+    match: /^([^,])+/g
+    output: cpu/name
 ```
-
 
 ## Manifest
 
@@ -96,16 +91,16 @@ initialize:
   plugins:
     cloud-instance-metadata:
       method: CSVLookup
-      path: "builtin"
-      global-config:
+      path: 'builtin'
+      config:
         filepath: https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
         query:
-          instance-class: "cloud/instance-type"
-        output: "*"
+          instance-class: 'cloud/instance-type'
+        output: '*'
     extract-processor-name:
       method: Regex
-      path: "builtin"
-      global-config:
+      path: 'builtin'
+      config:
         parameter: cpu-model-name
         match: /^([^,])+/g
         output: cpu/name
@@ -135,7 +130,6 @@ if-run -m instance-metadata.yml -o output.yml
 
 Your new `output.yml` file will contain the following:
 
-
 ```yaml
 name: csv-demo
 description: null
@@ -145,7 +139,7 @@ initialize:
     cloud-instance-metadata:
       path: builtin
       method: CSVLookup
-      global-config:
+      config:
         filepath: >-
           https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
         query:
@@ -154,7 +148,7 @@ initialize:
     extract-processor-name:
       path: builtin
       method: Regex
-      global-config:
+      config:
         parameter: cpu-model-name
         match: /^([^,])+/g
         output: cpu/name
