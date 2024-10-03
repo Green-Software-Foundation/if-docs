@@ -38,24 +38,69 @@ You can override the parameter metadata provided in a plugin's source code by ad
 ```yaml
 explainer: true
 plugins:
-  "sum-carbon":
-      path: "builtin"
-      method: Sum
-      global-config:
+  'sum-carbon':
+    path: 'builtin'
+    method: Sum
+    config:
       input-parameters:
-          - carbon-operational
-          - carbon-embodied
+        - carbon-operational
+        - carbon-embodied
       output-parameter: carbon
-      parameter-metadata:
+    parameter-metadata:
       inputs:
-          carbon-operational:
+        carbon-operational:
           description: "carbon emitted due to an application's execution"
-          unit: "gCO2eq"
-          aggregation-method: 'sum',
-          carbon-embodied:
+          unit: 'gCO2eq'
+          aggregation-method:
+            time: sum
+            component: sum,
+        carbon-embodied:
           description: "carbon emitted during the production, distribution and disposal of a hardware component, scaled by the fraction of the component's lifespan being allocated to the application under investigation"
-          unit: "gCO2eq"
-          aggregation-method: 'sum'
+          unit: 'gCO2eq'
+          aggregation-method:
+            time: sum
+            component: sum
 ```
 
 Read more on [explainer](../users/how-to-use-the-explain-feature.md)
+
+## Inline Arithmetic Expressions
+
+Inline arithmetic expressions allow basic mathematical operations to be embedded directly within `config` parameters and `inputs` values in manifest files. This enables dynamic calculations using constants or input variables, eliminating the need for manual pre-calculation of parameters.
+
+### Supported Symbols and Operations:
+
+- `=`: Indicates the start of an arithmetic expression.
+- Supported operators: `*` (multiplication), `+` (addition), `-` (subtraction), `/` (division).
+
+### Syntax:
+
+- To define an inline arithmetic expression, the string must start with an equal sign (`=`). For example:
+  ```yaml
+  'input-parameter': '= 2 * carbon'
+  ```
+  This expression evaluates the multiplication of `2` by the value of the `carbon` parameter from the input.
+- Arithmetic operations between two constants can also be defined without using the equal sign (`=`):
+  ```yaml
+  coefficient: 2 * 2
+  ```
+  This expression evaluates the multiplication of `2` by `2` directly.
+- If the parameter name contains symbols, it should be placed in the quotes. The expresion should look like:
+  ```yaml
+  output-parameter: '= 2 * "carbon-product"'
+  ```
+
+### Example:
+
+```yaml
+config:
+  'input-parameter': '= 2 * carbon'
+  coefficient: 2 * 2
+  'output-parameter': '= 2 * "carbon-product"'
+---
+inputs:
+  - timestamp: 2023-08-06T00:00
+    duration: 3600 * 60
+    carbon: = 10 * "other-param
+    other-param: 3
+```
