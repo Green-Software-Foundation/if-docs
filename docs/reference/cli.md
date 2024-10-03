@@ -363,7 +363,7 @@ initialize:
     mock-observations:
       path: builtin
       method: MockObservations
-      global-config:
+      config:
         timestamp-from: '2024-03-05T00:00:04.000Z'
         timestamp-to: '2024-03-05T00:00:07.000Z'
         duration: 1
@@ -384,7 +384,7 @@ initialize:
     sum:
       path: builtin
       method: Sum
-      global-config:
+     config:
         input-parameters:
           - cpu/energy
           - mem/energy
@@ -514,7 +514,7 @@ initialize:
     mock-observations:
       path: builtin
       method: MockObservations
-      global-config:
+     config:
         timestamp-from: '2024-03-05T00:00:04.000Z'
         timestamp-to: '2024-03-05T00:00:07.000Z'
         duration: 1
@@ -535,7 +535,7 @@ initialize:
     sum:
       path: builtin
       method: Sum
-      global-config:
+     config:
         input-parameters:
           - cpu/energy
           - mem/energy
