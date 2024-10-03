@@ -341,3 +341,340 @@ if-csv -m ./my-manifest.yml -p carbon
 ```sh
 if-run -m ./my-manifest.yml | if-csv -p carbon -o ./my-outdata
 ```
+
+
+## `--append`
+
+You can re-use a manifest file to make multiple batches of observations, appending the results to the existing outputs. The command that makes this possible is `--append`. To use `--append` you have to pass a manifest files that has **already been computed**  - i.e.it already has outputs. If you do, then the newly generated outputs will be appended to the existing output data.
+
+The use case for this is when you want to repeatedly monitor the same resource or set of resources without changign the manifest config - you just want to grab new observations. The `--append` command allows you to do this without havign to generate lots of individual manifest files.
+
+### example
+
+With a computed manifest:
+
+```yaml
+name: append
+description: >-
+  a complete pipeline that starts with mocked CPU utilization data and outputs
+  operational carbon in gCO2eq
+initialize:
+  plugins:
+    mock-observations:
+      path: builtin
+      method: MockObservations
+      global-config:
+        timestamp-from: '2024-03-05T00:00:04.000Z'
+        timestamp-to: '2024-03-05T00:00:07.000Z'
+        duration: 1
+        components:
+          - name: server-1
+            cloud/instance-type: Standard_E64_v3
+            cloud/region: westus3
+        generators:
+          common:
+            cloud/vendor: azure
+          randint:
+            cpu/energy:
+              min: 1
+              max: 99
+            mem/energy:
+              min: 1
+              max: 99
+    sum:
+      path: builtin
+      method: Sum
+      global-config:
+        input-parameters:
+          - cpu/energy
+          - mem/energy
+        output-parameter: energy
+execution:
+  command: >-
+    /home/user/.npm/_npx/1bf7c3c15bf47d04/node_modules/.bin/ts-node
+    /home/user/Code/if/src/index.ts -m
+    manifests/examples/mock-cpu-util-to-carbon.yml -s
+  environment:
+    if-version: 0.4.0
+    os: linux
+    os-version: 5.15.0-107-generic
+    node-version: 21.4.0
+    date-time: 2024-06-18T14:18:44.864Z (UTC)
+    dependencies:
+      - '@babel/core@7.22.10'
+      - '@babel/preset-typescript@7.23.3'
+      - '@commitlint/cli@18.6.0'
+      - '@commitlint/config-conventional@18.6.0'
+      - '@grnsft/if-core@0.0.3'
+      - '@jest/globals@29.7.0'
+      - '@types/jest@29.5.8'
+      - '@types/js-yaml@4.0.9'
+      - '@types/luxon@3.4.2'
+      - '@types/node@20.9.0'
+      - axios-mock-adapter@1.22.0
+      - axios@1.7.2
+      - cross-env@7.0.3
+      - csv-parse@5.5.6
+      - csv-stringify@6.4.6
+      - fixpack@4.0.0
+      - gts@5.2.0
+      - husky@8.0.3
+      - jest@29.7.0
+      - js-yaml@4.1.0
+      - lint-staged@15.2.2
+      - luxon@3.4.4
+      - release-it@16.3.0
+      - rimraf@5.0.5
+      - ts-command-line-args@2.5.1
+      - ts-jest@29.1.1
+      - typescript-cubic-spline@1.0.1
+      - typescript@5.2.2
+      - winston@3.11.0
+      - zod@3.22.4
+  status: success
+tree:
+  pipeline:
+    compute:
+      - mock-observations
+      - sum
+    regroup:
+      - cloud/region
+      - name
+  defaults: null
+  inputs:
+    - timestamp: '2024-03-05T00:00:00.000Z'
+      duration: 1
+      name: server-1
+      cloud/instance-type: Standard_E64_v3
+      cloud/region: westus3
+      cloud/vendor: azure
+      cpu/energy: 5
+      mem/energy: 10
+    - timestamp: '2024-03-05T00:00:01.000Z'
+      duration: 1
+      name: server-1
+      cloud/instance-type: Standard_E64_v3
+      cloud/region: westus3
+      cloud/vendor: azure
+      cpu/energy: 71
+      mem/energy: 5
+    - timestamp: '2024-03-05T00:00:02.000Z'
+      duration: 1
+      name: server-1
+      cloud/instance-type: Standard_E64_v3
+      cloud/region: westus3
+      cloud/vendor: azure
+      cpu/energy: 36
+      mem/energy: 74
+  outputs:
+    - timestamp: '2024-03-05T00:00:00.000Z'
+      duration: 1
+      name: server-1
+      cloud/instance-type: Standard_E64_v3
+      cloud/region: westus3
+      cloud/vendor: azure
+      cpu/energy: 5
+      mem/energy: 10
+      energy: 15
+    - timestamp: '2024-03-05T00:00:01.000Z'
+      duration: 1
+      name: server-1
+      cloud/instance-type: Standard_E64_v3
+      cloud/region: westus3
+      cloud/vendor: azure
+      cpu/energy: 71
+      mem/energy: 5
+      energy: 76
+    - timestamp: '2024-03-05T00:00:02.000Z'
+      duration: 1
+      name: server-1
+      cloud/instance-type: Standard_E64_v3
+      cloud/region: westus3
+      cloud/vendor: azure
+      cpu/energy: 36
+      mem/energy: 74
+      energy: 110
+```
+
+run 
+
+```sh
+npm run if-run  -- -m manifests/outputs/features/append.yaml -o manifests/outputs/features/re-append --append 
+```
+
+And see the following output (with new observations appended to old observations):
+
+```yaml
+name: append
+description: >-
+  a complete pipeline that starts with mocked CPU utilization data and outputs
+  operational carbon in gCO2eq
+initialize:
+  plugins:
+    mock-observations:
+      path: builtin
+      method: MockObservations
+      global-config:
+        timestamp-from: '2024-03-05T00:00:04.000Z'
+        timestamp-to: '2024-03-05T00:00:07.000Z'
+        duration: 1
+        components:
+          - name: server-1
+            cloud/instance-type: Standard_E64_v3
+            cloud/region: westus3
+        generators:
+          common:
+            cloud/vendor: azure
+          randint:
+            cpu/energy:
+              min: 1
+              max: 99
+            mem/energy:
+              min: 1
+              max: 99
+    sum:
+      path: builtin
+      method: Sum
+      global-config:
+        input-parameters:
+          - cpu/energy
+          - mem/energy
+        output-parameter: energy
+execution:
+  command: >-
+    /Users/jcrowley/.npm/_npx/1bf7c3c15bf47d04/node_modules/.bin/ts-node
+    /Users/jcrowley/Development/gsf/if/src/if-run/index.ts -m
+    manifests/outputs/features/append.yaml -o
+    manifests/outputs/features/re-append --append
+  environment:
+    if-version: 0.6.0
+    os: macOS
+    os-version: 14.6.1
+    node-version: 20.16.0
+    date-time: 2024-09-04T01:05:58.758Z (UTC)
+    dependencies:
+      - '@babel/core@7.22.10'
+      - '@babel/preset-typescript@7.23.3'
+      - '@commitlint/cli@18.6.0'
+      - '@commitlint/config-conventional@18.6.0'
+      - '@grnsft/if-core@0.0.16'
+      - '@jest/globals@29.7.0'
+      - '@types/jest@29.5.8'
+      - '@types/js-yaml@4.0.9'
+      - '@types/luxon@3.4.2'
+      - '@types/node@20.9.0'
+      - axios-mock-adapter@1.22.0
+      - axios@1.7.2
+      - cross-env@7.0.3
+      - csv-parse@5.5.6
+      - csv-stringify@6.4.6
+      - fixpack@4.0.0
+      - gts@5.2.0
+      - husky@8.0.3
+      - jest@29.7.0
+      - js-yaml@4.1.0
+      - lint-staged@15.2.2
+      - luxon@3.4.4
+      - release-it@16.3.0
+      - rimraf@5.0.5
+      - ts-command-line-args@2.5.1
+      - ts-jest@29.1.1
+      - typescript-cubic-spline@1.0.1
+      - typescript@5.2.2
+      - winston@3.11.0
+      - zod@3.23.8
+  status: success
+tree:
+  pipeline:
+    compute:
+      - mock-observations
+      - sum
+    regroup:
+      - cloud/region
+      - name
+  defaults: null
+  children:
+    westus3:
+      children:
+        server-1:
+          inputs:
+            - timestamp: '2024-03-05T00:00:00.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 5
+              mem/energy: 10
+            - timestamp: '2024-03-05T00:00:01.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 71
+              mem/energy: 5
+            - timestamp: '2024-03-05T00:00:02.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 36
+              mem/energy: 74
+          outputs:
+            - timestamp: '2024-03-05T00:00:00.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 5
+              mem/energy: 10
+              energy: 15
+            - timestamp: '2024-03-05T00:00:01.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 71
+              mem/energy: 5
+              energy: 76
+            - timestamp: '2024-03-05T00:00:02.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 36
+              mem/energy: 74
+              energy: 110
+            - timestamp: '2024-03-05T00:00:04.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 2
+              mem/energy: 26
+              energy: 28
+            - timestamp: '2024-03-05T00:00:05.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 67
+              mem/energy: 27
+              energy: 94
+            - timestamp: '2024-03-05T00:00:06.000Z'
+              duration: 1
+              name: server-1
+              cloud/instance-type: Standard_E64_v3
+              cloud/region: westus3
+              cloud/vendor: azure
+              cpu/energy: 88
+              mem/energy: 6
+              energy: 94
+```
