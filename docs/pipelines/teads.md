@@ -317,17 +317,17 @@ execution:
     /home/user/.npm/_npx/1bf7c3c15bf47d04/node_modules/.bin/ts-node
     /home/user/if/src/index.ts -m manifests/examples/teads-curve.yml
   environment:
-    if-version: 0.3.3-beta.0
-    os: linux
-    os-version: 5.15.0-107-generic
-    node-version: 21.4.0
-    date-time: 2024-06-06T14:33:25.188Z (UTC)
+    if-version: 0.6.0
+    os: macOS
+    os-version: 14.6.1
+    node-version: 18.20.4
+    date-time: 2024-10-03T15:05:11.948Z (UTC)
     dependencies:
       - '@babel/core@7.22.10'
       - '@babel/preset-typescript@7.23.3'
       - '@commitlint/cli@18.6.0'
       - '@commitlint/config-conventional@18.6.0'
-      - '@grnsft/if-unofficial-plugins@v0.3.1'
+      - '@grnsft/if-core@0.0.25'
       - '@jest/globals@29.7.0'
       - '@types/jest@29.5.8'
       - '@types/js-yaml@4.0.9'
@@ -335,6 +335,7 @@ execution:
       - '@types/node@20.9.0'
       - axios-mock-adapter@1.22.0
       - axios@1.7.2
+      - cross-env@7.0.3
       - csv-parse@5.5.6
       - csv-stringify@6.4.6
       - fixpack@4.0.0
@@ -351,7 +352,7 @@ execution:
       - typescript-cubic-spline@1.0.1
       - typescript@5.2.2
       - winston@3.11.0
-      - zod@3.22.4
+      - zod@3.23.8
   status: success
 tree:
   children:

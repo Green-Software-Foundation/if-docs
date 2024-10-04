@@ -155,20 +155,20 @@ The `Sum` plugin is used several times in this manifest. The instances are:
 
 #### config
 
-```
+```yaml
 sum-energy-components:
-input-parameters:
-  - cpu/energy
-  - network/energy
-output-parameter:
-  - energy
+  input-parameters:
+    - cpu/energy
+    - network/energy
+  output-parameter:
+    - energy
 
 sum-carbon:
-input-parameters:
-  - carbon-operational
-  - carbon-embodied
-output-parameter:
-  - carbon
+  input-parameters:
+    - carbon-operational
+    - carbon-embodied
+  output-parameter:
+    - carbon
 ```
 
 ### SciEmbodied

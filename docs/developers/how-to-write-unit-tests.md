@@ -8,23 +8,21 @@ Impact Framework unit tests follow a standard format. We use the `jest` testing 
 
 ## Test files
 
-Both the IF and the project repositories include a `__test__` directory. Inside, you will find subdirectory `unit/lib` containing directories for each plugin. Your plugin repository should also follow this structure. Inside the plugin directory you can add `index.test.ts`. This is where you write your unit tests. For example, here's the directory tree for our `teads-curve` test file:
+The IF includes a `__test__` directory. Inside, you will find subdirectory `if-run/builtins` containing test files for each plugin. Your plugin repository should also follow this structure. Inside the `builtins` you can add `plugin.test.ts`. This is where you write your unit tests. For example, here's the directory tree for our `sum` test file:
 
 ```sh
 
-if-unofficial-plugins
+if
  |
  |- src
     |
     |-__tests__
         |
-        |-unit
+        |-if-run
           |
-          |-lib
+          |-builtins
              |
-             teads-curve
-                 |
-                 |- index.test.ts
+             sum.test.ts
 ```
 
 ## Setting up your test file
@@ -33,8 +31,10 @@ You will need to import your plugin so that it can be instantiated and tested. Y
 For example, these are the imports for our `Sum` plugin.
 
 ```ts
-import { Sum } from '../../../../lib';
-import { ERRORS } from '../../../../util/errors';
+import { ERRORS } from '@grnsft/if-core/utils';
+
+import { Sum } from '../../../if-run/builtins/sum';
+
 const { InputValidationError } = ERRORS;
 ```
 
@@ -54,7 +54,7 @@ describe('execute', () => {});
 For example, here is a describe block checking that the `Sum` plugin initializes correctly:
 
 ```typescript
-describe('lib/sum: ', () => {
+describe('builtins/sum: ', () => {
   describe('Sum: ', () => {
     const config = {
       'input-parameters': ['cpu/energy', 'network/energy', 'memory/energy'],
@@ -164,16 +164,15 @@ We do have mock backends in several of our tests, and we also have a mock data g
 Please use `jest --coverage` to see a coverage report for your plugin - your unit tests should yield 100% coverage. The snippet below shows what to expect from the coverage report:
 
 ```sh
--------------------------------|---------|----------|---------|---------|-------------------
-| File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
-| --------------------------- | ------- | -------- | ------- | ------- | ----------------- |
-| All files                   | 100     | 100      | 100     | 100     |
-| lib                         | 100     | 100      | 100     | 100     |
-| index.ts                    | 100     | 100      | 100     | 100     |
-| lib/cloud-metadata          | 100     | 100      | 100     | 100     |
-| index.ts                    | 100     | 100      | 100     | 100     |
-| lib/e-mem                   | 100     | 100      | 100     | 100     |
-| index.ts                    | 100     | 100      | 100     | 100     |
-| lib/e-net                   | 100     | 100      | 100     | 100     |
-| index.ts                    | 100     | 100      | 100     | 100     |
+------------------------------------|---------|----------|---------|---------|-------------------
+| File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
+| --------------------------------- | ------- | -------- | ------- | ------- | ----------------- |
+| All files                         |      100|      100 |     100 |     100 |
+| if-run/builtins/coefficient       |     100 |      100 |     100 |     100 |
+|  index.ts                         |     100 |      100 |     100 |     100 |
+| if-run/builtins/copy-param        |     100 |      100 |     100 |     100 |
+|  index.ts                         |     100 |      100 |     100 |     100 |
+| if-run/builtins/csv-lookup        |     100 |      100 |     100 |     100 |
+|  index.ts                         |     100 |      100 |     100 |     100 |
+| if-run/builtins/divide            |     100 |    94.11 |     100 |     100 |
 ```
