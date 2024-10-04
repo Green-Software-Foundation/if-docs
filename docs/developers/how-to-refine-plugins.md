@@ -35,8 +35,8 @@ We prefer the following ordering of imports in your plugin code:
 1. Node built-in modules (e.g. `import fs from 'fs';`)
 2. External modules (e.g. `import {z} from 'zod';`)
 3. Internal modules (e.g. `import config from 'src/config';`)
-4. Interfaces (e.g. `import type {PluginInterface} from 'interfaces'`)
-5. Types (e.g. `import {PluginParams} from '../../types/common'`;)
+4. Interfaces (e.g. `import {PluginInterface} from '@grnsft/if-core/types';`)
+5. Types (e.g. `import {PluginParams} from '@grnsft/if-core/types';`)
 
 ### Comments
 
@@ -79,25 +79,39 @@ throw new MissingInputDataError("my-plugin is missing my-parameter from inputs[0
 
 ### Validation
 
-We recommend using validation techniques to ensure the integrity of input data. Validate input parameters against expected types, ranges, or constraints to prevent runtime errors and ensure data consistency.
+We recommend using `inputValidation` property from `PluginFactory` for validation to ensure the integrity of input data. Validate input parameters against expected types, ranges, or constraints to prevent runtime errors and ensure data consistency.
 
-We use `zod` to validate data. Here's an example from our codebase:
+You need to use `zod` schema or `InputValidatorFunction`. Here's an example from our codebase:
+
+- When using function with `InputValidatorFunction` type.
 
 ```ts
-/**
- * Checks for required fields in input.
- */
-const validateInput = (input: PluginParams) => {
-  const schema = z
-    .object({
-      'cpu/name': z.string(),
-    })
-    .refine(allDefined, {
-      message: '`cpu/name` should be present.',
-    });
+// `inputValidation` from plugin definition
+inputValidation: (input: PluginParams, config: ConfigParams) => {
+  const inputData = {
+    'input-parameter': input[config['input-parameter']],
+  };
+  const validationSchema = z.record(z.string(), z.number());
+  validate(validationSchema, inputData);
 
-  return validate<z.infer<typeof schema>>(schema, input);
+  return input;
 };
+```
+
+- When using `zod` schema
+
+```ts
+// `inputValidation` from plugin definition
+inputValidation: z.object({
+  duration: z.number().gt(0),
+  vCPUs: z.number().gt(0).default(1),
+  memory: z.number().gt(0).default(16),
+  ssd: z.number().gte(0).default(0),
+  hdd: z.number().gte(0).default(0),
+  gpu: z.number().gte(0).default(0),
+  'usage-ratio': z.number().gt(0).default(1),
+  time: z.number().gt(0).optional(),
+});
 ```
 
 ### Code Modularity
@@ -112,19 +126,20 @@ Your plugin should have unit tests with 100% coverage. We use `jest` to handle u
 Here's an example that covers plugin initialization and the happy path for the `execute()` function.
 
 ```ts
-import {Sum} from '../../../../lib';
+import { ERRORS } from '@grnsft/if-core/utils';
 
-import {ERRORS} from '@grnsft/if-core/util/';
+import { Sum } from '../../../if-run/builtins/sum';
 
-const {InputValidationError} = ERRORS;
+const { InputValidationError, WrongArithmeticExpressionError } = ERRORS;
 
-describe('lib/sum: ', () => {
+describe('builtins/sum: ', () => {
   describe('Sum: ', () => {
     const config = {
       'input-parameters': ['cpu/energy', 'network/energy', 'memory/energy'],
       'output-parameter': 'energy',
     };
-    const sum = Sum(config);
+    const parametersMetadata = {};
+    const sum = Sum(config, parametersMetadata, {});
 
     describe('init: ', () => {
       it('successfully initalized.', () => {
@@ -160,9 +175,9 @@ describe('lib/sum: ', () => {
 
         expect(result).toStrictEqual(expectedResult);
       });
-    }
-  })
-})
+    });
+  });
+});
 ```
 
 We have a [dedicated page](./how-to-write-unit-tests.md) explaining in more detail how to write great unit tests for Impact Framework plugins.

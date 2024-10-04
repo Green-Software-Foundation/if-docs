@@ -104,3 +104,79 @@ inputs:
     carbon: = 10 * "other-param
     other-param: 3
 ```
+
+### Plugin support
+
+To enable inline arithmetic expressions in your plugin, specify it in your plugin’s definition function like this:
+
+```ts
+allowArithmeticExpressions: ['input-parameter'];
+```
+
+In the `allowArithmeticExpressions` array, list all parameters (whether in config, inputs, or outputs) that can contain arithmetic expressions. The calculations are handled internally (in the PluginFactory interface).
+
+If your plugin doesn’t have specified parameters but has dynamic output parameters that should support evaluation, you can enable `arithmeticExpressions` with an empty array:
+
+```ts
+allowArithmeticExpressions: [];
+```
+
+To design your plugin with support for arithmetic expressions, you can use various utility functions.
+
+- If your plugin's config parameters must be of type `number`, you can use the `validateArithmeticExpression` function from `@grnsft/if-core/utils`:
+
+```ts
+import {validateArithmeticExpression} from '@grnsft/if-core/utils';
+
+// Plugin definition
+
+configValidation: (config: ConfigParams) => {
+    const configSchema = z.object({
+      coefficient: z.preprocess(
+        value => validateArithmeticExpression('coefficient', value, 'number'),
+        z.number()
+      ),
+      'input-parameter': z.string().min(1),
+      'output-parameter': z.string().min(1),
+    });
+
+    return validate<z.infer<typeof configSchema>>(
+      configSchema as ZodType<any>,
+      config
+    );
+  },
+```
+
+- If your config parameters contain arithmetic expressions like the following:
+
+```yaml
+config:
+  keep-existing: false
+  from: = 4 * "if-size"
+  to: 'if-repo-size'
+```
+
+But during implementation, you need to extract the pure parameter name (e.g., `if-size`), you can use the `getParameterFromArithmeticExpression` function:
+
+```ts
+import { getParameterFromArithmeticExpression } from '@grnsft/if-core/utils';
+
+// Plugin definition
+
+configValidation: (config: ConfigParams) => {
+  const configSchema = z.object({
+    'keep-existing': z.boolean(),
+    from: z.string().min(1),
+    to: z.string().min(1),
+  });
+
+  const extractedFrom = getParameterFromArithmeticExpression(config.from);
+  const updatedConfig = config['keep-existing']
+    ? config
+    : { ...config, 'pure-from': extractedFrom };
+
+  validate<z.infer<typeof configSchema>>(configSchema, updatedConfig);
+
+  return updatedConfig;
+};
+```

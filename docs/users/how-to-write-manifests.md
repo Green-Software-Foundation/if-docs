@@ -135,10 +135,16 @@ initialize:
           cpu/utilization:
             description: refers to CPU utilization
             unit: percentage
+            aggregation-method:
+              time: avg
+              component: avg
         outputs:
           cpu-factor:
             description: the factor of cpu
             unit: kWh
+            aggregation-method:
+              time: avg
+              component: avg
     'cpu-factor-to-wattage':
       method: Multiply
       path: builtin
@@ -150,13 +156,22 @@ initialize:
           cpu-factor:
             description: the factor of cpu
             unit: kWh
+            aggregation-method:
+              time: avg
+              component: avg
           cpu/thermal-design-power:
             description: thermal design power for a processor
             unit: kwh
+            aggregation-method:
+              time: avg
+              component: avg
         outputs:
           cpu-wattage:
             description: cpu in Wattage
             unit: wattage
+            aggregation-method:
+              time: sum
+              component: sum
     'wattage-times-duration':
       method: Multiply
       path: builtin
@@ -204,13 +219,22 @@ initialize:
           carbon:
             description: an amount of carbon emitted into the atmosphere
             unit: gCO2e
+            aggregation-method:
+              time: sum
+              component: sum
           requests:
             description: factor to convert per time to per f.unit
             unit: number
+            aggregation-method:
+              time: sum
+              component: sum
         outputs:
           sci:
             description: carbon expressed in terms of the given functional unit
             unit: gCO2e
+            aggregation-method:
+              time: avg
+              component: sum
     'sum-carbon':
       path: 'builtin'
       method: Sum
@@ -306,10 +330,11 @@ The recommended method for integrating data is to use the plugin system of the I
 
 There are already some community plugins available, including plugins for fetching data from Kubernetes, GCP, and third-party data aggregators like Datadog.
 
-If there is no fitting plugin available yet, we encourage you to write and add one for your specific use case. See [developer documentation](./developers/) for more information on how to build a plugin. There is a [Azure-Importer](https://github.com/Green-Software-Foundation/if-unofficial-plugins/blob/main/src/lib/azure-importer/README.md) you can as a prototype and starting point for your own development.
-If you already have external scripts you might have a look at the [shell plugin](https://github.com/Green-Software-Foundation/if-plugins/blob/main/src/lib/shell/README.md) to integrate them with the Impact Framework.
+If there is no fitting plugin available yet, we encourage you to write and add one for your specific use case. See [developer documentation](./developers/) for more information on how to build a plugin.
 
-If you just need data for testing purposes, you can use the [mock-observation](https://github.com/Green-Software-Foundation/if-plugins/blob/main/src/lib/mock-observations/README.md) plugin.
+If you already have external scripts you might have a look at the [shell plugin](https://github.com/Green-Software-Foundation/if/blob/main/src/if-run/builtins/shell/README.md) to integrate them with the Impact Framework.
+
+If you just need data for testing purposes, you can use the [mock-observation](https://github.com/Green-Software-Foundation/if/blob/main/src/if-run/builtins/mock-observations/README.md) plugin.
 
 ## Running a manifest
 

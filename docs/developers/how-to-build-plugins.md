@@ -5,9 +5,9 @@ sidebar-position: 1
 # How to build plugins
 
 The IF is designed to be as composable as possible. This means you can develop your own plugins and use them in a pipeline.
-To help developers write Typescript plugins to integrate easily into IF, we provide the `ExecutePlugin` interface. Here's an overview of the stages you need to follow to integrate your plugin:
+To help developers write Typescript plugins to integrate easily into IF, we provide the `PluginFactory` interface. Here's an overview of the stages you need to follow to integrate your plugin:
 
-- create a Typescript file that implements the `ExecutePlugin`
+- create a Typescript file that implements the `PluginFactory` from [`if-core`](https://github.com/Green-Software-Foundation/if-core)
 - install the plugin
 - initialize and invoke the plugin in your manifest file
 
@@ -25,49 +25,47 @@ Now your project is setup, you can focus on your plugin logic. The entry point f
 
 The following sections describe the rules your plugin code should conform to. We also have an [appendix](#appendix-walk-through-of-the-sum-plugin) that deep dives a real plugin.
 
-### The plugin interface
+### Plugin interface
 
-The `ExecutePlugin` is structured as follows:
+Your plugin must implement the `PluginFactory` interface, which is a higher-order function that takes a `params` object of type `PluginFactoryParams`. This factory function returns another function (referred to as the "inner function") that manages the plugin’s `config`, `parametersMetadata`, and `mapping`.
+
+The `PluginFactory` is structured as follows:
 
 ```ts
-export type ExecutePlugin = {
-  execute: (
-    inputs: PluginParams[],
-    config?: Record<string, any>
-  ) => PluginParams[];
-  metadata: {
-    kind: string;
-    inputs?: ParameterMetadata;
-    outputs?: ParameterMetadata;
-  };
-  [key: string]: any;
-};
+export const PluginFactory =
+  <C = ConfigParams>(params: PluginFactoryParams<C>) =>
+  (
+    config: C = {} as C,
+    parametersMetadata: PluginParametersMetadata,
+    mapping: MappingParams
+  ) => ({
+    metadata: {
+      inputs: {...params.metadata.inputs, ...parametersMetadata?.inputs},
+      outputs: parametersMetadata?.outputs || params.metadata.outputs,
+    },
+    execute: async (inputs: PluginParams[]) => {
+      // Generic plugin functionality goes here
+      // E.g., mapping, arithmetic operations, validation
+      // Process inputs and mapping logic
+    });
+  });
 ```
 
-The interface requires an execute function where your plugin logic is implemented. It should also return metadata. This can include any relevant metadata you want to include, with a minimum requirement being `kind: execute`.
+The inner function returned by the `PluginFactory` handles the following parameters:
+
+- **`config`**: An object of type `ConfigParams`. This parameter holds the configuration settings for the plugin and defaults to an empty object (`{}`).
+- **`parametersMetadata`**: An object of type `PluginParametersMetadata` that contains metadata describing the plugin’s parameters.
+- **`mapping`**: A `MappingParams` object that outlines how plugin parameters are mapped.
 
 ### Config
 
-Config is passed as an argument to the plugin. In your plugin code you can handle it as follows:
-
-```ts
-// Here's the function definition - notice that config is passed in here!
-export const Plugin = (
-  config: YourConfig,
-  parametersMetadata: PluginParametersMetadata,
-  mapping: MappingParams
-): ExecutePlugin => {
-  // in here you have access to config[your-params]
-};
-```
-
-The parameters available to you in `config` depends upon the parameters you pass in the manifest file. For example, the `Sum` plugin has access to `input-parameters` and `output-parameter` in its config, and it is defined in the `Initialize` block in the manifest file as follows:
+The `config` object is passed as an argument to your plugin and can be handled as shown in the example above. The structure of the config depends on what is defined in the manifest file. For example, the `Sci` plugin has access to `input-parameters` and `output-parameter` fields in its global configuration, as defined in the `Initialize` block of the manifest file:
 
 ```yaml
 initialize:
   plugins:
     sum:
-      method: Sum
+      method: Sci
       path: 'builtin'
       config:
         input-parameters: ['cpu/energy', 'network/energy']
@@ -82,7 +80,7 @@ The `parameter-metadata` is passed as an argument to the plugin as the config. I
 initialize:
   plugins:
     sum:
-      method: Sum
+      method: Sci
       path: 'builtin'
       config:
         input-parameters: ['cpu/energy', 'network/energy']
@@ -155,37 +153,61 @@ tree:
 
 In the `outputs`, the `sci` value returned by the `Sci` plugin will be named `if-sci`.
 
-### Methods
+### Plugin example
 
-#### execute
-
-`execute()` is where the main calculation logic of the plugin is implemented. It always takes `inputs` (an array of `PluginParams`) as an argument and returns an updated set of `inputs`.
-
-#### Params
-
-| Param    | Type             | Purpose                                                                        |
-| -------- | ---------------- | ------------------------------------------------------------------------------ |
-| `inputs` | `PluginParams[]` | Array of data provided in the `inputs` field of a component in a manifest file |
-
-#### Returns
-
-| Return value | Type                      | Purpose                                                     |
-| ------------ | ------------------------- | ----------------------------------------------------------- |
-| `outputs`    | `Promise<PluginParams[]>` | `Promise` resolving to an array of updated `PluginParams[]` |
-
-### What are `PluginParams`?
-
-## What are `PluginParams`?
-
-`PluginParams` are a fundamental data type in the Impact Framework. The type is defined as follows:
+Here’s a minimal example of a plugin that sums inputs based on the configuration:
 
 ```ts
-export type PluginParams = {
-  [key: string]: any;
-};
+export const Plugin = PluginFactory({
+  metadata: {
+    inputs: {
+      // Define your input parameters here
+    },
+    outputs: {
+      // Define your output parameters here
+    },
+  },
+  configValidation: (config: ConfigParams) => {
+    // Implement validation logic for config here
+  },
+  inputValidation: (input: PluginParams, config: ConfigParams) => {
+    // Implement validation logic for inputs here
+  },
+  implementation: async (inputs: PluginParams[], config: ConfigParams) => {
+    // Implement plugin logic here
+    // e.g., summing input parameters
+  },
+  allowArithmeticExpressions: [],
+});
+
+const plugin = Plugin(config, parametersMetadata, mapping);
+const result = await plugin.execute(inputs);
 ```
 
-The `PluginParams` type therefore defines an array of key-value pairs.
+### PluginFactoryParams
+
+The `PluginFactory` interface requires the mandatory parameters defined in the `PluginFactoryParams` interface:
+
+```ts
+export interface PluginFactoryParams<C = ConfigParams> {
+  implementation: (
+    inputs: PluginParams[],
+    config: C,
+    mapping?: MappingParams
+  ) => Promise<PluginParams[]>;
+  metadata?: PluginParametersMetadata;
+  configValidation?: z.ZodSchema | ConfigValidatorFunction;
+  inputValidation?: z.ZodSchema | InputValidatorFunction;
+  allowArithmeticExpressions?: string[];
+}
+```
+
+Additional Notes
+
+- `Implement`: You should implement `implementation` function. It should contains the primary logic to generate outputs.
+- `Validation`: You should define appropriate `zod` schemas or validation functions for both config and inputs. This ensures that invalid data is caught early and handled appropriately.
+- `Arithmetic Expressions`: By including configuration, input, and output parameters of the plugin in the `allowArithmeticExpressions` array, you enable dynamic evaluation of mathematical expressions within parameter values. This eliminates the need for manual pre-calculation and allows basic mathematical operations to be embedded directly within parameter values in manifest files. More details [here.](../reference/features.md)
+- `Mapping`: Ensure your plugin correctly handles the mapping of parameters. This is essential when working with dynamic input and output configurations.
 
 ## Step 3: Install your plugin
 
@@ -247,7 +269,7 @@ For example, for a plugin saved in `github.com/my-repo/new-plugin` you can do th
 npm install https://github.com/my-repo/new-plugin
 ```
 
-Then, in your manifest file, provide the path in the plugin instantiation. You also need to specify which function the plugin instantiates. Let's say you are using the `Sum` plugin from the example above:
+Then, in your manifest file, provide the path in the plugin instantiation. You also need to specify which function the plugin instantiates. Let's say you are using the `Sci` plugin from the example above:
 
 ```yaml
 name: plugin-demo
@@ -255,8 +277,7 @@ description: loads plugin
 tags: null
 initialize:
   plugins:
-    - name: new-plugin
-      kind: plugin
+    new-plugin:
       method: FunctionName
       path: https://github.com/my-repo/new-plugin
 tree:
@@ -288,9 +309,9 @@ You should also create unit tests for your plugin to demonstrate correct executi
 
 You can read our more advanced guide on [how to refine your plugins](./how-to-refine-plugins.md).
 
-## Appendix: Walk-through of the Sum plugin
+## Appendix: Walk-through of the Sci plugin
 
-To demonstrate how to build a plugin that conforms to the `ExecutePlugin`, let's examine the `sum` plugin.
+To demonstrate how to build a plugin that conforms to the `PluginFactory`, let's examine the `Sum` plugin.
 
 The `sum` plugin implements the following logic:
 
@@ -299,56 +320,44 @@ The `sum` plugin implements the following logic:
 
 Let's look at how you would implement this from scratch:
 
-The plugin must be a function conforming to `ExecutePlugin`. You can call the function `Sum`, and inside the body you can add the signature for the `execute` method:
-
-```typescript
-export const Sum = (
-  config: SumConfig,
-  parametersMetadata: PluginParametersMetadata
-): ExecutePlugin => {
-  const errorBuilder = buildErrorMessage(Sum.name);
-  const metadata = {
-    kind: 'execute',
-    inputs: parametersMetadata?.inputs,
-    outputs: parametersMetadata?.outputs,
-  };
-
-  /**
-   * Calculate the sum of each input.
-   */
-  const execute = async (inputs: PluginParams[]): Promise<PluginParams[]> => {};
-
-  return {
-    metadata,
-    execute,
-  };
-};
-```
-
-Your plugin now has the basic structure required for IF integration. Your next task is to add code to the body of `execute` to enable the actual plugin logic to be implemented.
-
-The `execute` function should grab the `input-parameters` (the values to sum) from `config`. it should then iterate over the `inputs` array, get the values for each of the `input-parameters` and append them to the `inputs` array, using the name from the `output-parameter` value in `config`. Here's what this can look like, with the actual calculation pushed to a separate function, `calculateSum`.
+The plugin must be a function conforming to `PluginFactory`.
 
 ```ts
-/**
- * Calculate the sum of each input.
- */
-const execute = async (inputs: PluginParams[]): Promise<PluginParams[]> => {
-  const inputParameters = config['input-parameters'];
-  const outputParameter = config['output-parameter'];
+export const Sum = PluginFactory({
+  configValidation: z.object({
+    'input-parameters': z.array(z.string()),
+    'output-parameter': z.string().min(1),
+  }),
+  inputValidation: (input: PluginParams, config: ConfigParams) => {
+    return validate(validationSchema, inputData);
+  },
+  implementation: async (inputs: PluginParams[], config: ConfigParams) => {},
+  allowArithmeticExpressions: [],
+});
+```
 
-  return inputs.map((input) => {
-    return {
-      ...input,
-      [outputParameter]: calculateSum(input, inputParameters),
-    };
-  });
+Your plugin now has the basic structure required for IF integration. Your next task is to add code to the body of `implementation` to enable the actual plugin logic to be implemented.
 
-  return {
-    metadata,
-    execute,
+The `implementation` function should grab the `input-parameters` (the values to sum) from `config`. It should then iterate over the `inputs` array, get the values for each of the `input-parameters` and append them to the `inputs` array, using the name from the `output-parameter` value in `config`. Here's what this can look like, with the actual calculation pushed to a separate function, `calculateSum`.
+
+```ts
+{
+  implementation: async (inputs: PluginParams[], config: ConfigParams) => {
+    const {
+      'input-parameters': inputParameters,
+      'output-parameter': outputParameter,
+    } = config;
+
+    return inputs.map((input) => {
+      const calculatedResult = calculateSum(input, inputParameters);
+
+      return {
+        ...input,
+        [outputParameter]: calculatedResult,
+      };
+    });
   };
-};
+}
 ```
 
 Now we just need to define what happens in `calculateSum` - this can be a simple `reduce`:
@@ -368,7 +377,7 @@ Note that this example did not include any validation or error handling - you wi
 
 ## Managing errors
 
-If framework provides it's own set of error classes which will make user's live much more easier!
-[If Core](https://github.com/Green-Software-Foundation/if-core) plugin has a set of error classes which can be used for having full integration with the IF framework. More details about each error class can be found at [Errors Reference](../reference//errors.md)
+The IF framework provides its own set of error classes, making your task as a plugin builder much simpler! These are available to you in the `if-core` package that comes bundled with IF. You can import the appropriate error classes and add custom messages.
+The [If Core](https://github.com/Green-Software-Foundation/if-core) repository contains the `PluginFactory` interface, utility functions, and a set of error classes that can be fully integrated with the IF framework. Detailed information on each error class can be found in the [Errors Reference](../reference/errors.md).
 
 Now you are ready to run your plugin using the `if-run` CLI tool!
