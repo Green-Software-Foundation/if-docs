@@ -377,7 +377,7 @@ Note that this example did not include any validation or error handling - you wi
 
 ## Managing errors
 
-If the framework provides its own set of error classes, it will significantly simplify users' lives!
+The IF framework provides its own set of error classes, making your task as a plugin builder much simpler! These are available to you in the `if-core` package that comes bundled with IF. You can import the appropriate error classes and add custom messages.
 The [If Core](https://github.com/Green-Software-Foundation/if-core) repository contains the `PluginFactory` interface, utility functions, and a set of error classes that can be fully integrated with the IF framework. Detailed information on each error class can be found in the [Errors Reference](../reference/errors.md).
 
 Now you are ready to run your plugin using the `if-run` CLI tool!
