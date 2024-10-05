@@ -6,15 +6,13 @@ sidebar-position: 2
 
 ## Description
 
-The [software carbon intensity (SCI)](https://greensoftware.foundation/articles/software-carbon-intensity-sci-specification-project) score is perhaps the most important value that can be generated using Impact Framework. 
+The [software carbon intensity (SCI)](https://greensoftware.foundation/articles/software-carbon-intensity-sci-specification-project) score is perhaps the most important value that can be generated using Impact Framework.
 
 SCI is an ISO-recognized standard for reporting the carbon costs of running software. This tutorial demonstrates how to organize a pipeline of Impact framework plugins to calculate SCI scores from some simple observations that are commonly available for software applications running in the cloud.
-
 
 ## Tags
 
 SCI, cloud, cpu, memory, power-curve
-
 
 ## Prerequisites
 
@@ -30,7 +28,6 @@ We employ the well known power curve from [Davy, 2021](https://medium.com/teads-
 
 We also use the networking energy and embodied carbon estimation methods from [Cloud Carbon Footprint](https://www.cloudcarbonfootprint.org/docs/methodology). This includes using the networking energy coefficient they suggest and implementing their method for calculating embodied emissions in an [Impact Framework plugin](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/sci-embodied).
 
-
 ## Observations
 
 This manifest requires the following observations:
@@ -44,17 +41,15 @@ This manifest requires the following observations:
 - data transferred in/out of the application
 - users per timestep
 
-
 ## Constants and coefficients:
 
 | parameter                    | description                                                                                                        | value                                              | unit          | source                                                                                                       |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------ |
 | `network-energy-coefficient` | Coefficient relating data sent over network to energy                                                              | 0.001                                              | kWh/GB        | [CCF](https://www.cloudcarbonfootprint.org/docs/methodology/#networking)                                     |
 | `x`, `y`                     | Points on power curve relating CPU utilization to a coefficient used to scale the processor's thermal design power | `x: [0, 10, 50, 100], y: [0.12, 0.32, 0.75, 1.02]` | dimensionless | [Davy, 2021](https://medium.com/teads-engineering/building-an-aws-ec2-carbon-emissions-dataset-3f0fd76c98ac) |
 | `baseline-emissions`         | embodied emissions for a "baseline" server with 1 CPU, 16GB RAM                                                    | 1000000                                            | gCO2e         | [CCF](https://www.cloudcarbonfootprint.org/docs/methodology/#embodied-emissions)                             |
 | `lifespan`                   | lifespan for the server running our application                                                                    | 126144000                                          | seconds       | none, assumed 4 years is typical                                                                             |
 | `usage-ratio`                | scaling factor for adjusting total embodied carbon down tot he portion our application is responsible for          | 1                                                  | dimensionless | no usage scaling is done here as we assume dedicated hardware, we only scale by time                         |
-
 
 ## Assumptions and limitations
 
@@ -67,7 +62,6 @@ The following are assumed to be true in this manifest:
 - the coefficient relating memory utilization to energy is accurate
 - it is appropriate to consider end user embodied carbon, end user operational carbon and the operationl and embodied emissions of the data center to be out of scope.
 - the temporal granularity of the observations are sufficient to accurately capture the behaviour of our application
-
 
 ## Components
 
@@ -117,25 +111,25 @@ The `Multiply` plugin is used several times. The instances are:
 
 ```
 cpu-factor-to-wattage:
-input-parameters:
-  - cpu-factor
-  - cpu/thermal-design-power
-output-parameter: 
-  - cpu-wattage
+  input-parameters:
+    - cpu-factor
+    - cpu/thermal-design-power
+  output-parameter:
+    - cpu-wattage
 
 wattage-times-duration:
-input-parameters:
-  - cpu-wattage
-  - duration
-output-parameter: 
-  - cpu-wattage-times-duration
+  input-parameters:
+    - cpu-wattage
+    - duration
+  output-parameter:
+    - cpu-wattage-times-duration
 
 operational-carbon:
-input-parameters:
-  - energy
-  - grid/carbon-intensity
-output-parameter: 
-  - carbon-operational
+  input-parameters:
+    - energy
+    - grid/carbon-intensity
+  output-parameter:
+    - carbon-operational
 
 ```
 
@@ -147,9 +141,9 @@ The `Divide` plugin is used once in this manifest. The instance is named `wattag
 
 ```
 wattage-to-energy-kwh:
-numerator: cpu-wattage-times-duration
-denominator: 3600000
-output: cpu-energy-raw
+  numerator: cpu-wattage-times-duration
+  denominator: 3600000
+  output: cpu-energy-raw
 ```
 
 ### Sum
@@ -159,23 +153,22 @@ The `Sum` plugin is used several times in this manifest. The instances are:
 - `sum-energy-components`: used to sum all the various components of energy into a single value, called `energy`.
 - `sum-carbon`: used to sum the various components of carbon into a single value, named `carbon`.
 
-
 #### config
 
-```
+```yaml
 sum-energy-components:
-input-parameters:
-  - cpu/energy
-  - network/energy
-output-parameter: 
-  - energy
+  input-parameters:
+    - cpu/energy
+    - network/energy
+  output-parameter:
+    - energy
 
 sum-carbon:
-input-parameters:
-  - carbon-operational
-  - carbon-embodied
-output-parameter: 
-  - carbon
+  input-parameters:
+    - carbon-operational
+    - carbon-embodied
+  output-parameter:
+    - carbon
 ```
 
 ### SciEmbodied
@@ -185,7 +178,6 @@ The `SciEmbodied` plugin is used once. Its purpose is to calculate the embodied 
 #### config
 
 We use the plugin defaults for all the `SciEmbodied` config. This means we assume the total embodied emissions to be 1000000 gCO2e and the server to be a simple rack server with 1 CPU and 16GB RAM and no other components.
-
 
 ### SCI
 
@@ -198,7 +190,6 @@ sci:
 functional-unit: users
 ```
 
-
 ## Manifest
 
 ```yaml
@@ -210,7 +201,7 @@ aggregation:
     - carbon
     - sci
   type: both
-  
+
 initialize:
   plugins:
     interpolate:
@@ -279,7 +270,7 @@ initialize:
       path: builtin
       method: SciEmbodied
       config:
-        output-parameter: carbon-embodied
+        output-parameter: embodied-carbon
     operational-carbon:
       path: builtin
       method: Multiply
@@ -326,172 +317,171 @@ tree:
         grid/carbon-intensity: 130
       inputs:
         - timestamp: '2024-07-22T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 228
           cpu/utilization: 45
           component: 1
           users: 1100
         - timestamp: '2024-07-23T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 216
           cpu/utilization: 30
           component: 1
           users: 1050
         - timestamp: '2024-07-24T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 203
           cpu/utilization: 50
           component: 1
           users: 1055
         - timestamp: '2024-07-25T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 203
           cpu/utilization: 33
           component: 1
           users: 996
         - timestamp: '2024-07-26T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 172
           cpu/utilization: 29
           component: 1
           users: 899
         - timestamp: '2024-07-27T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 38
           cpu/utilization: 68
           component: 1
           users: 1080
         - timestamp: '2024-07-28T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 63
           cpu/utilization: 49
           component: 1
           users: 1099
         - timestamp: '2024-07-29T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 621
           cpu/utilization: 77
           component: 1
           users: 1120
         - timestamp: '2024-07-30T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 181
           cpu/utilization: 31
           component: 1
           users: 1125
         - timestamp: '2024-07-31T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 213
           cpu/utilization: 29
           component: 1
           users: 1113
         - timestamp: '2024-08-01T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 167
           cpu/utilization: 29
           component: 1
           users: 1111
         - timestamp: '2024-08-02T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 428
           cpu/utilization: 29
           component: 1
           users: 1230
         - timestamp: '2024-08-03T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 58
           cpu/utilization: 64
           component: 1
           users: 1223
         - timestamp: '2024-08-04T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 66
           cpu/utilization: 59
           component: 1
           users: 1210
         - timestamp: '2024-08-05T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 301
           cpu/utilization: 60
           component: 1
           users: 1011
         - timestamp: '2024-08-06T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 193
           cpu/utilization: 35
           component: 1
           users: 999
         - timestamp: '2024-08-07T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 220
           cpu/utilization: 37
           component: 1
           users: 1010
         - timestamp: '2024-08-08T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 215
           cpu/utilization: 43
           component: 1
           users: 1008
         - timestamp: '2024-08-09T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 516
           cpu/utilization: 28
           component: 1
           users: 992
         - timestamp: '2024-08-10T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 42
           cpu/utilization: 39
           component: 1
           users: 1101
         - timestamp: '2024-08-11T00:00:00'
-          duration:	3600	
+          duration: 3600
           cpu/utilization: 40
           site-visits: 76
           component: 1
           users: 1000
         - timestamp: '2024-08-12T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 226
           cpu/utilization: 55
           component: 1
           users: 845
         - timestamp: '2024-08-13T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 180
           cpu/utilization: 62
           component: 1
           users: 1006
         - timestamp: '2024-08-14T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 232
           cpu/utilization: 71
           component: 1
           users: 1076
         - timestamp: '2024-08-15T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 175
           cpu/utilization: 75
           component: 1
           users: 1050
         - timestamp: '2024-08-16T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 235
           cpu/utilization: 77
           component: 1
           users: 1047
         - timestamp: '2024-08-17T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 44
           cpu/utilization: 80
           component: 1
           users: 1020
         - timestamp: '2024-08-18T00:00:00'
-          duration:	3600	
+          duration: 3600
           site-visits: 31
           cpu/utilization: 84
           component: 1
           users: 1038
-
 ```

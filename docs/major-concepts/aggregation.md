@@ -38,7 +38,7 @@ There are two fields: `metrics` and `type`.
 
 `metrics` is an array of metrics that you want to aggregate. You can provide any value here, but they must match a key that exists in your output data (i.e. if you tell IF to aggregate `carbon` but `carbon` is not in your outputs you will receive an error message and aggregation will fail). You can provide any number of metrics. In the example above, the aggregation feature will operate on the `carbon` and `energy` values.
 
-`type` determines which kind of aggregation you want to perform. The choices are `horizontal` (time-series aggregation only), `vertical` (tree aggregation only) or `both` (both kinds of aggregation will be performed). In the example above, both types of aggregation will be performed over the two selected metrics.
+`type` determines which kind of aggregation you want to perform. The choices are `time` (previously `horizontal`: time-series aggregation only), `component` (previously `vertical`: tree aggregation only) or `both` (both kinds of aggregation will be performed). In the example above, both types of aggregation will be performed over the two selected metrics.
 
 ## Aggregation methods
 

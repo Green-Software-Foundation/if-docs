@@ -16,6 +16,7 @@ The available options and their shortcuts are:
 - `--no-output` or `-n` (optional): suppress the output to console
 - `--help` or `-h`: prints out help instruction
 - `--debug`: enables IF execution logs
+- `--append`: allows you to rerun an already-computed manifest and append new values to the existing data.
 
 The only required command is `--manifest`. Without a valid path to a manifest file, `if-run` has nothing to execute.
 

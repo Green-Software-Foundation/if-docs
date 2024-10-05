@@ -18,23 +18,19 @@ This pipeline looks up metadata associated with the given cloud instance. It doe
 
 This pipeline is likely to be used as part of a larger pipeline. All we are doing here is retrieving metadata from an external file. Typicaly, this metadata will be used to feed further plugind to support impactestimates.
 
-
 ## Description
 
 The instance metadata pipeline simply looks up a metadata for a given virtual machine instance name using the `csv-lookup` plugin from the IF standard library. However, the target dataset can return multiple processor names for a given VM instance where there are multiple possibilitiers. This means we need to create a pipeline that includes the `regex` plugin so parse out just one of the possible values.
 
 For this demo we'll just extract the first value if there are multiple available for the `processor-name`.
 
-
 ## Tags
 
 csv, instance-metadata, regex
 
-
 ## Common Patterns
 
 The lookup process described on this page will likely be a common pattern used in other pipelines.
-
 
 ## Assumptions and limitations
 
@@ -42,7 +38,6 @@ The following are assumed to be true in this manifest:
 
 - the target dataset is up to date
 - where there are multiple possible processors associated with an instance name, it is appropriate to select the first in the list.
-
 
 ## Components
 
@@ -55,22 +50,20 @@ pipeline:
     - extract-processor-name
 ```
 
-
 ## Plugins
 
 ### csv-lookup
 
-The `csv-lookup` plugin is used once. The instance is named `cloud-instance-metadata`. It targets a csv file in our `if-data` repository. 
+The `csv-lookup` plugin is used once. The instance is named `cloud-instance-metadata`. It targets a csv file in our `if-data` repository.
 
 #### config
 
-```
+```yaml
 cloud-instance-metadata:
 filepath: https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
 query: instance-class: "cloud/instance-type"
 output: "*"
 ```
-
 
 ### regex
 
@@ -78,13 +71,15 @@ The `regex` plugin is used once. The instance is named `extract-processor-name`.
 
 #### config
 
-```
+```yaml
 extract-processor-name:
-parameter: cpu-model-name
-match: /^([^,])+/g
-output: cpu/name
+  method: Regex
+  path: 'builtin'
+  config:
+    parameter: cpu-model-name
+    match: /^([^,])+/g
+    output: cpu/name
 ```
-
 
 ## Manifest
 
@@ -96,16 +91,16 @@ initialize:
   plugins:
     cloud-instance-metadata:
       method: CSVLookup
-      path: "builtin"
-      global-config:
+      path: 'builtin'
+      config:
         filepath: https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
         query:
-          instance-class: "cloud/instance-type"
-        output: "*"
+          instance-class: 'cloud/instance-type'
+        output: '*'
     extract-processor-name:
       method: Regex
-      path: "builtin"
-      global-config:
+      path: 'builtin'
+      config:
         parameter: cpu-model-name
         match: /^([^,])+/g
         output: cpu/name
@@ -135,7 +130,6 @@ if-run -m instance-metadata.yml -o output.yml
 
 Your new `output.yml` file will contain the following:
 
-
 ```yaml
 name: csv-demo
 description: null
@@ -145,7 +139,7 @@ initialize:
     cloud-instance-metadata:
       path: builtin
       method: CSVLookup
-      global-config:
+      config:
         filepath: >-
           https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
         query:
@@ -154,7 +148,7 @@ initialize:
     extract-processor-name:
       path: builtin
       method: Regex
-      global-config:
+      config:
         parameter: cpu-model-name
         match: /^([^,])+/g
         output: cpu/name
@@ -163,17 +157,17 @@ execution:
     /home/user/.npm/_npx/1bf7c3c15bf47d04/node_modules/.bin/ts-node
     /home/user/Code/if/src/index.ts -m manifests/examples/instance-metadata.yml
   environment:
-    if-version: 0.3.3-beta.0
-    os: linux
-    os-version: 5.15.0-107-generic
-    node-version: 21.4.0
-    date-time: 2024-06-06T15:21:50.108Z (UTC)
+    if-version: 0.6.0
+    os: macOS
+    os-version: 14.6.1
+    node-version: 18.20.4
+    date-time: 2024-10-03T15:15:36.328Z (UTC)
     dependencies:
       - '@babel/core@7.22.10'
       - '@babel/preset-typescript@7.23.3'
       - '@commitlint/cli@18.6.0'
       - '@commitlint/config-conventional@18.6.0'
-      - '@grnsft/if-unofficial-plugins@v0.3.1'
+      - '@grnsft/if-core@0.0.25'
       - '@jest/globals@29.7.0'
       - '@types/jest@29.5.8'
       - '@types/js-yaml@4.0.9'
@@ -181,6 +175,7 @@ execution:
       - '@types/node@20.9.0'
       - axios-mock-adapter@1.22.0
       - axios@1.7.2
+      - cross-env@7.0.3
       - csv-parse@5.5.6
       - csv-stringify@6.4.6
       - fixpack@4.0.0
@@ -197,7 +192,7 @@ execution:
       - typescript-cubic-spline@1.0.1
       - typescript@5.2.2
       - winston@3.11.0
-      - zod@3.22.4
+      - zod@3.23.8
   status: success
 tree:
   children:

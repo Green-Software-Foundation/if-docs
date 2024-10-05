@@ -43,7 +43,6 @@ tree:
         observe:
         regroup:
         compute:
-      config:
       defaults:
       inputs:
         - timestamp: 2023-08-06T00:00
@@ -60,7 +59,7 @@ The global metadata includes the `name`, `description`, and `tags` that can be u
 
 #### Initialize
 
-The initialize section is where you define which plugins will be used in your manifest file and provide the global configuration for them. Below is sample for initialization:
+The initialize section is where you define which plugins will be used in your manifest file and provide the configuration for them. Below is sample for initialization:
 
 ```yaml
 initialize:
@@ -74,7 +73,7 @@ Where required values are:
 - `method`: the name of the function exported by the plugin.
 - `path`: the path to the plugin code. For example, for a plugin from our standard library, this value would be `builtin`
 
-There is also an optional `global-config` field that can be used to set _global_ configuration that is common to a plugin wherever it is invoked across the entire manifest file.
+There is also an optional `config` field that can be used to set _config_ that is common to a plugin wherever it is invoked across the entire manifest file.
 
 Impact Framework uses the `initialize` section to instantiate each plugin. A plugin cannot be invoked elsewhere in the manifest file unless it is included in this section.
 
@@ -107,24 +106,28 @@ You can also add information to the plugin's initialize section about parameter 
 
 ```yaml
 plugins:
-  "sum-carbon":
-      path: "builtin"
-      method: Sum
-      global-config:
+  sum-carbon:
+    path: 'builtin'
+    method: Sum
+    config:
       input-parameters:
-          - carbon-operational
-          - embodied-carbon
+        - carbon-operational
+        - embodied-carbon
       output-parameter: carbon
-      parameter-metadata:
+    parameter-metadata:
       inputs:
-          carbon-operational:
+        carbon-operational:
           description: "carbon emitted due to an application's execution"
-          unit: "gCO2eq"
-          aggregation-method: 'sum',
-          embodied-carbon:
+          unit: 'gCO2eq'
+          aggregation-method:
+            time: sum
+            component: sum
+        embodied-carbon:
           description: "carbon emitted during the production, distribution and disposal of a hardware component, scaled by the fraction of the component's lifespan being allocated to the application under investigation"
-          unit: "gCO2eq"
-          aggregation-method: 'sum'
+          unit: 'gCO2eq'
+          aggregation-method:
+            time: sum
+            component: sum
 ```
 
 #### Execution (auto-generated)
@@ -161,25 +164,31 @@ explain:
   carbon:
     plugins:
       - sci
-    unit: gCO2eq
-    description: >-
-      total carbon emissions attributed to an application's usage as the sum
-      of embodied and operational carbon
-    aggregation-method: 'sum'
+        unit: gCO2eq
+        description: >-
+          total carbon emissions attributed to an application's usage as the sum
+          of embodied and operational carbon
+        aggregation-method:
+          time: sum
+          component: sum
   requests:
     plugins:
       - sci
-    unit: requests
-    description: number of requests made to application in the given timestep
-    aggregation-method: 'sum'
+        unit: requests
+        description: number of requests made to application in the given timestep
+        aggregation-method:
+          time: sum
+          component: sum
   sci:
     plugins:
       - sci
-    unit: gCO2eq/request
-    description: >-
-      software carbon intensity expressed as a rate of carbon emission per
-      request
-    aggregation-method: 'sum'
+        unit: gCO2eq/request
+        description: >-
+          software carbon intensity expressed as a rate of carbon emission per
+          request
+        aggregation-method:
+          time: sum
+          component: sum
 ```
 
 ### Tree
@@ -234,7 +243,6 @@ tree:
             regroup:
             compute:
               - sum
-          config: null
           defaults: null
           inputs:
             - timestamp: 2023-07-06T00:00
@@ -255,7 +263,6 @@ tree:
                 regroup:
                 compute:
                   - sum
-              config: null
               defaults: null
               inputs:
                 - timestamp: 2023-07-06T00:00
@@ -506,7 +513,7 @@ initialize:
     sum:
       path: builtin
       method: Sum
-      global-config:
+      config:
         input-parameters:
           - cpu/energy
           - network/energy
@@ -557,8 +564,6 @@ tree:
         regroup:
         compute:
           - sum
-      config:
-        sum: null
       inputs:
         - timestamp: 2023-08-06T00:00
           duration: 3600

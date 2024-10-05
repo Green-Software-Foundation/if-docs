@@ -1,6 +1,7 @@
 ---
 sidebar-position: 2
 ---
+
 # How to make plugins production ready
 
 Our [How to build plugins](./how-to-build-plugins.md) guide covered the basics for how to construct an Impact Framework plugin. This guide will help you to refine your plugin to make it production-ready. These are best practice guidelines - if you intend to contribute your plugin to one of our repositories, following these guidelines will help your PR to get merged. Even if you are not aiming to have a plugin merged into one of our repositories, consistency with our norms is useful for debugging and maintaining and for making your plugin as useful as possible for other Impact Framework developers.
@@ -34,27 +35,27 @@ We prefer the following ordering of imports in your plugin code:
 1. Node built-in modules (e.g. `import fs from 'fs';`)
 2. External modules (e.g. `import {z} from 'zod';`)
 3. Internal modules (e.g. `import config from 'src/config';`)
-4. Interfaces (e.g. `import type {PluginInterface} from 'interfaces'`)
-5. Types (e.g. `import {PluginParams} from '../../types/common'`;)
+4. Interfaces (e.g. `import {PluginInterface} from '@grnsft/if-core/types';`)
+5. Types (e.g. `import {PluginParams} from '@grnsft/if-core/types';`)
 
 ### Comments
 
 Each logical unit in the code should be preceded by an appropriate explanatory comment. Sometimes it is useful to include short comments inside a function that clarifies the purpose of a particular statement. Here's an example from our codebase:
 
 ```ts
-  /**
-   * Calculates the energy consumption for a single input.
-   */
-  const calculateEnergy = (input: PluginParams) => {
-    const {
-      'memory/capacity': totalMemory,
-      'memory/utilization': memoryUtil,
-      'energy-per-gb': energyPerGB,
-    } = input;
+/**
+ * Calculates the energy consumption for a single input.
+ */
+const calculateEnergy = (input: PluginParams) => {
+  const {
+    'memory/capacity': totalMemory,
+    'memory/utilization': memoryUtil,
+    'energy-per-gb': energyPerGB,
+  } = input;
 
-    // GB * kWh/GB == kWh
-    return totalMemory * (memoryUtil / 100) * energyPerGB;
-  };
+  // GB * kWh/GB == kWh
+  return totalMemory * (memoryUtil / 100) * energyPerGB;
+};
 ```
 
 ### Error handling
@@ -71,40 +72,52 @@ import {ERRORS} from '@grnsft/if-core/util';
 
 const {MissingInputDataError} = ERRORS;
 
-... 
+...
 
 throw new MissingInputDataError("my-plugin is missing my-parameter from inputs[0]");
 ```
 
-
 ### Validation
 
-We recommend using validation techniques to ensure the integrity of input data. Validate input parameters against expected types, ranges, or constraints to prevent runtime errors and ensure data consistency.
+We recommend using `inputValidation` property from `PluginFactory` for validation to ensure the integrity of input data. Validate input parameters against expected types, ranges, or constraints to prevent runtime errors and ensure data consistency.
 
-We use `zod` to validate data. Here's an example from our codebase:
+You need to use `zod` schema or `InputValidatorFunction`. Here's an example from our codebase:
+
+- When using function with `InputValidatorFunction` type.
 
 ```ts
-/**
- * Checks for required fields in input.
- */
-const validateInput = (input: PluginParams) => {
-  const schema = z
-    .object({
-      'cpu/name': z.string(),
-    })
-    .refine(allDefined, {
-      message: '`cpu/name` should be present.',
-    });
+// `inputValidation` from plugin definition
+inputValidation: (input: PluginParams, config: ConfigParams) => {
+  const inputData = {
+    'input-parameter': input[config['input-parameter']],
+  };
+  const validationSchema = z.record(z.string(), z.number());
+  validate(validationSchema, inputData);
 
-  return validate<z.infer<typeof schema>>(schema, input);
-}
+  return input;
+};
+```
+
+- When using `zod` schema
+
+```ts
+// `inputValidation` from plugin definition
+inputValidation: z.object({
+  duration: z.number().gt(0),
+  vCPUs: z.number().gt(0).default(1),
+  memory: z.number().gt(0).default(16),
+  ssd: z.number().gte(0).default(0),
+  hdd: z.number().gte(0).default(0),
+  gpu: z.number().gte(0).default(0),
+  'usage-ratio': z.number().gt(0).default(1),
+  time: z.number().gt(0).optional(),
+});
 ```
 
 ### Code Modularity
 
 Break down complex functionality into smaller, manageable methods with well-defined responsibilities.
 Encapsulate related functionality into private methods to promote code reusability and maintainability.
-
 
 ## 3. Unit tests
 
@@ -113,19 +126,20 @@ Your plugin should have unit tests with 100% coverage. We use `jest` to handle u
 Here's an example that covers plugin initialization and the happy path for the `execute()` function.
 
 ```ts
-import {Sum} from '../../../../lib';
+import { ERRORS } from '@grnsft/if-core/utils';
 
-import {ERRORS} from '@grnsft/if-core/util/';
+import { Sum } from '../../../if-run/builtins/sum';
 
-const {InputValidationError} = ERRORS;
+const { InputValidationError, WrongArithmeticExpressionError } = ERRORS;
 
-describe('lib/sum: ', () => {
+describe('builtins/sum: ', () => {
   describe('Sum: ', () => {
-    const globalConfig = {
+    const config = {
       'input-parameters': ['cpu/energy', 'network/energy', 'memory/energy'],
       'output-parameter': 'energy',
     };
-    const sum = Sum(globalConfig);
+    const parametersMetadata = {};
+    const sum = Sum(config, parametersMetadata, {});
 
     describe('init: ', () => {
       it('successfully initalized.', () => {
@@ -161,9 +175,9 @@ describe('lib/sum: ', () => {
 
         expect(result).toStrictEqual(expectedResult);
       });
-    }
-  })
-})
+    });
+  });
+});
 ```
 
 We have a [dedicated page](./how-to-write-unit-tests.md) explaining in more detail how to write great unit tests for Impact Framework plugins.

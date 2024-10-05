@@ -42,7 +42,7 @@ tags:
 
 ### Initialize
 
-The `initialize` fields are where you specify each individual plugin that will be initialized in your pipeline. The plugins can be initialized in any order, but can only be invoked elsewhere in the manifest if they have been initialized first here. In each case, you will need to provide the `name`, `path` and `method` (and `global-config` if your plugin requires it):
+The `initialize` fields are where you specify each individual plugin that will be initialized in your pipeline. The plugins can be initialized in any order, but can only be invoked elsewhere in the manifest if they have been initialized first here. In each case, you will need to provide the `name`, `path` and `method` (and `config` if your plugin requires it):
 
 ```yaml
 initialize:
@@ -124,7 +124,7 @@ initialize:
     'interpolate':
       method: Interpolation
       path: 'builtin'
-      global-config:
+      config:
         method: linear
         x: [0, 10, 50, 100]
         y: [0.12, 0.32, 0.75, 1.02]
@@ -135,14 +135,20 @@ initialize:
           cpu/utilization:
             description: refers to CPU utilization
             unit: percentage
+            aggregation-method:
+              time: avg
+              component: avg
         outputs:
           cpu-factor:
             description: the factor of cpu
             unit: kWh
+            aggregation-method:
+              time: avg
+              component: avg
     'cpu-factor-to-wattage':
       method: Multiply
       path: builtin
-      global-config:
+      config:
         input-parameters: ['cpu-factor', 'cpu/thermal-design-power']
         output-parameter: 'cpu-wattage'
       parameter-metadata:
@@ -150,37 +156,46 @@ initialize:
           cpu-factor:
             description: the factor of cpu
             unit: kWh
+            aggregation-method:
+              time: avg
+              component: avg
           cpu/thermal-design-power:
             description: thermal design power for a processor
             unit: kwh
+            aggregation-method:
+              time: avg
+              component: avg
         outputs:
           cpu-wattage:
             description: cpu in Wattage
             unit: wattage
+            aggregation-method:
+              time: sum
+              component: sum
     'wattage-times-duration':
       method: Multiply
       path: builtin
-      global-config:
+      config:
         input-parameters: ['cpu-wattage', 'duration']
         output-parameter: 'cpu-wattage-times-duration'
     'wattage-to-energy-kwh':
       method: Divide
       path: 'builtin'
-      global-config:
+      config:
         numerator: cpu-wattage-times-duration
         denominator: 3600000
         output: cpu-energy-raw
     'calculate-vcpu-ratio':
       method: Divide
       path: 'builtin'
-      global-config:
+      config:
         numerator: vcpus-total
         denominator: vcpus-allocated
         output: vcpu-ratio
     'correct-cpu-energy-for-vcpu-ratio':
       method: Divide
       path: 'builtin'
-      global-config:
+      config:
         numerator: cpu-energy-raw
         denominator: vcpu-ratio
         output: cpu-energy-kwh
@@ -190,13 +205,13 @@ initialize:
     'operational-carbon':
       method: Multiply
       path: builtin
-      global-config:
+      config:
         input-parameters: ['cpu-energy-kwh', 'grid/carbon-intensity']
         output-parameter: 'carbon-operational'
     'sci':
       path: 'builtin'
       method: Sci
-      global-config:
+      config:
         functional-unit-time: 1 sec
         functional-unit: requests # factor to convert per time to per f.unit
       parameter-metadata:
@@ -204,17 +219,26 @@ initialize:
           carbon:
             description: an amount of carbon emitted into the atmosphere
             unit: gCO2e
+            aggregation-method:
+              time: sum
+              component: sum
           requests:
             description: factor to convert per time to per f.unit
             unit: number
+            aggregation-method:
+              time: sum
+              component: sum
         outputs:
           sci:
             description: carbon expressed in terms of the given functional unit
             unit: gCO2e
+            aggregation-method:
+              time: avg
+              component: sum
     'sum-carbon':
       path: 'builtin'
       method: Sum
-      global-config:
+      config:
         input-parameters:
           - carbon-operational
           - embodied-carbon
@@ -222,7 +246,7 @@ initialize:
     'time-sync':
       method: TimeSync
       path: 'builtin'
-      global-config:
+      config:
         start-time: '2023-12-12T00:00:00.000Z'
         end-time: '2023-12-12T00:01:00.000Z'
         interval: 5
@@ -233,6 +257,8 @@ tree:
       pipeline:
         observe:
         regroup:
+          - cloud/region
+          - cloud/instance-type
         compute:
           - interpolate
           - cpu-factor-to-wattage
@@ -245,11 +271,6 @@ tree:
           - sum-carbon
           - time-sync
           # - sci
-      config:
-        group-by:
-          group:
-            - cloud/region
-            - cloud/instance-type
       defaults:
         cpu/thermal-design-power: 100
         grid/carbon-intensity: 800
@@ -309,10 +330,11 @@ The recommended method for integrating data is to use the plugin system of the I
 
 There are already some community plugins available, including plugins for fetching data from Kubernetes, GCP, and third-party data aggregators like Datadog.
 
-If there is no fitting plugin available yet, we encourage you to write and add one for your specific use case. See [developer documentation](./developers/) for more information on how to build a plugin. There is a [Azure-Importer](https://github.com/Green-Software-Foundation/if-unofficial-plugins/blob/main/src/lib/azure-importer/README.md) you can as a prototype and starting point for your own development.
-If you already have external scripts you might have a look at the [shell plugin](https://github.com/Green-Software-Foundation/if-plugins/blob/main/src/lib/shell/README.md) to integrate them with the Impact Framework.
+If there is no fitting plugin available yet, we encourage you to write and add one for your specific use case. See [developer documentation](./developers/) for more information on how to build a plugin.
 
-If you just need data for testing purposes, you can use the [mock-observation](https://github.com/Green-Software-Foundation/if-plugins/blob/main/src/lib/mock-observations/README.md) plugin.
+If you already have external scripts you might have a look at the [shell plugin](https://github.com/Green-Software-Foundation/if/blob/main/src/if-run/builtins/shell/README.md) to integrate them with the Impact Framework.
+
+If you just need data for testing purposes, you can use the [mock-observation](https://github.com/Green-Software-Foundation/if/blob/main/src/if-run/builtins/mock-observations/README.md) plugin.
 
 ## Running a manifest
 

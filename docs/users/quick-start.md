@@ -19,7 +19,7 @@ Read our detailed guide to [installing IF](./how-to-install-if.md).
 
 ## 2: Create a manifest file
 
-A manifest file contains all the configuration and input data required to measure your application's energy and carbon impacts and should have a `.yml` extension. 
+A manifest file contains all the configuration and input data required to measure your application's energy and carbon impacts and should have a `.yml` extension.
 
 Open the file, add your data and save the file. The minimal example below runs two snapshot observations through a single plugin - all it does is multiply a value in each element of the `input` data by 2.
 
@@ -36,6 +36,7 @@ initialize:
         input-parameter: "cpu-utilization"
         coefficient: 2
         output-parameter: "cpu-utilization-doubled"
+
 tree:
   children:
     child-0:
@@ -69,11 +70,14 @@ The output will be printed to the console.
 
 :tada:**Congratulations** :tada:! You have just used the Impact Framework to compute a manifest file! Your challenge now is to use these principles to construct manifest files for real applications. Our docs will help! 
 
+
 ## Next steps
 
 Now you know how to use the `if-run` you can start building more complex pipelines of plugins and more complicated manifest files. Your overall aim is to create a manifest file that accurately represents a real software application, and a plugin pipeline that yields an environmental metric that's important to you (e.g. `carbon`).
 
+
 Experiment by adding more plugins to the pipeline and observe how each plugin enriches each element in the `inputs` array with new values.
+
 
 You can also configure `if` to save your output data to another `yaml` file. To do this, add the `--output` flag and the path to the output file where the results are saved.
 

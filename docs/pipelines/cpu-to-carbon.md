@@ -25,11 +25,11 @@ This pipeline takes the observations described above, and generates carbon emiss
 
 ## Scope
 
-This pipeline takes into account the operational carbon of the server running our application. This includes the energy used to run the application, calculated from CPU and memory utilization. It does not account for any embodied carbon, nor networking energy, nor anything related to the end user. In real applications, the pipeline described here will be part of a much larger manifest that considers other parts of the system. 
+This pipeline takes into account the operational carbon of the server running our application. This includes the energy used to run the application, calculated from CPU and memory utilization. It does not account for any embodied carbon, nor networking energy, nor anything related to the end user. In real applications, the pipeline described here will be part of a much larger manifest that considers other parts of the system.
 
 ## Description
 
-The Teads CPU power curve CPU utilization (as a percentage) against a scaling factor that can be applied to the CPUs thermal design power to estimate the power drawn by the CPU in Watts. 
+The Teads CPU power curve CPU utilization (as a percentage) against a scaling factor that can be applied to the CPUs thermal design power to estimate the power drawn by the CPU in Watts.
 
 The research underpinning the curve was summarized in a pair of blog posts:
 
@@ -40,12 +40,12 @@ The curve has become very widely used as a general purpose utilization-to-wattag
 
 The wattage can be transformed into energy by doing the following:
 
-1) Measure your CPU utilization
-2) Determine the thermal design power of your processor
-3) Determine the scaling factor for your CPU utilization by interpolating the Teads curve
-4) Determine the power drawn by your CPU by multiplying your scaling factor by the CPU's thermal design power
-5) Perform a unit conversion to convert power in Watts to energy in kwH
-6) Scale the energy estimated for the entire chip to the portion of the chip that is actually in use.
+1. Measure your CPU utilization
+2. Determine the thermal design power of your processor
+3. Determine the scaling factor for your CPU utilization by interpolating the Teads curve
+4. Determine the power drawn by your CPU by multiplying your scaling factor by the CPU's thermal design power
+5. Perform a unit conversion to convert power in Watts to energy in kwH
+6. Scale the energy estimated for the entire chip to the portion of the chip that is actually in use.
 
 These steps can be executed in IF using just three plugins:
 
@@ -53,19 +53,16 @@ These steps can be executed in IF using just three plugins:
 - `Multiply`
 - `Divide`
 
-
 ## Common patterns
 
 The logical flow from CPU utilization to carbon via a power-curve and thermal design power is a common pattern that is likely to be re-used elsewhere.
 
-
 ## Constants and coefficients:
 
 | parameter               | description                                                                                                        | value                                              | unit          | source                                                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------ |
 | `x`, `y`                | Points on power curve relating CPU utilization to a coefficient used to scale the processor's thermal design power | `x: [0, 10, 50, 100], y: [0.12, 0.32, 0.75, 1.02]` | dimensionless | [Davy, 2021](https://medium.com/teads-engineering/building-an-aws-ec2-carbon-emissions-dataset-3f0fd76c98ac) |
 | `grid-carbon-intensity` | the carbon emitted per unit energy from the electrical grid                                                        | 750                                                | gCO2e/kWh     | approximates global average                                                                                  |
-
 
 ## Assumptions and limitations
 
@@ -74,7 +71,6 @@ The following are assumed to be true in this manifest:
 - the power curve relating CPU utilization to power is appropriate for the processor being used to run our application
 - the temporal granularity of the observations are sufficient to accurately capture the behaviour of our application
 - the grid carbon intensity is sufficiently accurate for the location where the computational work is done
-
 
 ## Components
 
@@ -91,7 +87,6 @@ pipeline:
     - correct-cpu-energy-for-vcpu-ratio
     - energy-to-carbon
 ```
-
 
 ## Plugins
 
@@ -124,28 +119,28 @@ cpu-factor-to-wattage:
 input-parameters:
   - cpu-factor
   - cpu/thermal-design-power
-output-parameter: 
+output-parameter:
   - cpu-wattage
 
 wattage-times-duration:
 input-parameters:
   - cpu-wattage
   - duration
-output-parameter: 
+output-parameter:
   - cpu-wattage-times-duration
 
 energy-to-carbon:
 input-parameters:
   - grid-carbon-intensity
   - energy-cpu-kwh
-output-parameter: 
+output-parameter:
   - carbon
 
 ```
 
 ### Divide
 
-The `Divide` plugin is used several times in this manifest. The instances are:  
+The `Divide` plugin is used several times in this manifest. The instances are:
 
 - `wattage-to-energy-kwh`. used to convert energy in W/duration to kWh.
 - `calculate-vcpu-ratio`: used to calculate the ratio of allocated vCPUs to total vCPUS
@@ -171,9 +166,7 @@ output: cpu/energy
 
 ```
 
-
 ## Manifest
-
 
 ```yaml
 name: teads curve demo
@@ -239,24 +232,26 @@ initialize:
       path: builtin
       method: Multiply
       config:
-        input-parameters: ['grid-carbon-intensity', 'cpu-energy-kwh']
-        output-parameter: 'carbon'
+        input-parameters:
+          - grid-carbon-intensity
+          - cpu-energy-kwh
+        output-parameter: carbon
 execution:
   command: >-
     /home/user/.npm/_npx/1bf7c3c15bf47d04/node_modules/.bin/ts-node
     /home/user/if/src/index.ts -m manifests/examples/teads-curve.yml
   environment:
-    if-version: 0.3.3-beta.0
-    os: linux
-    os-version: 5.15.0-107-generic
-    node-version: 21.4.0
-    date-time: 2024-06-06T14:33:25.188Z (UTC)
+    if-version: 0.6.0
+    os: macOS
+    os-version: 14.6.1
+    node-version: 18.20.4
+    date-time: 2024-10-03T15:11:48.498Z (UTC)
     dependencies:
       - '@babel/core@7.22.10'
       - '@babel/preset-typescript@7.23.3'
       - '@commitlint/cli@18.6.0'
       - '@commitlint/config-conventional@18.6.0'
-      - '@grnsft/if-unofficial-plugins@v0.3.1'
+      - '@grnsft/if-core@0.0.25'
       - '@jest/globals@29.7.0'
       - '@types/jest@29.5.8'
       - '@types/js-yaml@4.0.9'
@@ -264,6 +259,7 @@ execution:
       - '@types/node@20.9.0'
       - axios-mock-adapter@1.22.0
       - axios@1.7.2
+      - cross-env@7.0.3
       - csv-parse@5.5.6
       - csv-stringify@6.4.6
       - fixpack@4.0.0
@@ -280,7 +276,7 @@ execution:
       - typescript-cubic-spline@1.0.1
       - typescript@5.2.2
       - winston@3.11.0
-      - zod@3.22.4
+      - zod@3.23.8
   status: success
 tree:
   children:
@@ -326,6 +322,7 @@ tree:
           thermal-design-power: 100
           vcpus-total: 8
           vcpus-allocated: 2
+          grid-carbon-intensity: 750
           cpu-factor: 0.13999999999999999
           cpu-wattage: 13.999999999999998
           cpu-wattage-times-duration: 5039.999999999999
@@ -339,6 +336,7 @@ tree:
           thermal-design-power: 100
           vcpus-total: 8
           vcpus-allocated: 2
+          grid-carbon-intensity: 750
           cpu-factor: 0.32
           cpu-wattage: 32
           cpu-wattage-times-duration: 11520
@@ -352,6 +350,7 @@ tree:
           thermal-design-power: 100
           vcpus-total: 8
           vcpus-allocated: 2
+          grid-carbon-intensity: 750
           cpu-factor: 0.75
           cpu-wattage: 75
           cpu-wattage-times-duration: 27000
@@ -365,6 +364,7 @@ tree:
           thermal-design-power: 100
           vcpus-total: 8
           vcpus-allocated: 2
+          grid-carbon-intensity: 750
           cpu-factor: 1.02
           cpu-wattage: 102
           cpu-wattage-times-duration: 36720

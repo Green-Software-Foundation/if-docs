@@ -19,34 +19,28 @@ initialize:
     sum:
       path: builtin
       method: Sum
-      global-config:
+      config:
         input-parameters:
           - cpu/energy
           - network/energy
         output-parameter: energy
-  outputs:
-    - yaml
 execution:
   command: >-
     /Users/manushak/.npm/_npx/1bf7c3c15bf47d04/node_modules/.bin/ts-node
     /Users/manushak/Documents/Projects/Green-Software/if/src/if-run/index.ts -m
-    ./manifests/test.yaml -o ./manifests/re-test
+    manifests/examples/test.yaml
   environment:
-    if-version: 0.5.0
+    if-version: 0.6.0
     os: macOS
-    os-version: 13.6.7
-    node-version: 18.20.0
-    date-time: 2024-07-09T16:00:58.218Z (UTC)
+    os-version: 14.6.1
+    node-version: 18.20.4
+    date-time: 2024-10-03T15:23:26.460Z (UTC)
     dependencies:
       - '@babel/core@7.22.10'
       - '@babel/preset-typescript@7.23.3'
       - '@commitlint/cli@18.6.0'
       - '@commitlint/config-conventional@18.6.0'
-      - '@grnsft/if-core@0.0.10'
-      - '@grnsft/if-plugins@v0.3.2 extraneous -> file:../../../if-models'
-      - >-
-        @grnsft/if-unofficial-plugins@v0.3.0 extraneous ->
-        file:../../../if-unofficial-models
+      - '@grnsft/if-core@0.0.25'
       - '@jest/globals@29.7.0'
       - '@types/jest@29.5.8'
       - '@types/js-yaml@4.0.9'
@@ -71,7 +65,7 @@ execution:
       - typescript-cubic-spline@1.0.1
       - typescript@5.2.2
       - winston@3.11.0
-      - zod@3.22.4
+      - zod@3.23.8
   status: success
 tree:
   children:
@@ -81,8 +75,6 @@ tree:
         regroup:
         compute:
           - sum
-      config:
-        sum: null
       inputs:
         - timestamp: 2023-08-06T00:00
           duration: 3600
