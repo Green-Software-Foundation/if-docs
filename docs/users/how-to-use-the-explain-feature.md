@@ -239,116 +239,122 @@ When we execute this manifest, the following `explain` block is added to the out
 
 ```yaml
 explain:
-  vCPUs:
-    plugins:
-      - sci-embodied
-    unit: CPUs
-    description: number of CPUs allocated to an application
-    aggregation-method:
-      time: copy
-      component: copy
-  memory:
-    plugins:
-      - sci-embodied
-    unit: GB
-    description: RAM available for a resource, in GB
-    aggregation-method:
-      time: copy
-      component: copy
-  ssd:
-    plugins:
-      - sci-embodied
-    unit: SSDs
-    description: number of SSDs available for a resource
-    aggregation-method:
-      time: copy
-      component: copy
-  hdd:
-    plugins:
-      - sci-embodied
-    unit: HDDs
-    description: number of HDDs available for a resource
-    aggregation-method:
-      time: copy
-      component: copy
-  gpu:
-    plugins:
-      - sci-embodied
-    unit: GPUs
-    description: number of GPUs available for a resource
-    aggregation-method:
-      time: copy
-      component: copy
-  usage-ratio:
-    plugins:
-      - sci-embodied
-    unit: dimensionless
-    description: >-
-      a scaling factor that can be used to describe the ratio of actual resource
-      usage comapred to real device usage, e.g. 0.25 if you are using 2 out of 8
-      vCPUs, 0.1 if you are responsible for 1 out of 10 GB of storage, etc
-    aggregation-method:
-      time: copy
-      component: copy
-  time:
-    plugins:
-      - sci-embodied
-    unit: seconds
-    description: >-
-      a time unit to scale the embodied carbon by, in seconds. If not
-      provided,time defaults to the value of the timestep duration.
-    aggregation-method:
-      time: copy
-      component: copy
-  embodied-carbon:
-    plugins:
-      - sci-embodied
-      - sum-carbon
-    unit: gCO2eq
-    description: >-
-      carbon emitted during the production, distribution and disposal of a
-      hardware component, scaled by the fraction of the component's lifespan
-      being allocated to the application under investigation
-    aggregation-method:
-      time: sum
-      component: sum
-  carbon-operational:
-    plugins:
-      - sum-carbon
-    unit: gCO2eq
-    description: carbon emitted due to an application's execution
-    aggregation-method:
-      time: sum
-      component: sum
-  carbon:
-    plugins:
-      - sum-carbon
-      - sci
-    unit: gCO2eq
-    description: >-
-      total carbon emissions attributed to an application's usage as the sum of
-      embodied and operational carbon
-    aggregation-method:
-      time: sum
-      component: sum
-  requests:
-    plugins:
-      - sci
-    unit: requests
-    description: number of requests made to application in the given timestep
-    aggregation-method:
-      time: sum
-      component: sum
+  sci-embodied:
+    inputs:
+      vCPUs:
+        description: number of CPUs allocated to an application
+        unit: CPUs
+        aggregation-method:
+          time: copy
+          component: copy
+      memory:
+        description: RAM available for a resource, in GB
+        unit: GB
+        aggregation-method:
+          time: copy
+          component: copy
+      ssd:
+        description: number of SSDs available for a resource
+        unit: SSDs
+        aggregation-method:
+          time: copy
+          component: copy
+      hdd:
+        description: number of HDDs available for a resource
+        unit: HDDs
+        aggregation-method:
+          time: copy
+          component: copy
+      gpu:
+        description: number of GPUs available for a resource
+        unit: GPUs
+        aggregation-method:
+          time: copy
+          component: copy
+      usage-ratio:
+        description: >-
+          a scaling factor that can be used to describe the ratio of actual
+          resource usage comapred to real device usage, e.g. 0.25 if you are
+          using 2 out of 8 vCPUs, 0.1 if you are responsible for 1 out of 10 GB
+          of storage, etc
+        unit: dimensionless
+        aggregation-method:
+          time: copy
+          component: copy
+      time:
+        description: >-
+          a time unit to scale the embodied carbon by, in seconds. If not
+          provided,time defaults to the value of the timestep duration.
+        unit: seconds
+        aggregation-method:
+          time: copy
+          component: copy
+    outputs:
+      embodied-carbon:
+        description: embodied carbon for a resource, scaled by usage
+        unit: gCO2eq
+        aggregation-method:
+          time: sum
+          component: sum
+  sum-carbon:
+    inputs:
+      carbon-operational:
+        unit: gCO2eq
+        description: carbon emitted due to an application's execution
+        aggregation-method:
+          time: sum
+          component: sum
+      embodied-carbon:
+        unit: gCO2eq
+        description: >-
+          carbon emitted during the production, distribution and disposal of a
+          hardware component, scaled by the fraction of the component's lifespan
+          being allocated to the application under investigation
+        aggregation-method:
+          time: sum
+          component: sum
+    outputs:
+      carbon:
+        unit: gCO2eq
+        description: >-
+          total carbon emissions attributed to an application's usage as the sum
+          of embodied and operational carbon
+        aggregation-method:
+          time: sum
+          component: sum
   sci:
-    plugins:
-      - sci
-    unit: gCO2eq/request
-    description: >-
-      software carbon intensity expressed as a rate of carbon emission per
-      request
-    aggregation-method:
-      time: sum
-      component: sum
+    inputs:
+      carbon:
+        unit: gCO2eq
+        description: >-
+          total carbon emissions attributed to an application's usage as the sum
+          of embodied and operational carbon
+        aggregation-method:
+          time: sum
+          component: sum
+      functional-unit:
+        description: >-
+          the name of the functional unit in which the final SCI value should be
+          expressed, e.g. requests, users
+        unit: none
+        aggregation-method:
+          time: sum
+          component: sum
+      requests:
+        unit: requests
+        description: number of requests made to application in the given timestep
+        aggregation-method:
+          time: sum
+          component: sum
+    outputs:
+      sci:
+        unit: gCO2eq/request
+        description: >-
+          software carbon intensity expressed as a rate of carbon emission per
+          request
+        aggregation-method:
+          time: sum
+          component: sum
 ```
 
 ## When _not_ to use `explainer`
