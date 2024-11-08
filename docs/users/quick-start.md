@@ -33,7 +33,7 @@ initialize:
       path: 'builtin'
       method: Coefficient
       config:
-        input-parameter: "cpu-utilization"
+        input-parameter: "cpu/utilization"
         coefficient: 2
         output-parameter: "cpu-utilization-doubled"
 
