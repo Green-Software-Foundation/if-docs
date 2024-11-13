@@ -16,29 +16,29 @@ You can also add your own plugins to the Explorer using this [form](https://wiki
 
 IF builtins all come bundled with IF. Below you will find a list of each builtin along with a brief description of its purpose and a link to its README documentation.
 
-- [Time Sync](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins#readme): Takes a heterogeneous set of time series data that might be offset, discontinuous or irregularly spaces and returns time series conforming to a user defined time grid. E.g. a user can define that all sets of observations should start at some global start time, end at some global end time and have a specific temporal resolution.
+- [Time Sync](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/time-sync): Takes a heterogeneous set of time series data that might be offset, discontinuous or irregularly spaces and returns time series conforming to a user defined time grid. E.g. a user can define that all sets of observations should start at some global start time, end at some global end time and have a specific temporal resolution.
 
-- [SCI-embodied](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/sci-embodied) - Calculates the embodied carbon for a component.
+- [SCI-embodied](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/sci-embodied) - Calculates the embodied carbon for a component.
 
-- [SCI](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/sci): Calculates the software carbon intensity.
-- [Shell](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/shell) - A plugin that enables external code in any language to be run in a child process
+- [SCI](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/sci): Calculates the software carbon intensity.
+- [Shell](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/shell) - A plugin that enables external code in any language to be run in a child process.
 
-- [Sum](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/sum): a generic arithmetic plugin that allows you to sum any set of input parameters.
-- [Multiply](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/multiply): a generic arithmetic plugin that allows you to multiply any set of input parameters.
-- [Coefficient](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/coefficient): a generic arithmetic plugin that allows you to multiply any input value by a coefficient.
+- [Sum](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/sum): a generic arithmetic plugin that allows you to sum any set of input parameters.
+- [Multiply](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/multiply): a generic arithmetic plugin that allows you to multiply any set of input parameters.
+- [Coefficient](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/coefficient): a generic arithmetic plugin that allows you to multiply any input value by a coefficient.
 
-- [Mock Observations](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/mock-observations): A plugin for mocking observations (inputs) for testing and demo purposes.
-- [Subtract](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/subtract): a generic plugin for subtracting one value from another
+- [Mock Observations](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/mock-observations): A plugin for mocking observations (inputs) for testing and demo purposes.
+- [Subtract](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/subtract): a generic plugin for subtracting one value from another.
 
-- [Divide](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/divide): A generic plugin for doing arithmetic division of two values.
-- [Regex](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/regex): A generic plugin to match part of one string and extract it into another.
+- [Divide](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/divide): A generic plugin for doing arithmetic division of two values.
+- [Regex](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/regex): A generic plugin to match part of one string and extract it into another.
 
-- [Exponent](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/exponent): A generic plugin for raising a value to a power
+- [Exponent](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/exponent): A generic plugin for raising a value to a power.
 
-- [Interpolation](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/interpolation): A generic plugin for interpolating between known points.
+- [Interpolation](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/interpolation): A generic plugin for interpolating between known points.
 
-- [Copy Param](https://github.com/Green-Software-Foundation/if/tree/main/src/builtins/copy-param): A generic plugin for copying a parameter to a new element in the input array, optionally deleting the original. Useful as a way to rename parameters.
+- [Copy Param](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/copy-param): A generic plugin for copying a parameter to a new element in the input array, optionally deleting the original. Useful as a way to rename parameters.
 
-- [CSV lookup](https://github.com/Green-Software-Foundation/if/blob/main/src/if-run/builtins/csv-lookup/README.md): A generic plugin for querying data from CSV files.
+- [CSV lookup](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/csv-lookup): A generic plugin for querying data from CSV files.
 
-- [Time Converter](https://github.com/Green-Software-Foundation/if/blob/main/src/if-run/builtins/time-converter/README.md): A gerenric plugin for converting time unit of energy value to another time unit.
+- [Time Converter](https://github.com/Green-Software-Foundation/if/tree/main/src/if-run/builtins/time-converter): A generic plugin for converting time unit of energy value to another time unit.
