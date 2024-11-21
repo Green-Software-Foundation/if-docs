@@ -60,9 +60,12 @@ The `csv-lookup` plugin is used once. The instance is named `cloud-instance-meta
 
 ```yaml
 cloud-instance-metadata:
-filepath: https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
-query: instance-class: "cloud/instance-type"
-output: "*"
+  method: CSVLookup
+  path: 'builtin'
+  config:
+    filepath: https://raw.githubusercontent.com/Green-Software-Foundation/if-data/main/cloud-metdata-azure-instances.csv
+    query: instance-class: "cloud/instance-type"
+    output: "*"
 ```
 
 ### regex

@@ -109,7 +109,7 @@ The `Multiply` plugin is used several times. The instances are:
 
 #### config
 
-```
+```yaml
 cpu-factor-to-wattage:
   input-parameters:
     - cpu-factor
@@ -130,7 +130,6 @@ operational-carbon:
     - grid/carbon-intensity
   output-parameter:
     - carbon-operational
-
 ```
 
 ### Divide
@@ -139,7 +138,7 @@ The `Divide` plugin is used once in this manifest. The instance is named `wattag
 
 #### config
 
-```
+```yaml
 wattage-to-energy-kwh:
   numerator: cpu-wattage-times-duration
   denominator: 3600000
@@ -185,9 +184,9 @@ The `SCI` plugin is used once. It is used to calculate the software carbon inten
 
 #### config:
 
-```
+```yaml
 sci:
-functional-unit: users
+  functional-unit: users
 ```
 
 ## Manifest
