@@ -4,7 +4,7 @@ sidebar-position: 2
 
 # How to make plugins production ready
 
-Our [How to build plugins](./how-to-build-plugins.md) guide covered the basics for how to construct an Impact Framework plugin. This guide will help you to refine your plugin to make it production-ready. These are best practice guidelines - if you intend to contribute your plugin to one of our repositories, following these guidelines will help your PR to get merged. Even if you are not aiming to have a plugin merged into one of our repositories, consistency with our norms is useful for debugging and maintaining and for making your plugin as useful as possible for other Impact Framework developers.
+Our [How to build plugins](./how-to-build-plugins.md) guide covered the basics for how to construct an Impact Framework plugin. This guide will help you to refine your plugin to make it production-ready. These are best practice guidelines - if you intend to contribute to one of our repositories, following these guidelines will help your PR to get merged. Consistency with our norms is useful for debugging and maintaining and for making your plugin as useful as possible for other Impact Framework developers.
 
 ## 1. Naming conventions
 
@@ -79,6 +79,8 @@ throw new MissingInputDataError("my-plugin is missing my-parameter from inputs[0
 
 ### Validation
 
+#### Input Validation
+
 We recommend using `inputValidation` property from `PluginFactory` for validation to ensure the integrity of input data. Validate input parameters against expected types, ranges, or constraints to prevent runtime errors and ensure data consistency.
 
 You need to use `zod` schema or `InputValidatorFunction`. Here's an example from our codebase:
@@ -112,6 +114,41 @@ inputValidation: z.object({
   'usage-ratio': z.number().gt(0).default(1),
   time: z.number().gt(0).optional(),
 });
+```
+
+#### Config Validation
+
+To validate the `config`, you need to use `configValidation` property from `PluginFactory`. Validate config parameters against expected types, ranges, or constraints to prevent runtime errors and ensure data consistency.
+
+You need to use `zod` schema or `ConfigValidatorFunction`:
+
+- When using function with `ConfigValidatorFunction` type.
+
+```ts
+configValidation: (config: ConfigParams) => {
+  const configSchema = z.object({
+    coefficient: z.preprocess(
+      (value) => validateArithmeticExpression('coefficient', value, 'number'),
+      z.number()
+    ),
+    'input-parameter': z.string().min(1),
+    'output-parameter': z.string().min(1),
+  });
+
+  return validate<z.infer<typeof configSchema>>(
+    configSchema as ZodType<any>,
+    config
+  );
+};
+```
+
+- When using `zod` schema
+
+```ts
+configValidation: z.object({
+  'input-parameters': z.array(z.string()),
+  'output-parameter': z.string().min(1),
+}),
 ```
 
 ### Code Modularity
