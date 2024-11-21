@@ -13,4 +13,4 @@ This includes:
 - [Plugins](plugins.md)
 - [IF features](features.md)
 
-These are developer focused reference docs. If you are not a developer and looking for usage guides, please head over to the [`Using IF`](../using-if/) section.
+These are developer focused reference docs. If you are not a developer and looking for usage guides, please head over to the [`Using IF`](../users/) section.

@@ -101,7 +101,7 @@ config:
 inputs:
   - timestamp: 2023-08-06T00:00
     duration: 3600 * 60
-    carbon: = 10 * "other-param
+    carbon: = 10 * "other-param"
     other-param: 3
 ```
 
@@ -110,7 +110,7 @@ inputs:
 To enable inline arithmetic expressions in your plugin, specify it in your plugin’s definition function like this:
 
 ```ts
-allowArithmeticExpressions: ['input-parameter'];
+allowArithmeticExpressions: ['input-parameter', 'coefficient'];
 ```
 
 In the `allowArithmeticExpressions` array, list all parameters (whether in config, inputs, or outputs) that can contain arithmetic expressions. The calculations are handled internally (in the PluginFactory interface).
