@@ -16,13 +16,14 @@ If you have globally installed our `if` npm package, you can invoke the CLI usin
 
 `if-run` runs the full execution cycle of a manifest file, including `observe`, `regroup` and `compute` phases along with `aggregation` and `explain` if they are configured in the manifest.
 
-
 ### `--manifest` , `-m`
 
 The `--manifest` flag is the only required flag and tells `if-run` where to find the manifest file that you want to execute. This command expects to receive the path where your manifest file is saved, as shown in the following example:
 
 ```sh
 if-run --manifest examples/manifests/my-manifest.yml
+## or using aliases
+if-run -m examples/manifests/my-manifest.yml
 ```
 
 ### `--output` , `-o`
@@ -51,9 +52,10 @@ if-run -h
 
 ### `--observe`
 
-`if-run --observe` runs *only* the observe phase of the manifest execution. This means only those plugins that generate `input` data are run. These are defined in the `observe` section of the pipeline for each component in the manifest.
+`if-run --observe` runs _only_ the observe phase of the manifest execution. This means only those plugins that generate `input` data are run. These are defined in the `observe` section of the pipeline for each component in the manifest.
 
 An example of an observe pipeline that invokes a plugin called "azure-importer" could look as follows:
+
 ```yaml
 tree:
   children:
@@ -65,7 +67,7 @@ tree:
 
 ### `--regroup`
 
-`if-run --regroup` runs *only* the regrouping phase of the manifest's execution. There has to be `input` data available in the manifest to regroup (or `--observe` has to be invoked too) and the regrouping configuration has to be included in the manifest. This config defines which parameters `if-run --regroup` should regroup the data by.
+`if-run --regroup` runs _only_ the regrouping phase of the manifest's execution. There has to be `input` data available in the manifest to regroup (or `--observe` has to be invoked too) and the regrouping configuration has to be included in the manifest. This config defines which parameters `if-run --regroup` should regroup the data by.
 
 For example, to regroup on `cloud/region` and `cloud/instance-type`:
 
@@ -80,10 +82,9 @@ tree:
           - cloud/instance-type
 ```
 
-
 ### `--compute`
 
-`if-run --compute` runs *only* the compute phase of the manifest's execution. The manifest passed to `if-run --compute` should already have input data, appropriately grouped (or you have to pass `--observe --regroup` too). This includes the plugins that do operations over the input data to generate output data.
+`if-run --compute` runs _only_ the compute phase of the manifest's execution. The manifest passed to `if-run --compute` should already have input data, appropriately grouped (or you have to pass `--observe --regroup` too). This includes the plugins that do operations over the input data to generate output data.
 
 For example, in a manifest that executes `sum`, `coefficient` and `multiply` in its compute phase:
 
@@ -93,12 +94,11 @@ tree:
     child-1:
       pipeline:
         observe:
-        compute: 
+        compute:
           - sum
           - coefficient
           - multiply
 ```
-
 
 ### `--debug`
 
@@ -124,7 +124,7 @@ DEBUG: 2024-06-12T08:48:04.862Z: Aggregating outputs
 DEBUG: 2024-06-12T08:48:04.862Z: Preparing output data
 ```
 
-You can use the `--debug` flag to help debug failing IF runs. You will see exactly where in the execution pipeline an error arose. If the error arose from a plugin, this will be clear from the execution logs, for example:
+You can use the `--debug` flag to help debug failing IF runs. You will see exactly where in the execution pipeline an error arise. If the error arose from a plugin, this will be clear from the execution logs, for example:
 
 ```sh
 INFO: 2024-06-12T08:53:21.376Z: Starting IF
@@ -342,10 +342,9 @@ if-csv -m ./my-manifest.yml -p carbon
 if-run -m ./my-manifest.yml | if-csv -p carbon -o ./my-outdata
 ```
 
-
 ## `--append`
 
-You can re-use a manifest file to make multiple batches of observations, appending the results to the existing outputs. The command that makes this possible is `--append`. To use `--append` you have to pass a manifest files that has **already been computed**  - i.e.it already has outputs. If you do, then the newly generated outputs will be appended to the existing output data.
+You can re-use a manifest file to make multiple batches of observations, appending the results to the existing outputs. The command that makes this possible is `--append`. To use `--append` you have to pass a manifest files that has **already been computed** - i.e.it already has outputs. If you do, then the newly generated outputs will be appended to the existing output data.
 
 The use case for this is when you want to repeatedly monitor the same resource or set of resources without changign the manifest config - you just want to grab new observations. The `--append` command allows you to do this without havign to generate lots of individual manifest files.
 
@@ -496,10 +495,10 @@ tree:
       energy: 110
 ```
 
-run 
+run
 
 ```sh
-npm run if-run  -- -m manifests/outputs/features/append.yaml -o manifests/outputs/features/re-append --append 
+npm run if-run -- -m manifests/outputs/features/append.yaml -o manifests/outputs/features/re-append --append
 ```
 
 And see the following output (with new observations appended to old observations):
@@ -514,7 +513,7 @@ initialize:
     mock-observations:
       path: builtin
       method: MockObservations
-     config:
+      config:
         timestamp-from: '2024-03-05T00:00:04.000Z'
         timestamp-to: '2024-03-05T00:00:07.000Z'
         duration: 1
@@ -535,7 +534,7 @@ initialize:
     sum:
       path: builtin
       method: Sum
-     config:
+      config:
         input-parameters:
           - cpu/energy
           - mem/energy

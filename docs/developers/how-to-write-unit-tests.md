@@ -144,7 +144,7 @@ it('throws an exception on missing functional unit data.', async () => {
   expect.assertions(1);
 
   try {
-    await sciModel.execute(inputs);
+    await sciPlugin.execute(inputs);
   } catch (error) {
     expect(error).toBeInstanceOf(InputValidationError);
   }

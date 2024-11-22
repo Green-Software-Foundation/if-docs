@@ -53,7 +53,7 @@ You will get the executed manifest in the `output-sum.yaml` file.
 
 ## if-csv
 
-The [`if-csv`](../users/how-to-export-csv-file-with-if-csv.md) script allows users to pass in `yaml` and `yml` files created using `if-run` and save the output in `csv` format. Yopu have to define the parameters you want to export from the yaml file, e.g. `energy` or `carbon`.
+The [`if-csv`](../users/how-to-export-csv-file-with-if-csv.md) script allows users to pass in `yaml` and `yml` files created using `if-run` and save the output in `csv` format. You have to define the parameters you want to export from the yaml file, e.g. `energy` or `carbon`.
 
 For the above example, you can get the following result:
 

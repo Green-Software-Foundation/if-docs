@@ -34,6 +34,7 @@ The Teads CPU power curve CPU utilization (as a percentage) against a scaling fa
 The research underpinning the curve was summarized in a pair of blog posts:
 
 [TEADS Engineering: Buildiong an AWS EC2 Carbon Emissions Dataset](https://medium.com/teads-engineering/building-an-aws-ec2-carbon-emissions-dataset-3f0fd76c98ac)
+
 [Teads Engineering: Estimating AWS EC2 Instances Power Consumption](https://medium.com/teads-engineering/estimating-aws-ec2-instances-power-consumption-c9745e347959)
 
 The curve has become very widely used as a general purpose utilization-to-wattage converter for CPUs, despite the fact that it does not generalize well.
@@ -96,10 +97,10 @@ The `interpolate` plugin is used once. The instance is named `interpolate`. It i
 
 #### config
 
-```
+```yaml
 method: linear
 x: [0, 10, 50, 100]
-y:[0.12, 0.32, 0.75, 1.02]
+y: [0.12, 0.32, 0.75, 1.02]
 input-parameter: cpu/utilization
 output-parameter: cpu-factor
 ```
@@ -114,28 +115,27 @@ The `Multiply` plugin is used several times. The instances are:
 
 #### config
 
-```
+```yaml
 cpu-factor-to-wattage:
-input-parameters:
-  - cpu-factor
-  - cpu/thermal-design-power
-output-parameter:
-  - cpu-wattage
+  input-parameters:
+    - cpu-factor
+    - cpu/thermal-design-power
+  output-parameter:
+    - cpu-wattage
 
 wattage-times-duration:
-input-parameters:
-  - cpu-wattage
-  - duration
-output-parameter:
-  - cpu-wattage-times-duration
+  input-parameters:
+    - cpu-wattage
+    - duration
+  output-parameter:
+    - cpu-wattage-times-duration
 
 energy-to-carbon:
-input-parameters:
-  - grid-carbon-intensity
-  - energy-cpu-kwh
-output-parameter:
-  - carbon
-
+  input-parameters:
+    - grid-carbon-intensity
+    - energy-cpu-kwh
+  output-parameter:
+    - carbon
 ```
 
 ### Divide
@@ -148,30 +148,29 @@ The `Divide` plugin is used several times in this manifest. The instances are:
 
 #### config
 
-```
+```yaml
 wattage-to-energy-kwh:
-numerator: cpu-wattage-times-duration
-denominator: 3600000
-output: cpu-energy-raw
+  numerator: cpu-wattage-times-duration
+  denominator: 3600000
+  output: cpu-energy-raw
 
 calculate-vcpu-ratio:
-numerator: vcpus-total
-denominator: vcpus-allocated
-output: vcpu-ratio
+  numerator: vcpus-total
+  denominator: vcpus-allocated
+  output: vcpu-ratio
 
 correct-cpu-energy-for-vcpu-ratio:
-numerator: cpu-energy-raw
-denominator: vcpu-ratio
-output: cpu/energy
-
+  numerator: cpu-energy-raw
+  denominator: vcpu-ratio
+  output: cpu/energy
 ```
 
 ## Manifest
 
 ```yaml
 name: teads curve demo
-description: null
-tags: null
+description:
+tags:
 initialize:
   plugins:
     interpolate:

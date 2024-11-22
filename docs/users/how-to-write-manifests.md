@@ -330,7 +330,7 @@ The recommended method for integrating data is to use the plugin system of the I
 
 There are already some community plugins available, including plugins for fetching data from Kubernetes, GCP, and third-party data aggregators like Datadog.
 
-If there is no fitting plugin available yet, we encourage you to write and add one for your specific use case. See [developer documentation](./developers/) for more information on how to build a plugin.
+If there is no fitting plugin available yet, we encourage you to write and add one for your specific use case. See [developer documentation](../developers/) for more information on how to build a plugin.
 
 If you already have external scripts you might have a look at the [shell plugin](https://github.com/Green-Software-Foundation/if/blob/main/src/if-run/builtins/shell/README.md) to integrate them with the Impact Framework.
 

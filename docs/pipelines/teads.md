@@ -9,6 +9,7 @@ The Teads CPU power curve CPU utilization (as a percentage) against a scaling fa
 The research underpinning the curve was summarized in a pair of blog posts:
 
 [TEADS Engineering: Buildiong an AWS EC2 Carbon Emissions Dataset](https://medium.com/teads-engineering/building-an-aws-ec2-carbon-emissions-dataset-3f0fd76c98ac)
+
 [Teads Engineering: Estimating AWS EC2 Instances Power Consumption](https://medium.com/teads-engineering/estimating-aws-ec2-instances-power-consumption-c9745e347959)
 
 The curve has become very widely used as a general purpose utilization-to-wattage converter for CPUs, despite the fact that it does not geenralize well.
@@ -28,7 +29,7 @@ These steps can be executed in IF using just three plugins:
 - `Multiply`
 - `Divide`
 
-We'll go through each step in the energy estimate and examine how to implement it in a manifest file using IF's standard library of `builtin`s.
+We'll go through each step in the energy estimate and examine how to implement it in a manifest file using IF's standard library of `builtins`.
 
 ## Impact Framework implementation
 
@@ -55,7 +56,7 @@ If this structure looks unfamiliar to you, you can go back to our [manifests pag
 
 ### Step 1: measure CPU utilization
 
-The first step was to measure your CPU utilization. In real use cases you would typoically do this using an importer plugin that grabs data from a monitor API or similar. However, for this example we will just manually create some dummy data. Add some timestamps, durations and cpu/utilization data to your `inputs` array, as follows:
+The first step was to measure your CPU utilization. In real use cases you would typically do this using an importer plugin that grabs data from a monitor API or similar. However, for this example we will just manually create some dummy data. Add some timestamps, durations and cpu/utilization data to your `inputs` array, as follows:
 
 ```yaml
 name: teads demo
@@ -92,7 +93,7 @@ tree:
 
 ### Step 2: Determine the thermal design power of your processor
 
-Typically determinign the TDP of your processor would be done using a CSV lookup. We have a pipeline example for [tdp-finder](./tdp-finder.md) in these docs - combining this pipeline with the `tdp-finder` pipeline would eb a great follow on exercise after you have finished this tutorial. Foir now, we will just hartd code some TDP data into your manifest so we can focus on the CPU utilization to energy calculations. Add `thermal-design-power` to `defaults` - this is a shortcut to providing it in every timestep in your `inputs` array.
+Typically determinign the TDP of your processor would be done using a CSV lookup. For now, we will just hard code some TDP data into your manifest so we can focus on the CPU utilization to energy calculations. Add `thermal-design-power` to `defaults` - this is a shortcut to providing it in every timestep in your `inputs` array.
 
 ```yaml
 default:
@@ -101,7 +102,7 @@ default:
 
 ### Step 3: Interpolate the Teads curve
 
-The Teads curve has CPU utilization ont he `x` axis and a scaling factor on the `y` axis. There are only four points on the published curve. Your task is to get the scaling factor for your specific CPU utilization values by interpolating between the known points. Luckily, we have a `builtin` for that purpose!
+The Teads curve has CPU utilization on the `x` axis and a scaling factor on the `y` axis. There are only four points on the published curve. Your task is to get the scaling factor for your specific CPU utilization values by interpolating between the known points. Luckily, we have a `builtin` for that purpose!
 
 Add the `Interpolation` plugin to your list of plugins in the `initialize` block.
 
@@ -109,11 +110,11 @@ Add the `Interpolation` plugin to your list of plugins in the `initialize` block
 initialize:
   plugins:
     interpolate:
-      method Interpolation
+      method: Interpolation
       path: builtin
 ```
 
-The details about the interpolation you want to do and the values to return are configured in the `config` whoch is also added int he `initialize block`. Specifically, you have to provide the known points of the curve you want to interpolate, the `input-parameter` (which is the `x` value whose correspondiong `y` value you want to find out, i.e. your CPU utilization value) and the `output-parameter` (the name you want to give to your retrieved `y` value).
+The details about the interpolation you want to do and the values to return are configured in the `config` which is also added in the `initialize block`. Specifically, you have to provide the known points of the curve you want to interpolate, the `input-parameter` (which is the `x` value whose correspondiong `y` value you want to find out, i.e. your CPU utilization value) and the `output-parameter` (the name you want to give to your retrieved `y` value).
 
 You want to interpolate the Teads curve, so you can provide the `x` and `y` values obtained from the articles linked in the introduction section above:
 
@@ -140,9 +141,9 @@ interpolate:
 
 ### Step 4: Convert CPU factor to power
 
-The interpoaltion only gave use the scaling factor; we need to apply that scaling factor to the processor's TDP to get the power drawn by the CPU at your specific CPU utilization.
+The interpoaltion only gives us the scaling factor; we need to apply that scaling factor to the processor's TDP to get the power drawn by the CPU at your specific CPU utilization.
 
-To do this, we can use the `Multiply` plugin in the IF standard library. We'll give the instance of `Multiply` the name `cpu-factor-to-wattage` and int he `config` we'll define `cpu-factor` and `thermal-design-power` as the two elements in our `inputs` array that we want to multiply together. Then we'll name the result `cpu-wattage`:
+To do this, we can use the `Multiply` plugin in the IF standard library. We'll give the instance of `Multiply` the name `cpu-factor-to-wattage` and in the `config` we'll define `cpu-factor` and `thermal-design-power` as the two elements in our `inputs` array that we want to multiply together. Then we'll name the result `cpu-wattage`:
 
 ```yaml
 cpu-factor-to-wattage:
@@ -238,7 +239,7 @@ tree:
 
 You also need to add some input data that your pipeline can operate over.
 
-You can see the full manifest in the [IF repository](https://github.com/Green-Software-Foundation/if/blob/main/manifests/examples/teads-curve.yml).
+You can see the full manifest in the [IF repository](https://github.com/Green-Software-Foundation/if/blob/main/manifests/examples/pipelines/teads-curve.yml).
 
 That's it! Your manifest is ready to run!
 

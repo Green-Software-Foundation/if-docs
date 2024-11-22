@@ -24,8 +24,8 @@ To solve this problem, we provide a built-in `time-sync` feature that synchroniz
 - This works by first upsampling each time series to a common base resolution (typically 1s).
 - Any gaps in the time series are filled in with "zero objects", which have an identical structure to the real observations but with usage metrics set to zero (we assume that when there is no data, there is no usage).
 - Next, we check to see whether the first timestamp in each time series is before, after or identical to the global start time.
--     If a component's time series starts after the global start time, we pad the start of the time series with "zero objects" so that the start times are identical.
--     If the component's time series starts *before* the global start time, we trim the time series down, discarding observations from before the global start time. The same trimming logic is applied to the end times.
+- If a component's time series starts after the global start time, we pad the start of the time series with "zero objects" so that the start times are identical.
+- If the component's time series starts _before_ the global start time, we trim the time series down, discarding observations from before the global start time. The same trimming logic is applied to the end times.
 - After synchronizing the start and end times and padding any discontinuities, we have a set of continuous time series' of identical length.
 - Next, we batch observations together into time bins whose size is define by the global `interval` value. This means that the resolution of the final time series' are identical and equal to `interval`.
 

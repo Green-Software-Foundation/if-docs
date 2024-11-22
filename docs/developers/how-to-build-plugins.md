@@ -121,6 +121,8 @@ b) instruct the second plugin to accept `cpu-energy` instead of the default `cpu
 The `mapping` config is an object with key-value pairs, where the `key` is the 'original' parameter name that the plugin uses, and the `value` is the 'new' name that you want to use instead.
 The `mapping` block is an optional and allows mapping the input and output parameters of the plugin. The structure of the `mapping` block is:
 
+#### Mapping config and output
+
 ```yaml
 name: sci
 description: successful path
@@ -132,9 +134,10 @@ initialize:
       method: Sci
       path: 'builtin'
       config:
-        functional-unit: requests
+        functional-unit: if-requests
       mapping:
-        sci: if-sci
+        sci: if-sci # mapping output parameter
+        requests: if-requests # mapping config parameter
 tree:
   children:
     child:
@@ -148,10 +151,35 @@ tree:
           carbon-operational: 5
           carbon-embodied: 0.02
           carbon: 5.02
-          requests: 100
+          if-requests: 100
 ```
 
 In the `outputs`, the `sci` value returned by the `Sci` plugin will be named `if-sci`.
+
+#### Mapping input
+
+```yaml
+name: embodied-carbon demo
+description:
+tags:
+initialize:
+  plugins:
+    embodied-carbon:
+      method: SciEmbodied
+      path: builtin
+      mapping:
+        hdd: 'hdd-mapped' # mapping input parameter
+tree:
+  children:
+    child:
+      pipeline:
+        compute:
+          - embodied-carbon
+      inputs:
+        - timestamp: 2023-08-06T00:00
+          duration: 3600
+          hdd-mapped: 2
+```
 
 ### Plugin example
 
@@ -274,7 +302,7 @@ Then, in your manifest file, provide the path in the plugin instantiation. You a
 ```yaml
 name: plugin-demo
 description: loads plugin
-tags: null
+tags:
 initialize:
   plugins:
     new-plugin:
@@ -309,7 +337,7 @@ You should also create unit tests for your plugin to demonstrate correct executi
 
 You can read our more advanced guide on [how to refine your plugins](./how-to-refine-plugins.md).
 
-## Appendix: Walk-through of the Sci plugin
+## Appendix: Walk-through of the Sum plugin
 
 To demonstrate how to build a plugin that conforms to the `PluginFactory`, let's examine the `Sum` plugin.
 

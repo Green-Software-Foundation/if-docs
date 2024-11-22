@@ -17,6 +17,9 @@ The available options and their shortcuts are:
 - `--help` or `-h`: prints out help instruction
 - `--debug`: enables IF execution logs
 - `--append`: allows you to rerun an already-computed manifest and append new values to the existing data.
+- `--observe`: runs only `observe` phases of the manifest execution
+- `--regroup`: runs only `regroup` phases of the manifest execution
+- `--compute`: runs only `compute` phases of the manifest execution
 
 The only required command is `--manifest`. Without a valid path to a manifest file, `if-run` has nothing to execute.
 
@@ -42,7 +45,7 @@ For more information on the `if-run` commands see the [CLI reference documentati
 
 ## Phased execution
 
-To enable greener and more flexible use of IF, we separate the manifest execution into distinct phases: `observe`, `regroup` and `compute`. This is invisible to you when you run `if-run` but behind the scenes all three of these phases are being run. However, you can instruct IF to run these phases individually, to avoid recomputing parts of the manifest unnecessarily. To do this, you simply pass `--observe`, `--regroup`, and `--compute` flags to IF in the combination you need. For example, to run *only* the observe phase (to generate input data):
+To enable greener and more flexible use of IF, we separate the manifest execution into distinct phases: `observe`, `regroup` and `compute`. This is invisible to you when you run `if-run` but behind the scenes all three of these phases are being run. However, you can instruct IF to run these phases individually, to avoid recomputing parts of the manifest unnecessarily. To do this, you simply pass `--observe`, `--regroup`, and `--compute` flags to IF in the combination you need. For example, to run _only_ the observe phase (to generate input data):
 
 ```
 if-run -m <manifest> --observe
