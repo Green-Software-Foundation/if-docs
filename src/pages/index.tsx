@@ -21,7 +21,7 @@ function HomepageHeader() {
             The solution to opaque carbon reporting{" "}
           </p>
           <div className={styles.buttons}>
-            <Link className="button button--primary button--md" to="https://grnsft.org/if/become-a-watcher">
+            <Link className="button button--primary button--md" to="https://grnsft.notion.site/watchers-apply">
             Become a watcher
             </Link>
             <Link
