@@ -677,3 +677,21 @@ tree:
               mem/energy: 6
               energy: 94
 ```
+
+## `if-merge`
+
+`if-merge` is a command line tool that takes multiple output files and merges them into one single file.
+
+### commands
+
+- `--manifests` or `-m`: (required) the path to an executed manifest
+- `--output` or `-o`: (optional) the path to save your output data
+- `name` or `n`: (optional) the value of the `name` property in the merged manifest
+- `description` or `d`: (optional) the value of the `description` property in the merged manifest
+- `help` or `h`: (optional) provides information about all available commands in order to help you easily find the command you need.
+
+This cli helps for systems to generate their own manifests independently, then later merge all the manifests from the different components together for time-syncing, aggregation and reporting purposes.
+
+```sh
+if-merge -m manifest1.yml manifest2.yml -n "merged-manifest" -d "description of my manifest" -o merged-manifest.yml
+```
