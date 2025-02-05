@@ -91,6 +91,11 @@ const config = {
             label: "Plugins",
           },
           {
+            href: "https://viz.if.greensoftware.foundation/",
+            position: "left",
+            label: "Visualizer",
+          },
+          {
             href: "https://github.com/Green-Software-Foundation/if",
             position: "right",
             className: 'header-github-link',
