@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Pipelines
+# Pipeline Examples
 
 This section contains walkthrough guides for some common pipelines you may want to use in your manifest files. 
 
