@@ -4,7 +4,6 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import HomepageFeatures from "@site/src/components/HomepageFeatures";
-import Hackathon from "@site/src/components/Hackathon";
 
 import styles from "./index.module.css";
 
@@ -21,8 +20,8 @@ function HomepageHeader() {
             The solution to opaque carbon reporting{" "}
           </p>
           <div className={styles.buttons}>
-            <Link className="button button--primary button--md" to="https://grnsft.notion.site/watchers-apply">
-            Become a watcher
+            <Link className="button button--primary button--md" to="https://grnsft.org/if/become-a-watcher ">
+              Become a watcher
             </Link>
             <Link
               className="button button--secondary button--md"
