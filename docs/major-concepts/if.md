@@ -60,5 +60,5 @@ if-run -m <manifest> --compute
 To run the observe and compute phases without regrouping:
 
 ```
-if-run -m <mnaifest> --observe --compute
+if-run -m <manifest> --observe --compute
 ```
