@@ -84,7 +84,7 @@ extract-processor-name:
     output: cpu/name
 ```
 
-## Manifest
+## IMP
 
 ```yaml
 name: instance-metadata
