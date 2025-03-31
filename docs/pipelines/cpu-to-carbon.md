@@ -165,7 +165,7 @@ correct-cpu-energy-for-vcpu-ratio:
   output: cpu/energy
 ```
 
-## Manifest
+## IMP
 
 ```yaml
 name: teads curve demo

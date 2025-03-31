@@ -4,7 +4,7 @@ sidebar_position: 7
 
 # How to check parameters and units using `explainer`
 
-Manifest files can get complicated, especially when there are many plugin instances initialized. It can be challenging to keep track of the flow of parameters and their units through a pipeline. To help IMP authors and auditors verify the correct flow of information through a pipeline, we provide the `explainer` feature.
+IMP files can get complicated, especially when there are many plugin instances initialized. It can be challenging to keep track of the flow of parameters and their units through a pipeline. To help IMP authors and auditors verify the correct flow of information through a pipeline, we provide the `explainer` feature.
 
 `explainer` adds a block to the IMP that simply lists the parameter metadata used be the plugin's instance in the IMP. The metadata contains:
 

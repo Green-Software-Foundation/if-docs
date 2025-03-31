@@ -30,7 +30,7 @@
 
 <!--- List the plugins used, the instance names, a brief description of the purpose of each instance and list out the config for each instance. -->
 
-## Manifest
+## IMP
 
 <!--- Provide the IMP in full. -->
 

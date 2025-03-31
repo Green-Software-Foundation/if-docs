@@ -189,7 +189,7 @@ sci:
   functional-unit: users
 ```
 
-## Manifest
+## IMP
 
 ```yaml
 name: sci example

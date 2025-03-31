@@ -2,9 +2,9 @@
 sidebar-position: 2
 ---
 
-# Manifest File
+# IMP Files
 
-Manifest files are fundamental to Impact Framework and they serve multiple important purposes, including:
+IMP files are fundamental to Impact Framework and they serve multiple important purposes, including:
 
 - They contain all the necessary configurations for Impact Framework
 - They define your application architecture
@@ -25,7 +25,7 @@ Anyone can download Impact Framework and execute an IMP file to verify the resul
 
 ### Overview
 
-Manifest files can be simple or very intricate, depending on the plugin pipeline you want to use and the complexity of your application. However, all IMP files conform to a basic structure that looks as follows:
+IMP files can be simple or very intricate, depending on the plugin pipeline you want to use and the complexity of your application. However, all IMP files conform to a basic structure that looks as follows:
 
 ```yaml
 name:
