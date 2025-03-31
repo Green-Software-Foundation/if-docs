@@ -30,7 +30,7 @@ Your plugin documentation should include the following information:
 - A description of any environment setup such as credentials in environment variables, etc. (REQUIRED)
 - Installation instructions (REQUIRED)
 - A written description of the plugin behaviour (REQUIRED)
-- A demo manifest that executes the plugin correctly without errors (REQUIRED)
+- A demo IMP that executes the plugin correctly without errors (REQUIRED)
 - A link to your unit tests 
 - A list of errors that your plugin can raise, the behaviours that cause them and potential remedies.
 - A reference list of any publications or other material supporting the approach you have taken in your plugin.

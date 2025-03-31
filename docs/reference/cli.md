@@ -1,6 +1,6 @@
 # Command line tool
 
-A core feature of the Impact Framework is the `if-run` command line tool (CLI). This is how you trigger Impact Framework to execute a certain manifest file.
+A core feature of the Impact Framework is the `if-run` command line tool (CLI). This is how you trigger Impact Framework to execute a certain IMP file.
 
 We also provide several other command line tools that work in concert with `if-run` to enable flows such as comparing, re-executing and verifying IF output files.
 
@@ -14,16 +14,16 @@ If you have globally installed our `if` npm package, you can invoke the CLI usin
 
 `if-run <args>`
 
-`if-run` runs the full execution cycle of a manifest file, including `observe`, `regroup` and `compute` phases along with `aggregation` and `explain` if they are configured in the manifest.
+`if-run` runs the full execution cycle of an IMP file, including `observe`, `regroup` and `compute` phases along with `aggregation` and `explain` if they are configured in the IMP.
 
 ### `--manifest` , `-m`
 
-The `--manifest` flag is the only required flag and tells `if-run` where to find the manifest file that you want to execute. This command expects to receive the path where your manifest file is saved, as shown in the following example:
+The `--manifest` flag is the only required flag and tells `if-run` where to find the IMP file that you want to execute. This command expects to receive the path where your IMP file is saved, as shown in the following example:
 
 ```sh
-if-run --manifest examples/manifests/my-manifest.yml
+if-run --manifest examples/manifests/my-imp.yml
 ## or using aliases
-if-run -m examples/manifests/my-manifest.yml
+if-run -m examples/manifests/my-imp.yml
 ```
 
 ### `--output` , `-o`
@@ -33,9 +33,9 @@ The `--output` flag is optional and is used for defining a path to save your out
 Here is an example of `--output` being used to define a path:
 
 ```sh
-if-run --manifest examples/manifests/my-manifest.yml --output examples/outputs/my-outdata
+if-run --manifest examples/manifests/my-imp.yml --output examples/outputs/my-outdata
 ## or using aliases
-if-run -m examples/manifests/my-manifest.yml -o examples/outputs/my-outdata
+if-run -m examples/manifests/my-imp.yml -o examples/outputs/my-outdata
 ```
 
 ### `--help` , `-h`
@@ -52,7 +52,7 @@ if-run -h
 
 ### `--observe`
 
-`if-run --observe` runs _only_ the observe phase of the manifest execution. This means only those plugins that generate `input` data are run. These are defined in the `observe` section of the pipeline for each component in the manifest.
+`if-run --observe` runs _only_ the observe phase of the IMP execution. This means only those plugins that generate `input` data are run. These are defined in the `observe` section of the pipeline for each component in the IMP.
 
 An example of an observe pipeline that invokes a plugin called "azure-importer" could look as follows:
 
@@ -67,7 +67,7 @@ tree:
 
 ### `--regroup`
 
-`if-run --regroup` runs _only_ the regrouping phase of the manifest's execution. There has to be `input` data available in the manifest to regroup (or `--observe` has to be invoked too) and the regrouping configuration has to be included in the manifest. This config defines which parameters `if-run --regroup` should regroup the data by.
+`if-run --regroup` runs _only_ the regrouping phase of the IMP's execution. There has to be `input` data available in the IMP to regroup (or `--observe` has to be invoked too) and the regrouping configuration has to be included in the IMP. This config defines which parameters `if-run --regroup` should regroup the data by.
 
 For example, to regroup on `cloud/region` and `cloud/instance-type`:
 
@@ -84,9 +84,9 @@ tree:
 
 ### `--compute`
 
-`if-run --compute` runs _only_ the compute phase of the manifest's execution. The manifest passed to `if-run --compute` should already have input data, appropriately grouped (or you have to pass `--observe --regroup` too). This includes the plugins that do operations over the input data to generate output data.
+`if-run --compute` runs _only_ the compute phase of the IMP's execution. The IMP passed to `if-run --compute` should already have input data, appropriately grouped (or you have to pass `--observe --regroup` too). This includes the plugins that do operations over the input data to generate output data.
 
-For example, in a manifest that executes `sum`, `coefficient` and `multiply` in its compute phase:
+For example, in an IMP that executes `sum`, `coefficient` and `multiply` in its compute phase:
 
 ```yaml
 tree:
@@ -145,9 +145,9 @@ DEBUG: 2024-06-12T08:53:23.165Z: Computing pipeline for `sum`
 
 ## `if-diff`
 
-The `if-diff` command line tool allows you to determine whether two manifest or output files are the same, and if not, how they differ.
+The `if-diff` command line tool allows you to determine whether two IMP or output files are the same, and if not, how they differ.
 
-`if-diff` needs two files to compare - a `source` and a `target`. The `source` file is considered to be the "true" file that another file, the `target`, is compared against. Note that for most purposes, it doesn't matter which file is assigned as `source` or `target` - the important thing is that `if-diff` receives two files. Both files should be `yaml` files. They are expected to be IF output files, meaning they contain all the required fields of a `manifest` plus the IF-generated `output` and `execution` blocks.
+`if-diff` needs two files to compare - a `source` and a `target`. The `source` file is considered to be the "true" file that another file, the `target`, is compared against. Note that for most purposes, it doesn't matter which file is assigned as `source` or `target` - the important thing is that `if-diff` receives two files. Both files should be `yaml` files. They are expected to be IF output files, meaning they contain all the required fields of an IMP plus the IF-generated `output` and `execution` blocks.
 
 `if-diff` is run as follows:
 
@@ -162,7 +162,7 @@ If the original was correctly and honestly reported, `if-diff` will return a suc
 e.g.
 
 ```
-if-run -m my-manifest | if-diff --target my-output-file.yml
+if-run -m my-imp | if-diff --target my-output-file.yml
 ```
 
 ### `if-diff` matching rules
@@ -221,39 +221,39 @@ target:  exists
 
 ## `if-env`
 
-`if-env` is a command line tool that helps you to create local development environments where you can run manifests.
+`if-env` is a command line tool that helps you to create local development environments where you can run IMPs.
 
 There are two use cases for this:
 
 1. setting up a new development environment for plugin building
-2. replicating a runtime environment for a given manifest, so you can re-execute it
+2. replicating a runtime environment for a given IMP, so you can re-execute it
 
 ### commands
 
-- `--manifest` or `-m`: the path to a manifest whose dependencies you want to install
+- `--manifest` or `-m`: the path to an IMP whose dependencies you want to install
 - `--install` or `-i`: instructs `if-env` to automatically install the dependencies in the local `package.json`
-- `--cwd` or `-c`: forces `if-env` to create or update the package.json in the current working directory. This is already default behaviour when no arguments are passed to `if-env`, but when a manifest is passed to `-m`, `if-env` defaults to saving a package.json in the same folder as the manifest. using `-cwd` overrides that behaviour and uses the current working directory as the `package.json` target path.
+- `--cwd` or `-c`: forces `if-env` to create or update the package.json in the current working directory. This is already default behaviour when no arguments are passed to `if-env`, but when an IMP is passed to `-m`, `if-env` defaults to saving a package.json in the same folder as the IMP. using `-cwd` overrides that behaviour and uses the current working directory as the `package.json` target path.
 
 ### Setting up new development environments using `if-env`
 
-If you are creating a new manifest from scratch and want to bootstrap your way in, you can use `if-env` with no arguments to generate a template manifest and package.json in your current working directory. Then, all you need to do is tweak the templates for your specific use case.
+If you are creating a new IMP from scratch and want to bootstrap your way in, you can use `if-env` with no arguments to generate a template IMP and package.json in your current working directory. Then, all you need to do is tweak the templates for your specific use case.
 
 For example:
 
 ```sh
-mkdir my-manifest && cd my-manifest
+mkdir my-imp && cd my-imp
 if-env
 ```
 
-After running these commands, you will see the following files in `my-manifest`:
+After running these commands, you will see the following files in `my-imp`:
 
 ```
-ls my-manifest
+ls my-imp
 
 > package.json manifest.yaml
 ```
 
-Now, you can use these files as templates for your manifest development.
+Now, you can use these files as templates for your IMP development.
 
 ### Replicating runtime environments using `if-env`
 
@@ -272,7 +272,7 @@ if-env -m output-file.yml
 npm i
 ```
 
-and you are ready to re-execute `output-file.yaml` in your local environment. We also provide the `--install` flag to instruct `if-env` to automatically run `npm i` after merging the dependencies, so you could craft a single command to install all the relevant dependencies and then run the manifest, as follows:
+and you are ready to re-execute `output-file.yaml` in your local environment. We also provide the `--install` flag to instruct `if-env` to automatically run `npm i` after merging the dependencies, so you could craft a single command to install all the relevant dependencies and then run the IMP, as follows:
 
 ```sh
 if-env -m output-file.yml -i && if-run -m output-file.yml
@@ -280,9 +280,9 @@ if-env -m output-file.yml -i && if-run -m output-file.yml
 
 ## `if-check`
 
-`if-check` is a manifest verification tool that is equivalent to running `if-env` and `if-diff` on a given manifest file. The manifest file must have `outputs` and an `execution` section for `if-check` to run.
+`if-check` is an IMP verification tool that is equivalent to running `if-env` and `if-diff` on a given IMP file. The IMP file must have `outputs` and an `execution` section for `if-check` to run.
 
-The intended use case is to verify that a manifest's outputs are correct and honest. Say someone handed you a manifest as evidence of their environmental impact. You could choose to trust them, or you could run `if-check` to verify that their calculations are correct. Under the hood, IF is creating a development environment using the dependencies listed in the given file's `execution` section and then executing the file locally, then comparing the newly generated results to those in the given file.
+The intended use case is to verify that an IMP's outputs are correct and honest. Say someone handed you an IMP as evidence of their environmental impact. You could choose to trust them, or you could run `if-check` to verify that their calculations are correct. Under the hood, IF is creating a development environment using the dependencies listed in the given file's `execution` section and then executing the file locally, then comparing the newly generated results to those in the given file.
 
 To check a file:
 
@@ -302,15 +302,15 @@ If `if-check` was not able to verify the file because there were differences in 
 if-check: could not verify <filename>. The re-executed file does not match the original.
 ```
 
-### Running IF over multiple manifests with `--d`
+### Running IF over multiple IMPs with `--d`
 
-Alice could also run `if-check` over any number of manifests in a single command, using the `--directory` or `-d` subcommand. For a folder containing multiple manifests, pass the folder path:
+Alice could also run `if-check` over any number of IMPs in a single command, using the `--directory` or `-d` subcommand. For a folder containing multiple IMPs, pass the folder path:
 
 ```sh
-if-check -d /my-folder-of-manifests
+if-check -d /my-folder-of-imps
 ```
 
-Each manifest will be run through `if-check` in sequence.
+Each IMP will be run through `if-check` in sequence.
 
 ## `if-csv`
 
@@ -318,7 +318,7 @@ Each manifest will be run through `if-check` in sequence.
 
 ### commands
 
-- `--manifest` or `-m`: (optional) the path to an executed manifest
+- `--manifest` or `-m`: (optional) the path to an executed IMP
 - `--output` or `-o`: (optional) the path to save your output data in `csv` format
 - `--params` or `-p`: (required) the metric to export the data
 
@@ -327,30 +327,30 @@ There are three use cases for this:
 1. Exporting CSV with the `--output` flag: When the `--output` flag is provided, `if-csv` exports the data to a CSV file at the specified path. This is useful for saving data for later use or sharing with others.
 
 ```sh
-if-csv -m ./my-manifest.yml -p carbon -o ./my-outdata
+if-csv -m ./my-imp.yml -p carbon -o ./my-outdata
 ```
 
 2. Printing CSV to the console without the `--output` flag: If the `--output` flag is omitted, `if-csv` will print the CSV data directly to the console. This is useful for quick checks.
 
 ```sh
-if-csv -m ./my-manifest.yml -p carbon
+if-csv -m ./my-imp.yml -p carbon
 ```
 
-3. Piping output from `if-run` to `if-csv`. By piping the output from `if-run`, you can chain commands to execute a manifest and then immediately export the data to a CSV file.
+3. Piping output from `if-run` to `if-csv`. By piping the output from `if-run`, you can chain commands to execute an IMP and then immediately export the data to a CSV file.
 
 ```sh
-if-run -m ./my-manifest.yml | if-csv -p carbon -o ./my-outdata
+if-run -m ./my-imp.yml | if-csv -p carbon -o ./my-outdata
 ```
 
 ## `--append`
 
-You can re-use a manifest file to make multiple batches of observations, appending the results to the existing outputs. The command that makes this possible is `--append`. To use `--append` you have to pass a manifest files that has **already been computed** - i.e.it already has outputs. If you do, then the newly generated outputs will be appended to the existing output data.
+You can re-use an IMP file to make multiple batches of observations, appending the results to the existing outputs. The command that makes this possible is `--append`. To use `--append` you have to pass IMP files that has **already been computed** - i.e.it already has outputs. If you do, then the newly generated outputs will be appended to the existing output data.
 
-The use case for this is when you want to repeatedly monitor the same resource or set of resources without changign the manifest config - you just want to grab new observations. The `--append` command allows you to do this without havign to generate lots of individual manifest files.
+The use case for this is when you want to repeatedly monitor the same resource or set of resources without changign the IMP config - you just want to grab new observations. The `--append` command allows you to do this without havign to generate lots of individual IMP files.
 
 ### example
 
-With a computed manifest:
+With a computed IMP:
 
 ```yaml
 name: append
@@ -684,14 +684,14 @@ tree:
 
 ### commands
 
-- `--manifests` or `-m`: (required) the path to an executed manifest
+- `--manifests` or `-m`: (required) the path to an executed IMP
 - `--output` or `-o`: (optional) the path to save your output data
-- `name` or `n`: (optional) the value of the `name` property in the merged manifest
-- `description` or `d`: (optional) the value of the `description` property in the merged manifest
+- `name` or `n`: (optional) the value of the `name` property in the merged IMP
+- `description` or `d`: (optional) the value of the `description` property in the merged IMP
 - `help` or `h`: (optional) provides information about all available commands in order to help you easily find the command you need.
 
-This cli helps for systems to generate their own manifests independently, then later merge all the manifests from the different components together for time-syncing, aggregation and reporting purposes.
+This cli helps for systems to generate their own IMPs independently, then later merge all the IMPs from the different components together for time-syncing, aggregation and reporting purposes.
 
 ```sh
-if-merge -m manifest1.yml manifest2.yml -n "merged-manifest" -d "description of my manifest" -o merged-manifest.yml
+if-merge -m imp.yml imp2.yml -n "merged-imp" -d "description of my imp" -o merged-imp.yml
 ```

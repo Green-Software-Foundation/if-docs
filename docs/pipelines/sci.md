@@ -30,7 +30,7 @@ We also use the networking energy and embodied carbon estimation methods from [C
 
 ## Observations
 
-This manifest requires the following observations:
+This IMP requires the following observations:
 
 - CPU utilization
 - thermal design power of the processors
@@ -53,7 +53,7 @@ This manifest requires the following observations:
 
 ## Assumptions and limitations
 
-The following are assumed to be true in this manifest:
+The following are assumed to be true in this IMP:
 
 - the embodied carbon of the baseline server approximates the real embodied carbon of the server running our application
 - the lifespan of the server running our application is really 4 years
@@ -134,7 +134,7 @@ operational-carbon:
 
 ### Divide
 
-The `Divide` plugin is used once in this manifest. The instance is named `wattage-to-energy-kwh`. It is used to convert energy in W/duration to kWh.
+The `Divide` plugin is used once in this IMP. The instance is named `wattage-to-energy-kwh`. It is used to convert energy in W/duration to kWh.
 
 #### config
 
@@ -147,7 +147,7 @@ wattage-to-energy-kwh:
 
 ### Sum
 
-The `Sum` plugin is used several times in this manifest. The instances are:
+The `Sum` plugin is used several times in this IMP. The instances are:
 
 - `sum-energy-components`: used to sum all the various components of energy into a single value, called `energy`.
 - `sum-carbon`: used to sum the various components of carbon into a single value, named `carbon`.
@@ -180,7 +180,7 @@ We use the plugin defaults for all the `SciEmbodied` config. This means we assum
 
 ### SCI
 
-The `SCI` plugin is used once. It is used to calculate the software carbon intensity by dividing `carbon` by a functional unit, that has to be available in the manifest `inputs` array at the time the plugin is executed. The functional unit in this example is users in each timestep.
+The `SCI` plugin is used once. It is used to calculate the software carbon intensity by dividing `carbon` by a functional unit, that has to be available in the IMP `inputs` array at the time the plugin is executed. The functional unit in this example is users in each timestep.
 
 #### config:
 

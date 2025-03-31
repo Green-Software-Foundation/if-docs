@@ -4,24 +4,24 @@ sidebar_position: 6
 
 # Verifying IF outputs with `if-check`
 
-IF includes a command line tool called `if-check` that can be used to verify the results in a manifest file.
+IF includes a command line tool called `if-check` that can be used to verify the results in an IMP file.
 
-Imagine that someone provides you with a computed manifest file that they claim demonstrates the environmental impact of their software application.
+Imagine that someone provides you with a computed IMP file that they claim demonstrates the environmental impact of their software application.
 
 You could trust them and take their results at face value, but there are probably cases where you think someone might have made a mistake or might be massaging their data in a dishonest way. Maybe you just need to demonstrate due diligence in the quality of the data you receive and use. In these cases, you can make use of `if-check`.
 
-`if-check` is a single command that takes a given manifest file, sets up an environment where it can be executed, executes it, and compares the newly generated results to those in the original file. This means you can independently verify the results in the file using your own local copy of IF.
+`if-check` is a single command that takes a given IMP file, sets up an environment where it can be executed, executes it, and compares the newly generated results to those in the original file. This means you can independently verify the results in the file using your own local copy of IF.
 
 Under the hood, `if-check` is wrapping calls to `if-env` and `if-diff`, so if you need granular control over the information flow for some reason, you could achieve the same result using separate calls to those commands.
 
 ## Example
 
-Alice is a manifest verifier. She receives a manifest from Bob. Bob is a good actor and has provided a valid file. Alice is a good cypherpunk who verifies everything.
+Alice is an IMP verifier. She receives an IMP from Bob. Bob is a good actor and has provided a valid file. Alice is a good cypherpunk who verifies everything.
 
-Here is Bob's manifest:
+Here is Bob's IMP:
 
 ```yaml
-name: bobs-manifest
+name: bobs-imp
 description:
 tags: null
 initialize:
@@ -126,20 +126,20 @@ tree:
 Alice runs :
 
 ```
-if-check -m bobs-manifest.yml
+if-check -m bobs-imp.yml
 ```
 
 And receives the response:
 
 ```
-if-check: successfully verified bobs-manifest
+if-check: successfully verified bobs-imp
 ```
 
-Charlie also has a copy of Bob's manifest. He wants to trick Alice into thinking his SCI score is lower, so he overwrites the values in the manifest file, making them lower. Charlie's manifest looks like this:
+Charlie also has a copy of Bob's IMP. He wants to trick Alice into thinking his SCI score is lower, so he overwrites the values in the IMP file, making them lower. Charlie's IMP looks like this:
 
 ```yaml
 # start
-name: charlies-manifest
+name: charlies-imp
 description:
 tags: null
 initialize:
@@ -241,10 +241,10 @@ tree:
           sci: 0.0102
 ```
 
-Now, when Alice runs `if-check -m charlies-manifest`, she receives:
+Now, when Alice runs `if-check -m charlies-imp`, she receives:
 
 ```yaml
-if-check could not verify charlies-manifest. The re-executed file does not match the original.
+if-check could not verify charlies-imp. The re-executed file does not match the original.
 
 Files do not match!
 tree.children.child-1.outputs.0.sci
@@ -254,16 +254,16 @@ target: 0.020199999999999995
 
 Not only can Alice see that the files do not match, she can see which values Charlie manipulated.
 
-## Running IF over multiple manifests
+## Running IF over multiple IMPs
 
-Alice could also run `if-check` over any number of manifests in a single command, using the `-d` subcommand. For a folder containing `n` manifests, pass the folder path:
+Alice could also run `if-check` over any number of IMPs in a single command, using the `-d` subcommand. For a folder containing `n` IMPs, pass the folder path:
 
 ```sh
-if-check -d /my-folder-of-manifests
+if-check -d /my-folder-of-imp
 ```
 
-Each manifest will be run through `if-check` in sequence.
+Each IMP will be run through `if-check` in sequence.
 
 ## `if-check` limitations
 
-`if-check` can verify that a manifest is correctly calculated. However, if someone really wanted to use a fraudulent manifest, they could provide fraudulent _input_ data not _output_ data. There's little we can really do about this - if someone provides fake input data it is out of IF's remit. This means that although the examples above are good for demonstrating how `if-check` works, it's more likely to be used to check for bugs and configuration errors than it is to be used to detect fraud.
+`if-check` can verify that an IMP is correctly calculated. However, if someone really wanted to use a fraudulent IMP, they could provide fraudulent _input_ data not _output_ data. There's little we can really do about this - if someone provides fake input data it is out of IF's remit. This means that although the examples above are good for demonstrating how `if-check` works, it's more likely to be used to check for bugs and configuration errors than it is to be used to detect fraud.

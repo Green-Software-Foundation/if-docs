@@ -4,11 +4,11 @@ sidebar_position: 5
 
 # Exporting CSV file with `if-csv`
 
-IF includes a command line tool called `if-csv` which is designed to export CSV files based on a specified manifest file and metric.
+IF includes a command line tool called `if-csv` which is designed to export CSV files based on a specified IMP file and metric.
 
 ## Example:
 
-Let's execute this manifest file. This manifest simply sums two components, `cpu/energy` and `network/energy` and assigns the result to `energy` in the outputs array.
+Let's execute this IMP file. This IMP simply sums two components, `cpu/energy` and `network/energy` and assigns the result to `energy` in the outputs array.
 
 ```yaml
 name: sum

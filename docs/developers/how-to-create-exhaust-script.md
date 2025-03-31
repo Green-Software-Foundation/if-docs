@@ -7,7 +7,7 @@ sidebar-position: 6
 The `IF` framework outputs data in `yaml` format. Any other output formats require a separate script that takes the yaml output data and processes it. We provide [`if-csv`](../users/how-to-export-csv-file-with-if-csv.md) for outputting data in `csv` format bundled with IF. For any other format, you need to write an exhaust script.
 This guide will help you create your own exhaust script.
 
-In this example, we'll create a script that executes the manifest and outputs the data in `json` format.
+In this example, we'll create a script that executes the IMP and outputs the data in `json` format.
 
 ```ts
 const IfJson = async () => {
@@ -42,4 +42,4 @@ To add this script to your package.json, include the following entry in the scri
 }
 ```
 
-This setup ensures that your script will execute the manifest and output the data in JSON format.
+This setup ensures that your script will execute the IMP and output the data in JSON format.

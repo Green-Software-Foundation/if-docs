@@ -13,7 +13,7 @@ npm install -g @grnsft/if
 Then, run the package using the `if-run` command:
 
 ```sh
-if-run --manifest <path to manifest file> 
+if-run --manifest <path to imp file> 
 ```
 
 ## Installing locally
@@ -28,7 +28,7 @@ npm install
 Then, use the following command to run Impact Framework:
 
 ```sh
-npm run if-run -- --manifest <path to your manifest file>
+npm run if-run -- --manifest <path to your imp file>
 ```
 
 Next, install local plugin repositories using `npm link`. You can do this by entering the plugin folder and running the following command:
@@ -37,6 +37,6 @@ Next, install local plugin repositories using `npm link`. You can do this by ent
 npm link
 ```
 
-This creates a global package with the same name as your project root directory which you can then load by passing the path in your manifest file.
+This creates a global package with the same name as your project root directory which you can then load by passing the path in your IMP file.
 
 Read our detailed guide to [installing plugins](./how-to-import-plugins.md).

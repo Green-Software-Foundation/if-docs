@@ -17,9 +17,9 @@ npm install -g @grnsft/if
 Read our detailed guide to [installing IF](./how-to-install-if.md).
 
 
-## 2: Create a manifest file
+## 2: Create an IMP file
 
-A manifest file contains all the configuration and input data required to measure your application's energy and carbon impacts and should have a `.yml` extension.
+A IMP file contains all the configuration and input data required to measure your application's energy and carbon impacts and should have a `.yml` extension.
 
 Open the file, add your data and save the file. The minimal example below runs two snapshot observations through a single plugin - all it does is multiply a value in each element of the `input` data by 2.
 
@@ -56,24 +56,24 @@ tree:
           cpu/utilization: 80
 ```
 
-Read our detailed guides to [writing manifest files](./how-to-write-manifests.md).
+Read our detailed guides to [writing IMP files](./how-to-write-imps.md).
 
-## 3: Compute your manifest file
+## 3: Compute your IMP file
 
-Run the pipeline by passing the path to your manifest file to the `if-run` command line tool:
+Run the pipeline by passing the path to your IMP file to the `if-run` command line tool:
 
 ```sh
-if-run --manifest <path-to-your-manifest>
+if-run --IMP <path-to-your-IMP>
 ```
 
 The output will be printed to the console.
 
-:tada:**Congratulations** :tada:! You have just used the Impact Framework to compute a manifest file! Your challenge now is to use these principles to construct manifest files for real applications. Our docs will help! 
+:tada:**Congratulations** :tada:! You have just used the Impact Framework to compute an IMP file! Your challenge now is to use these principles to construct IMP files for real applications. Our docs will help! 
 
 
 ## Next steps
 
-Now you know how to use the `if-run` you can start building more complex pipelines of plugins and more complicated manifest files. Your overall aim is to create a manifest file that accurately represents a real software application, and a plugin pipeline that yields an environmental metric that's important to you (e.g. `carbon`).
+Now you know how to use the `if-run` you can start building more complex pipelines of plugins and more complicated IMP files. Your overall aim is to create an IMP file that accurately represents a real software application, and a plugin pipeline that yields an environmental metric that's important to you (e.g. `carbon`).
 
 
 Experiment by adding more plugins to the pipeline and observe how each plugin enriches each element in the `inputs` array with new values.
@@ -84,11 +84,11 @@ You can also configure `if` to save your output data to another `yaml` file. To 
 The command is then as follows:
 
 ```sh
-if-run --manifest <path-to-your-impl> --output <save-path>
+if-run --IMP <path-to-your-impl> --output <save-path>
 ```
 
 Explore our user documentation for walkthrough guides to common Impact Framework tasks:
 
 - [How to install Impact Framework](./how-to-install-if.md)
 - [How to load plugins](./how-to-import-plugins.md)
-- [How to write manifest files](./how-to-write-manifests.md)
+- [How to write IMP files](./how-to-write-IMPs.md)

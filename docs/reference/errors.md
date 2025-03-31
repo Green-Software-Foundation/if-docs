@@ -18,16 +18,16 @@ Errors of this class are caused by invalid input arguments being passed to the [
 
 ### `ManifestValidationError`
 
-Errors of the `ManifestValidationError` class arise due to a problem in the manifest (yaml) file. Validation of the manifest is done using the [Zod](https://zod.dev/) library.
+Errors of the `ManifestValidationError` class arise due to a problem in the IMP (yaml) file. Validation of the IMP is done using the [Zod](https://zod.dev/) library.
 
-The error message will be the error surfaced by Zod, and will include the name of the manifest element that is invalid. Since the set of error messages is very large and all conform to a simple schema, we do not list them exhaustively here, but instead demonstrate using the following example:
+The error message will be the error surfaced by Zod, and will include the name of the IMP element that is invalid. Since the set of error messages is very large and all conform to a simple schema, we do not list them exhaustively here, but instead demonstrate using the following example:
 
 `ManifestValidationError: "initialize" parameter is required. Error code: invalid_type.`
 
-You can infer from the error code that the issue is related to an invalid or missing value encountered during the manifest validation.
+You can infer from the error code that the issue is related to an invalid or missing value encountered during the IMP validation.
 The message itself indicates that the problematic element is `initialize` and the problem is that it is missing.
 
-The remedy for this issue is to add an `initialize` block into the manifest.
+The remedy for this issue is to add an `initialize` block into the IMP.
 
 ### `InvalidGroupingError`
 
@@ -49,14 +49,14 @@ Errors of the `WriteFileError` class are caused by problems writing output data 
 
 ### `CliSourceFileError`
 
-Errors of the `CliSourceFileError` class are caused by problems with source manifest.
+Errors of the `CliSourceFileError` class are caused by problems with source IMP.
 
 #### Messages
 
-| message                                    | cause                                                    | remedy                                                 |
-| ------------------------------------------ | -------------------------------------------------------- | ------------------------------------------------------ |
-| `Manifest is missing.`                     | Source manifest is not provided                          | check that you have provided a path to source manifest |
-| `Given source file is not in yaml format.` | Source file is provided, but format is not a yaml format | check that you have provided valid yaml manifest       |
+| message                                    | cause                                                    | remedy                                            |
+| ------------------------------------------ | -------------------------------------------------------- | ------------------------------------------------- |
+| `Manifest is missing.`                     | Source IMP is not provided                               | check that you have provided a path to source IMP |
+| `Given source file is not in yaml format.` | Source file is provided, but format is not a yaml format | check that you have provided valid yaml manifest  |
 
 ### `CliTargetFileError`
 
@@ -95,7 +95,7 @@ Errors of the `MissingAggregationParamError` class are caused by problems in the
 
 ## `MissingPluginMethodError`
 
-Errors of the `MissingPluginMethodError` class are caused by missing information in manifest's `initalize.plugins` section.
+Errors of the `MissingPluginMethodError` class are caused by missing information in IMP's `initalize.plugins` section.
 
 | message                                    | cause                                                                                  | remedy                                                                                                                                             |
 | ------------------------------------------ | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -103,7 +103,7 @@ Errors of the `MissingPluginMethodError` class are caused by missing information
 
 ## `MissingPluginPathError`
 
-Errors of the `MissingPluginPathError` class are caused by missing information in manifest's `initalize.plugins` section.
+Errors of the `MissingPluginPathError` class are caused by missing information in IMP's `initalize.plugins` section.
 
 | message                                  | cause                                                                               | remedy                                                                                                                                                          |
 | ---------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -221,11 +221,11 @@ Errors of the `ExhaustOutputArgError` class arise when there is output path issu
 
 Errors of the `CSVParseError` occur due to a problem reading CSV file. Typically, this can occur when provided file is not a CSV.
 
-## Capturing errors in manifests
+## Capturing errors in IMPs
 
-When you run a [manifest](../major-concepts/manifest-file.md), IF generates output data and either displays it in the console or saves it to a file. If IF or one of the plugins being executed throws an exception, IF can still return an output file, except instead of adding `outputs`, it captures the error message that caused IF to fail in the manifest's `execution` section. Inside the `execution` section, you will find two fields: `status` and `error`. The `status` field is either `success` or `fail`, and the `error` field contains the error message.
+When you run an [IMP](../major-concepts/imp-file.md), IF generates output data and either displays it in the console or saves it to a file. If IF or one of the plugins being executed throws an exception, IF can still return an output file, except instead of adding `outputs`, it captures the error message that caused IF to fail in the IMP's `execution` section. Inside the `execution` section, you will find two fields: `status` and `error`. The `status` field is either `success` or `fail`, and the `error` field contains the error message.
 
-For example, the following is an output file generated by running a manifest whose `input` data omitted the required `duration` field:
+For example, the following is an output file generated by running an IMP whose `input` data omitted the required `duration` field:
 
 ```yaml
 name: input-error-missing-duration
@@ -270,4 +270,4 @@ tree:
           cpu/utilization: 20
 ```
 
-No configuration is necessary - this is the default behaviour for IF if the output is configured to save to yaml and the manifest has an error causing IF to fail.
+No configuration is necessary - this is the default behaviour for IF if the output is configured to save to yaml and the IMP has an error causing IF to fail.

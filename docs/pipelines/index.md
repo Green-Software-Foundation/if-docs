@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Pipeline Examples
 
-This section contains walkthrough guides for some common pipelines you may want to use in your manifest files. 
+This section contains walkthrough guides for some common pipelines you may want to use in your IMP files. 
 
 These pipelines only use plugins from our standard library that comes bundled with IF and do not require any third party plugins to be installed. They all work out of the box with IF.
 
@@ -16,4 +16,4 @@ The pipeline guides include:
 - [Basic observations -> Software Carbon Intensity](./sci.md)
 - [Grabbing cloud instance metadata from csv file](./instance-metadata.md)
 
-You can find the manifests themselves in your copy of IF in `manifests/examples` or find them on our [Github](https://github.com/Green-Software-Foundation/if/tree/main/manifests/examples).
+You can find the IMPs themselves in your copy of IF in `manifests/examples` or find them on our [Github](https://github.com/Green-Software-Foundation/if/tree/main/manifests/examples).

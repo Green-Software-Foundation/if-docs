@@ -2,13 +2,13 @@
 sidebar_position: 4
 ---
 
-# How to write a manifest file
+# How to write an IMP file
 
-The Impact Framework receives all its configuration and input data in the form of a manifest file known as an manifest. To use the framework, you will need to write a manifest file and pass its path to the command line tool. This guide will help you to understand how to construct one of these files and use it to measure the energy and carbon usage of your app.
+The Impact Framework receives all its configuration and input data in the form of an IMP file known as an IMP. To use the framework, you will need to write an IMP file and pass its path to the command line tool. This guide will help you to understand how to construct one of these files and use it to measure the energy and carbon usage of your app.
 
-## Structure of a manifest
+## Structure of an IMP
 
-The basic structure of a manifest is as follows:
+The basic structure of an IMP is as follows:
 
 ```yaml
 name:
@@ -32,7 +32,7 @@ tree:
 
 ### Project metadata
 
-The file starts with some metadata about the project. There are no strict specifications for what to put in these fields, they are for you to keep track of your manifest files and to help other users to understand your use case.
+The file starts with some metadata about the project. There are no strict specifications for what to put in these fields, they are for you to keep track of your IMP files and to help other users to understand your use case.
 
 ```yaml
 name:
@@ -42,7 +42,7 @@ tags:
 
 ### Initialize
 
-The `initialize` fields are where you specify each individual plugin that will be initialized in your pipeline. The plugins can be initialized in any order, but can only be invoked elsewhere in the manifest if they have been initialized first here. In each case, you will need to provide the `name`, `path` and `method` (and `config` if your plugin requires it):
+The `initialize` fields are where you specify each individual plugin that will be initialized in your pipeline. The plugins can be initialized in any order, but can only be invoked elsewhere in the IMP if they have been initialized first here. In each case, you will need to provide the `name`, `path` and `method` (and `config` if your plugin requires it):
 
 ```yaml
 initialize:
@@ -85,7 +85,7 @@ tree:
 
 ### Inputs
 
-The most granular level of the manifest file are the `inputs`. This is where you can add specific data for each `child`. Inputs must always include a `timestamp` and a `duration`.
+The most granular level of the IMP file are the `inputs`. This is where you can add specific data for each `child`. Inputs must always include a `timestamp` and a `duration`.
 
 ```yaml
 inputs:
@@ -94,13 +94,13 @@ inputs:
     cpu-util: 45
 ```
 
-You now have a simple manifest file that will use the plugin config and input data to run the `teads-curve` and `sci-m` plugins. The output data will be appended to the manifest under a new `outputs` field and saved as an output file.
+You now have a simple IMP file that will use the plugin config and input data to run the `teads-curve` and `sci-m` plugins. The output data will be appended to the IMP under a new `outputs` field and saved as an output file.
 
-## More complex manifests
+## More complex IMPs
 
 ### Complex pipelines
 
-Whilst the manifest file we looked at above works perfectly well, it will only return the most basic output data. Most users will want to calculate an SCI score, which implies a number of additional steps:
+Whilst the IMP file we looked at above works perfectly well, it will only return the most basic output data. Most users will want to calculate an SCI score, which implies a number of additional steps:
 
 - `operational-carbon` and `embodied-carbon` must appear as inputs.
 - This means that `sci` will need to be preceded by `sci-m` and `sci-o` in the plugin pipeline.
@@ -109,7 +109,7 @@ Whilst the manifest file we looked at above works perfectly well, it will only r
 - The `sci` plugin also requires `functional-unit` information so it can convert the estimated `carbon` into a useful unit.
 - You may also wish to grab your `input` data by querying a metrics API on a virtual machine.
 
-The example below gives you the full pipeline implemented in a manifest. There are also several other executable example manifests in `if/manifests/examples` that you can run for yourself.
+The example below gives you the full pipeline implemented in an IMP. There are also several other executable example IMPs in `if/manifests/examples` that you can run for yourself.
 
 ```yaml
 name: pipeline-with-aggregate
@@ -308,13 +308,13 @@ tree:
 
 ### Complex applications
 
-The manifest examples provided so far have only had a single component. However, Impact Framework can handle any number of nested `children`.
+The IMP examples provided so far have only had a single component. However, Impact Framework can handle any number of nested `children`.
 
 In this way, you can combine complex plugin pipelines and application architectures to calculate the energy and carbon outputs of complicated systems.
 
 ## Choosing which plugins to run
 
-The plugins are designed to be composable, but they each have specific input requirements that must be met in order for the plugins to run correctly. For example, the `teads-curve` plugin requires `cpu/thermal-design-power` to be available in the manifest. If it is not there, the plugin cannot use it to calculate `cpu/energy`.
+The plugins are designed to be composable, but they each have specific input requirements that must be met in order for the plugins to run correctly. For example, the `teads-curve` plugin requires `cpu/thermal-design-power` to be available in the IMP. If it is not there, the plugin cannot use it to calculate `cpu/energy`.
 
 It is also possible to leapfrog some plugins if you have access to high-level data. For example, perhaps you already know the energy being used by your CPU. In this case, there is no need to run `teads-curve`, you can simply provide `cpu/energy` as an `input` and omit `teads-curve` from the plugin pipeline.
 
@@ -322,9 +322,9 @@ We have deliberately made the plugins modular and composable so that you can be 
 
 ## Adding real-life inputs
 
-The examples above already include inputs for the components. However, you may want to input real-life data into the manifest file.
+The examples above already include inputs for the components. However, you may want to input real-life data into the IMP file.
 
-There is no one-size-fits-all solution for getting data into the manifest file. This is because there are so many possible sources for your input data, all of which have their own particular requirements related to authorization, API request syntax and return types. Therefore, the approach taken by IF is to have specific plugins for specific services.
+There is no one-size-fits-all solution for getting data into the IMP file. This is because there are so many possible sources for your input data, all of which have their own particular requirements related to authorization, API request syntax and return types. Therefore, the approach taken by IF is to have specific plugins for specific services.
 
 The recommended method for integrating data is to use the plugin system of the Impact Framework. You can either use an existing specific importer plugin or write your own.
 
@@ -336,10 +336,10 @@ If you already have external scripts you might have a look at the [shell plugin]
 
 If you just need data for testing purposes, you can use the [mock-observation](https://github.com/Green-Software-Foundation/if/blob/main/src/if-run/builtins/mock-observations/README.md) plugin.
 
-## Running a manifest
+## Running an IMP
 
-You run a manifest by providing its path to our command line tool and a path to save the results file to. You can run a manifest named `my-manifest.yml` using the following command:
+You run an IMP by providing its path to our command line tool and a path to save the results file to. You can run an IMP named `my-imp.yml` using the following command:
 
 ```sh
-if-run --manifest my-manifest.yml
+if-run --manifest my-imp.yml
 ```
