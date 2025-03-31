@@ -1,0 +1,44 @@
+{
+    "grammarly.selectors": [
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "docs/FAQ.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "docs/reference/errors.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "docs/users/how-to-compare-files-with-if-diff.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "docs/reference/plugins.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "docs/pipelines/sci.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "docs/reference/cli.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "docs/users/how-to-verify-files-with-if-check.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "docs/users/how-to-use-the-explain-feature.md"
+        }
+    ]
+}
