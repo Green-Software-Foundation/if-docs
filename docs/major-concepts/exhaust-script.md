@@ -4,7 +4,7 @@ sidebar_position: 9
 
 # Exhaust scripts
 
-Exhaust scripts are scripts that can run independently of IF itself that take an executed manifest file (one with `outputs`) as an input, parse the yaml data and reformat it into some other representation. We provide `if-csv` bundled with IF, but if you want other data formats, you'll have to create an exhaust script yourself.
+Exhaust scripts are scripts that can run independently of IF itself that take an executed IMP file (one with `outputs`) as an input, parse the yaml data and reformat it into some other representation. We provide `if-csv` bundled with IF, but if you want other data formats, you'll have to create an exhaust script yourself.
 
 ## if-run
 
@@ -12,9 +12,9 @@ Exhaust scripts are scripts that can run independently of IF itself that take an
 
 ### How to Use if-run
 
-To use `if-run`, you need to provide a manifest file in `yaml` or `yml` foramt. The output will be in `yaml` format if you specify the output file path.
+To use `if-run`, you need to provide an IMP file in `yaml` or `yml` foramt. The output will be in `yaml` format if you specify the output file path.
 
-Here's a simple manifest file example. This manifest sums two components, `cpu/energy` and `network/energy` and assigns the result to `energy` in the outputs array.
+Here's a simple IMP file example. This IMP sums two components, `cpu/energy` and `network/energy` and assigns the result to `energy` in the outputs array.
 
 ```yaml
 name: sum
@@ -43,13 +43,13 @@ tree:
           network/energy: 0.001
 ```
 
-To execute this manifest with `if-run`, use the following command:
+To execute this IMP with `if-run`, use the following command:
 
 ```sh
 if-run -m sum.yaml -o output-sum
 ```
 
-You will get the executed manifest in the `output-sum.yaml` file.
+You will get the executed IMP in the `output-sum.yaml` file.
 
 ## if-csv
 
@@ -68,4 +68,4 @@ by running:
 if-csv -m sum.yaml -p energy -o output-sum
 ```
 
-This command specifies the manifest file (`sum.yaml`), the parameter to export (`energy`), and the output file path (`output-sum`).
+This command specifies the IMP file (`sum.yaml`), the parameter to export (`energy`), and the output file path (`output-sum`).

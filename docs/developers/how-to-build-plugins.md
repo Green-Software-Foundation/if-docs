@@ -9,7 +9,7 @@ To help developers write Typescript plugins to integrate easily into IF, we prov
 
 - create a Typescript file that implements the `PluginFactory` from [`if-core`](https://github.com/Green-Software-Foundation/if-core)
 - install the plugin
-- initialize and invoke the plugin in your manifest file
+- initialize and invoke the plugin in your IMP file
 
 ## Step 1: Use our template repository
 
@@ -59,7 +59,7 @@ The inner function returned by the `PluginFactory` handles the following paramet
 
 ### Config
 
-The `config` object is passed as an argument to your plugin and can be handled as shown in the example above. The structure of the config depends on what is defined in the manifest file. For example, the `Sci` plugin has access to `input-parameters` and `output-parameter` fields in its global configuration, as defined in the `Initialize` block of the manifest file:
+The `config` object is passed as an argument to your plugin and can be handled as shown in the example above. The structure of the config depends on what is defined in the IMP file. For example, the `Sci` plugin has access to `input-parameters` and `output-parameter` fields in its global configuration, as defined in the `Initialize` block of the IMP file:
 
 ```yaml
 initialize:
@@ -74,7 +74,7 @@ initialize:
 
 ### Parameter metadata
 
-The `parameter-metadata` is passed as an argument to the plugin as the config. It contains information about the `description`, `unit` and `aggregation-method` of the parameters of the inputs and outputs that defined in the manifest.
+The `parameter-metadata` is passed as an argument to the plugin as the config. It contains information about the `description`, `unit` and `aggregation-method` of the parameters of the inputs and outputs that defined in the IMP.
 
 ```yaml
 initialize:
@@ -234,7 +234,7 @@ Additional Notes
 
 - `Implement`: You should implement `implementation` function. It should contains the primary logic to generate outputs.
 - `Validation`: You should define appropriate `zod` schemas or validation functions for both config and inputs. This ensures that invalid data is caught early and handled appropriately.
-- `Arithmetic Expressions`: By including configuration, input, and output parameters of the plugin in the `allowArithmeticExpressions` array, you enable dynamic evaluation of mathematical expressions within parameter values. This eliminates the need for manual pre-calculation and allows basic mathematical operations to be embedded directly within parameter values in manifest files. More details [here.](../reference/features.md)
+- `Arithmetic Expressions`: By including configuration, input, and output parameters of the plugin in the `allowArithmeticExpressions` array, you enable dynamic evaluation of mathematical expressions within parameter values. This eliminates the need for manual pre-calculation and allows basic mathematical operations to be embedded directly within parameter values in IMP files. More details [here.](../reference/features.md)
 - `Mapping`: Ensure your plugin correctly handles the mapping of parameters. This is essential when working with dynamic input and output configurations.
 
 ## Step 3: Install your plugin
@@ -261,7 +261,7 @@ npm link new-plugin
 
 replacing `new-plugin` with your plugin name as defined in the plugin's `package.json`. If you are not sure, the name can be checked by running `npm ls -g --depth=0 --link=true`.
 
-Your plugin is now ready to be run in IF. All that remains is to add your plugin to your manifest file. This means adding it to the `initialize block` and adding it to the component pipelines where you want your plugin to be executed. For example, an `initilize` block might look as follows:
+Your plugin is now ready to be run in IF. All that remains is to add your plugin to your IMP file. This means adding it to the `initialize block` and adding it to the component pipelines where you want your plugin to be executed. For example, an `initilize` block might look as follows:
 
 ```yaml
 initialize:
@@ -273,10 +273,10 @@ initialize:
         something: true
 ```
 
-Run your manifest uisng
+Run your IMP uisng
 
 ```sh
-npm run if-run -- --manifest <path-to-manifest>
+npm run if-run -- --manifest <path-to-imp>
 ```
 
 If you have to link more than one local plugin, for example to test your plugin in a pipeline, you can do so with
@@ -289,7 +289,7 @@ This will create an entry like `"new-plugin": "file:path/to/your/plugin"` in the
 
 ## Step 5: Publishing your plugin
 
-Now you have run your plugin locally and you are happy with how it works, you can make it public by publishing it to a public Github repository. Now all you have to do to use it in a manifest file is `npm install` it and pass the path to the Github repository in the plugin `initialize` block.
+Now you have run your plugin locally and you are happy with how it works, you can make it public by publishing it to a public Github repository. Now all you have to do to use it in an IMP file is `npm install` it and pass the path to the Github repository in the plugin `initialize` block.
 
 For example, for a plugin saved in `github.com/my-repo/new-plugin` you can do the following:
 
@@ -297,7 +297,7 @@ For example, for a plugin saved in `github.com/my-repo/new-plugin` you can do th
 npm install https://github.com/my-repo/new-plugin
 ```
 
-Then, in your manifest file, provide the path in the plugin instantiation. You also need to specify which function the plugin instantiates. Let's say you are using the `Sci` plugin from the example above:
+Then, in your IMP file, provide the path in the plugin instantiation. You also need to specify which function the plugin instantiates. Let's say you are using the `Sci` plugin from the example above:
 
 ```yaml
 name: plugin-demo
@@ -314,12 +314,12 @@ tree:
       inputs:
 ```
 
-Now, when you run the manifest file, it will load the plugin automatically.
+Now, when you run the IMP file, it will load the plugin automatically.
 
 You can run this using the globally installed IF as follows:
 
 ```sh
-if-run --manifest <path-to-my-manifest>
+if-run --manifest <path-to-my-imp>
 ```
 
 ## Summary of steps
@@ -328,7 +328,7 @@ if-run --manifest <path-to-my-manifest>
 - Add your plugin code to `index.ts`
 - Build and link the plugin using `npm run build && npm link`
 - Load your plugin into `if` using `npm link`
-- Initialize your plugin and add it to a pipeline in your manifest file.
+- Initialize your plugin and add it to a pipeline in your IMP file.
 - Publish your plugin to Github
 
 You should also create unit tests for your plugin to demonstrate correct execution and handling of corner cases.

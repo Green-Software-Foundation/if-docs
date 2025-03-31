@@ -3,7 +3,7 @@ sidebar-position: 4
 ---
 # Plugins
 
-Plugins are self-contained units of code that do one thing. They can be loaded into IF and chained together in a pipeline so that simple individual plugins can form a complicated procedure for computing a manifest file.
+Plugins are self-contained units of code that do one thing. They can be loaded into IF and chained together in a pipeline so that simple individual plugins can form a complicated procedure for computing an IMP file.
 
 ## What are plugins?
 

@@ -29,11 +29,11 @@ These steps can be executed in IF using just three plugins:
 - `Multiply`
 - `Divide`
 
-We'll go through each step in the energy estimate and examine how to implement it in a manifest file using IF's standard library of `builtins`.
+We'll go through each step in the energy estimate and examine how to implement it in an IMP file using IF's standard library of `builtins`.
 
 ## Impact Framework implementation
 
-First, create a manifest file and add this following boilerplate code:
+First, create an IMP file and add this following boilerplate code:
 
 ```yaml
 name: carbon-intensity plugin demo
@@ -52,7 +52,7 @@ tree:
       inputs:
 ```
 
-If this structure looks unfamiliar to you, you can go back to our [manifests page](../major-concepts/manifest-file.md).
+If this structure looks unfamiliar to you, you can go back to our [IMPs page](../major-concepts/imp-file.md).
 
 ### Step 1: measure CPU utilization
 
@@ -93,7 +93,7 @@ tree:
 
 ### Step 2: Determine the thermal design power of your processor
 
-Typically determinign the TDP of your processor would be done using a CSV lookup. For now, we will just hard code some TDP data into your manifest so we can focus on the CPU utilization to energy calculations. Add `thermal-design-power` to `defaults` - this is a shortcut to providing it in every timestep in your `inputs` array.
+Typically determinign the TDP of your processor would be done using a CSV lookup. For now, we will just hard code some TDP data into your IMP so we can focus on the CPU utilization to energy calculations. Add `thermal-design-power` to `defaults` - this is a shortcut to providing it in every timestep in your `inputs` array.
 
 ```yaml
 default:
@@ -219,7 +219,7 @@ correct-cpu-energy-for-vcpu-ratio:
 
 ### Step 7: Define your pipeline
 
-Now you have configured all your plugins, covering all the stages of the calculation, you can simple define them in order in the `pipeline` section of your manifest, as follows:
+Now you have configured all your plugins, covering all the stages of the calculation, you can simple define them in order in the `pipeline` section of your IMP, as follows:
 
 ```yaml
 tree:
@@ -239,13 +239,13 @@ tree:
 
 You also need to add some input data that your pipeline can operate over.
 
-You can see the full manifest in the [IF repository](https://github.com/Green-Software-Foundation/if/blob/main/manifests/examples/pipelines/teads-curve.yml).
+You can see the full IMP in the [IF repository](https://github.com/Green-Software-Foundation/if/blob/main/manifests/examples/pipelines/teads-curve.yml).
 
-That's it! Your manifest is ready to run!
+That's it! Your IMP is ready to run!
 
-## Running the manifest
+## Running the IMP
 
-Having saved your manifest as `teads-curve.yaml` you can run it using IF:
+Having saved your IMP as `teads-curve.yaml` you can run it using IF:
 
 ```sh
 if-run -m teads-curve.yml -o teads-output.yml

@@ -17,7 +17,7 @@ The total time covered by an inputs array is determined by the timestamp of the 
 
 # Synchronizing time series'
 
-The time series for each component is defined by its inputs array. However, a manifest file can contain many separate components, each with their own time series. There is no guarantee that an individual time series is continuous, or that all the components in a manifest file have the same start time, end time and resolution. This makes it difficult to aggregate, visualize or do like-for-like comparisons between components.
+The time series for each component is defined by its inputs array. However, an IMP file can contain many separate components, each with their own time series. There is no guarantee that an individual time series is continuous, or that all the components in an IMP file have the same start time, end time and resolution. This makes it difficult to aggregate, visualize or do like-for-like comparisons between components.
 
 To solve this problem, we provide a built-in `time-sync` feature that synchronizes the time series' across all the components in a tree. The time-sync feature takes a global start time, end time and interval, then forces every individual time series to conform to this configuration.
 
@@ -35,7 +35,7 @@ This process yields synchronized time series for all components across a tree, e
 
 ## Toggling off time sync
 
-Some applications will not want to pad with zero values, and may be strict about continuous time series' being provided in the raw manifest file. In these cases, simply toggle the padding off in the manifest file.
+Some applications will not want to pad with zero values, and may be strict about continuous time series' being provided in the raw IMP file. In these cases, simply toggle the padding off in the IMP file.
 
 ## Time sync in your pipelines
 

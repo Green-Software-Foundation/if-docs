@@ -22,7 +22,7 @@ Assuming the aggregation method is `sum`, the parent would receive an aggregated
 
 ## Configuration
 
-`Aggregate` is a built-in feature of the IF. This means you do not need to initialize it along with the plugins you are using in your pipeline. All you need to do is to add a small piece of config to your manifest file.
+`Aggregate` is a built-in feature of the IF. This means you do not need to initialize it along with the plugins you are using in your pipeline. All you need to do is to add a small piece of config to your IMP file.
 
 The `aggregate` config looks as follows:
 
@@ -50,7 +50,7 @@ Similarly, some values are proportions or percentages. In these cases, the right
 
 ## Aggregation outputs
 
-The aggregation process adds new output data to your manifest file. The two types of aggregation add different outputs. The horizontal (time-series) aggregation adds a new field called `aggregated` to each node whose time series has been aggregated. In the `aggregated` block, you will find the aggregated value for each of the aggregation metrics defined in the aggregation config.
+The aggregation process adds new output data to your IMP file. The two types of aggregation add different outputs. The horizontal (time-series) aggregation adds a new field called `aggregated` to each node whose time series has been aggregated. In the `aggregated` block, you will find the aggregated value for each of the aggregation metrics defined in the aggregation config.
 
 The vertical aggregation adds a new array of output observations. These are simply named `outputs` and they always contain a timestamp and duration along with the aggregated metrics for each timestep.
 

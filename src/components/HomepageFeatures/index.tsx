@@ -35,14 +35,14 @@ const FeatureList: FeatureItem[] = [
     title: 'Decentralize Data',
     Svg: require('@site/static/img/decentralize.svg').default,
     description: (
-      <>Record your observations, chosen plugins, configurations, and computed environmental impacts in a manifest file. Open the door for others to understand, verify, and challenge the entire process.</>
+      <>Record your observations, chosen plugins, configurations, and computed environmental impacts in an IMP file. Open the door for others to understand, verify, and challenge the entire process.</>
     ),
   },
   {
     title: 'Democratize Measurement',
     Svg: require('@site/static/img/democratize.svg').default,
     description: (
-      <>Empower others to rerun your manifest file, validate your findings, or question your assumptions. They can tweak configurations, select different plugins, and run the analysis themselves.</>
+      <>Empower others to rerun your IMP file, validate your findings, or question your assumptions. They can tweak configurations, select different plugins, and run the analysis themselves.</>
     ),
   },
 ];

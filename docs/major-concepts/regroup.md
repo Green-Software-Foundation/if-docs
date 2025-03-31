@@ -4,7 +4,7 @@ sidebar-position: 7
 
 # Regroup
 
-Regroup is an IF feature that reorganizes a tree according to keys provided by the user. This allows users to regroup their observations according to various properties of their application. For example, the following manifest file contains a flat array of observations. This is how you might expect data to arrive from an importer plugin, maybe one that hits a metrics API for a cloud service.
+Regroup is an IF feature that reorganizes a tree according to keys provided by the user. This allows users to regroup their observations according to various properties of their application. For example, the following IMP file contains a flat array of observations. This is how you might expect data to arrive from an importer plugin, maybe one that hits a metrics API for a cloud service.
 
 
 ```yaml
@@ -96,7 +96,7 @@ children:
 
 ## Using `regroup`
 
-To use `regroup`, you simply provide the keys you want to regroup by in the `regroup` pipeline. `regroup` is NOT a plugin, it is a core feature of IF that is executed when you run `if-run` or `if-run --regroup` if the config is available in the manifest file.
+To use `regroup`, you simply provide the keys you want to regroup by in the `regroup` pipeline. `regroup` is NOT a plugin, it is a core feature of IF that is executed when you run `if-run` or `if-run --regroup` if the config is available in the IMP file.
 
 The config is provided at the node level, and it looks as follows:
 

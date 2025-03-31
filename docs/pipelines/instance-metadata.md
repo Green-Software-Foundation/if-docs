@@ -6,7 +6,7 @@ sidebar-position: 1
 
 ## Observations
 
-This manifest requires the following observations:
+This IMP requires the following observations:
 
 - name of the specific cloud instance being used
 
@@ -34,7 +34,7 @@ The lookup process described on this page will likely be a common pattern used i
 
 ## Assumptions and limitations
 
-The following are assumed to be true in this manifest:
+The following are assumed to be true in this IMP:
 
 - the target dataset is up to date
 - where there are multiple possible processors associated with an instance name, it is appropriate to select the first in the list.
@@ -125,7 +125,7 @@ tree:
           cloud/instance-type: Standard_A1_v2
 ```
 
-Now you can run this manifest using:
+Now you can run this IMP using:
 
 ```sh
 if-run -m instance-metadata.yml -o output.yml

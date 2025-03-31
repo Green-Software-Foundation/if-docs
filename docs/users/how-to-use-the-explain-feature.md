@@ -4,22 +4,22 @@ sidebar_position: 7
 
 # How to check parameters and units using `explainer`
 
-Manifest files can get complicated, especially when there are many plugin instances initialized. It can be challenging to keep track of the flow of parameters and their units through a pipeline. To help manifest authors and auditors verify the correct flow of information through a pipeline, we provide the `explainer` feature.
+Manifest files can get complicated, especially when there are many plugin instances initialized. It can be challenging to keep track of the flow of parameters and their units through a pipeline. To help IMP authors and auditors verify the correct flow of information through a pipeline, we provide the `explainer` feature.
 
-`explainer` adds a block to the manifest that simply lists the parameter metadata used be the plugin's instance in the manifest. The metadata contains:
+`explainer` adds a block to the IMP that simply lists the parameter metadata used be the plugin's instance in the IMP. The metadata contains:
 
 - **plugins:** the list of plugins where the parameter is used
 - **unit**: the unit in which the parameter is expressed
 - **description:** a plain-language summary of the parameter
 - **aggregation-method:**: The appropriate method to use when aggregating the parameter across time or components (e.g. should it be summed, averaged, or held constant)
 
-This information allows you to check that the units output by one plugin are consistent with those expected as inputs to another, in one clear itemized list in your output manifest.
+This information allows you to check that the units output by one plugin are consistent with those expected as inputs to another, in one clear itemized list in your output IMP.
 
 Note that when the parameter has different units across instances, an error will occur.
 
 ## Toggling `explainer` on or off
 
-To enable the `explainer` feature, add the following line to your manifest, somewhere in the manifest context (e.g. above the `plugins` block):
+To enable the `explainer` feature, add the following line to your IMP, somewhere in the IMP context (e.g. above the `plugins` block):
 
 ```yaml
 explainer: true
@@ -108,9 +108,9 @@ export const SciEmbodied = PluginFactory({
 });
 ```
 
-However, there are cases where a plugin might not have parameter metadata in its source code, either because it was omitted, it was not knowable in advance, or the plugin was built before we shipped the `explain` feature. Sometimes, you might want to override the hard-coded defaults and use alternative metadata. In these cases, you can define new plugin metadata in the manifest file. It is considered best-practice to ensure all plugin instances have a complete set of plugin metadata.
+However, there are cases where a plugin might not have parameter metadata in its source code, either because it was omitted, it was not knowable in advance, or the plugin was built before we shipped the `explain` feature. Sometimes, you might want to override the hard-coded defaults and use alternative metadata. In these cases, you can define new plugin metadata in the IMP file. It is considered best-practice to ensure all plugin instances have a complete set of plugin metadata.
 
-Setting parameter metadata from the manifest file is done in the plugin instance's `initialize` block, as follows:
+Setting parameter metadata from the IMP file is done in the plugin instance's `initialize` block, as follows:
 
 ```yaml
 initialize:
@@ -141,11 +141,11 @@ initialize:
               component: avg
 ```
 
-## Example manifest
+## Example IMP
 
-The following manifest uses three plugins: `sci`, `sci-embodied` and `sum-carbon`. Of these, only `sci-embodied` has defaults hardcoded into the plugin code. The other two do not because they are "generic" arithmetic plugins for whom the values cannot be known in advance. Therefore, we set new parameter metadata in the `initialize` block for `sci` and `sum-carbon` but use the hardcoded defaults for `sci-embodied`.
+The following IMP uses three plugins: `sci`, `sci-embodied` and `sum-carbon`. Of these, only `sci-embodied` has defaults hardcoded into the plugin code. The other two do not because they are "generic" arithmetic plugins for whom the values cannot be known in advance. Therefore, we set new parameter metadata in the `initialize` block for `sci` and `sum-carbon` but use the hardcoded defaults for `sci-embodied`.
 
-We toggle the `explainer` feature by adding `explainer: true` in the manifest context.
+We toggle the `explainer` feature by adding `explainer: true` in the IMP context.
 
 ```yaml
 name: sci
@@ -235,7 +235,7 @@ tree:
           requests: 100
 ```
 
-When we execute this manifest, the following `explain` block is added to the output file:
+When we execute this IMP, the following `explain` block is added to the output file:
 
 ```yaml
 explain:
@@ -359,4 +359,4 @@ explain:
 
 ## When _not_ to use `explainer`
 
-In manifests where you are only using generic plugins, or override all the metadata loaded in from the plugin source code, `explainer` will simply echo back information from your `initialize` block since all the parameter metadata is set there. In these cases, the `explain` block is probably redundant information as you could just read the same information in your manifest's `plugins` section. The point of `explain` is to confirm what units and parameters are being passed through a pipeline when you have a mixture of plugins from many sources whose parameter metadata is defined in-code and in-manifest.
+In IMPs where you are only using generic plugins, or override all the metadata loaded in from the plugin source code, `explainer` will simply echo back information from your `initialize` block since all the parameter metadata is set there. In these cases, the `explain` block is probably redundant information as you could just read the same information in your IMP's `plugins` section. The point of `explain` is to confirm what units and parameters are being passed through a pipeline when you have a mixture of plugins from many sources whose parameter metadata is defined in-code and in-IMP.

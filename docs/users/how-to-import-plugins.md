@@ -6,7 +6,7 @@ sidebar_position: 3
 
 Plugins are developed separately to the Impact Framework core. However, the IF core developers maintain a standard library of plugins come bundled with IF. These are known as `builtins`.
 
-Builtins have to be initialized in a manifest file using the path `builtin`. Then they can be invoked in pipelines.
+Builtins have to be initialized in an IMP file using the path `builtin`. Then they can be invoked in pipelines.
 
 ```yaml
 name: if-demo
@@ -26,7 +26,7 @@ initialize:
 
 Other plugins are hosted externally to the IF. Anyone can build a plugin and provide it as an npm package or a public code repository (such as Github) and share it using our [Explorer](https://explorer.if.greensoftware.foundation).
 
-These external plugins are loaded into IF by installing locally and initializing in a manifest.
+These external plugins are loaded into IF by installing locally and initializing in an IMP.
 
 First, install the plugin by providing the path to the repository to `npm install` as follows:
 
@@ -34,9 +34,9 @@ First, install the plugin by providing the path to the repository to `npm instal
 npm install https://github.com/some-account/some-repo
 ```
 
-Then, in the manifest's `initialize` section, you'll need to provide the following fields:
+Then, in the IMP's `initialize` section, you'll need to provide the following fields:
 
-- `YOUR-PLUGIN-HERE`: a name to reference this specific instance of the plugin. The same name has to be used to refer to this plugin instance everywhere across the manifest
+- `YOUR-PLUGIN-HERE`: a name to reference this specific instance of the plugin. The same name has to be used to refer to this plugin instance everywhere across the IMP
 - `method`: the function name exported by your plugin, e.g. `AzureImporter`
 - `path`: the path to the plugin
 

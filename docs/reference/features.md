@@ -2,7 +2,7 @@
 
 This page simply lists the features of Impact Framework that are not plugins or CLI tools, along with a brief description, usage instruction and link to more detailed docs.
 
-Typically these features are enabled using a piece of manifest config.
+Typically these features are enabled using a piece of IMP config.
 
 ## Aggregate
 
@@ -10,7 +10,7 @@ Aggregate collects and summarizes data across time or across components in your 
 
 ### How to configure
 
-Add the following config to your manifest (this example is for aggregating "cpu/utilization" values across both time and components):
+Add the following config to your IMP (this example is for aggregating "cpu/utilization" values across both time and components):
 
 ```yaml
 aggregation:
@@ -23,11 +23,11 @@ aggregation:
 
 ## Explainer
 
-The explainer lists the unit, description, aggregation method, and plugins of the parameter that is used in the manifest.
+The explainer lists the unit, description, aggregation method, and plugins of the parameter that is used in the IMP.
 
 ### How to configure
 
-You can toggle the `explainer` by adding the following config to your manifest:
+You can toggle the `explainer` by adding the following config to your IMP:
 
 ```yaml
 explainer: true
@@ -66,7 +66,7 @@ Read more on [explainer](../users/how-to-use-the-explain-feature.md)
 
 ## Inline Arithmetic Expressions
 
-Inline arithmetic expressions allow basic mathematical operations to be embedded directly within `config` parameters and `inputs` values in manifest files. This enables dynamic calculations using constants or input variables, eliminating the need for manual pre-calculation of parameters.
+Inline arithmetic expressions allow basic mathematical operations to be embedded directly within `config` parameters and `inputs` values in IMP files. This enables dynamic calculations using constants or input variables, eliminating the need for manual pre-calculation of parameters.
 
 ### Supported Symbols and Operations:
 

@@ -10,7 +10,7 @@ carbon, teads, power-curve
 
 ## Observations
 
-This manifest requires the following observations:
+This IMP requires the following observations:
 
 - CPU utilization
 - thermal design power of the processors
@@ -25,7 +25,7 @@ This pipeline takes the observations described above, and generates carbon emiss
 
 ## Scope
 
-This pipeline takes into account the operational carbon of the server running our application. This includes the energy used to run the application, calculated from CPU and memory utilization. It does not account for any embodied carbon, nor networking energy, nor anything related to the end user. In real applications, the pipeline described here will be part of a much larger manifest that considers other parts of the system.
+This pipeline takes into account the operational carbon of the server running our application. This includes the energy used to run the application, calculated from CPU and memory utilization. It does not account for any embodied carbon, nor networking energy, nor anything related to the end user. In real applications, the pipeline described here will be part of a much larger IMP that considers other parts of the system.
 
 ## Description
 
@@ -67,7 +67,7 @@ The logical flow from CPU utilization to carbon via a power-curve and thermal de
 
 ## Assumptions and limitations
 
-The following are assumed to be true in this manifest:
+The following are assumed to be true in this IMP:
 
 - the power curve relating CPU utilization to power is appropriate for the processor being used to run our application
 - the temporal granularity of the observations are sufficient to accurately capture the behaviour of our application
@@ -140,7 +140,7 @@ energy-to-carbon:
 
 ### Divide
 
-The `Divide` plugin is used several times in this manifest. The instances are:
+The `Divide` plugin is used several times in this IMP. The instances are:
 
 - `wattage-to-energy-kwh`. used to convert energy in W/duration to kWh.
 - `calculate-vcpu-ratio`: used to calculate the ratio of allocated vCPUs to total vCPUS
@@ -238,7 +238,7 @@ initialize:
 execution:
   command: >-
     /home/user/.npm/_npx/1bf7c3c15bf47d04/node_modules/.bin/ts-node
-    /home/user/if/src/index.ts -m manifests/examples/teads-curve.yml
+    /home/user/if/src/index.ts -m IMPs/examples/teads-curve.yml
   environment:
     if-version: 0.6.0
     os: macOS
