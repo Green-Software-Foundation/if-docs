@@ -695,3 +695,100 @@ This cli helps for systems to generate their own IMPs independently, then later 
 ```sh
 if-merge -m imp.yml imp2.yml -n "merged-imp" -d "description of my imp" -o merged-imp.yml
 ```
+
+## `if-api`
+
+`if-api` is a command that provides the functionality of `if-run` as an API Server.  By default, it accepts requests on `localhost:3000`, but this can be changed using environment variables or options.
+
+```sh
+# Run the API server listening on the default localhost:3000.
+$ if-api
+```
+
+If the API server is running, you can send a manifest in the request body and receive the results of `if-run` as a response.
+
+```sh
+# Health check
+$ curl http://localhost:3000/health
+
+# Process manifest (YAML request)
+$ curl -H "Content-Type: application/yaml" --data-binary @manifest.yaml http://localhost:3000/v1/run
+
+# Process manifest (JSON request)
+$ curl --json @manifest.json http://localhost:3000/v1/run
+```
+
+The options `--observe`, `--aggregate`, and `--compute` for running only specific phases of `if-run` can be specified as query parameters.
+
+```sh
+# Execute only the compute phase
+$ curl -H "Content-Type: application/yaml" --data-binary @manifest.yaml http://localhost:3000/v1/run --url-query compute=true
+```
+
+### environment variables
+
+`if-api` supports the following environment variables.
+
+- `HOST`: Specifies the hostname/IP address that the API Server will listen on.
+- `PORT`: Specifies the port number that the API Server will listen on.
+
+### `--host`, `-b`
+
+The `--host` option specifies the hostname/IP address that the API Server will listen on.  This option takes precedence over the `HOST` environment variable specification.
+
+```sh
+# Run the API server listening on 0.0.0.0:3000.
+$ if-api --host 0.0.0.0
+## or using aliases
+$ if-api -b 0.0.0.0
+```
+
+### `--port`, `-p`
+
+The `--port` option specifies the port number that the API Server will listen on.  This option takes precedence over the `PORT` environment variable specification.
+
+```sh
+# Run the API server listening on localhost:8080
+$ if-api --port 8080
+## or using aliases
+$ if-api -p 8080
+```
+
+### `--disableExternalPluginWarning`, `-w`
+
+`if-api` outputs warning logs for external plugins that are being executed for the first time, but this warning can be suppressed by specifying the `--disableExternalPluginWarning` option.
+
+### `--disabledPlugins`, `-f`
+
+With `if-api`, it's possible to use not only builtin plugins but also external plugins installed in the execution environment. However, for security reasons, the following builtin plugins are disabled by default:
+
+- Shell
+- CSVImport
+- CSVLookup
+
+To enable these, or conversely to disable other plugins, you can control them by specifying a file containing the plugins to be disabled using the startup option `--disabledPlugins <filename>`.
+In the file, specify one plugin per line in the format `plugin-path:method-name`. For builtin plugins, specify them in the format `builtin:method-name`.
+
+```sh
+# Disable builtin:Shell and if-github-plugin:Github. Do not disable builtin:CSVImport and builtin:CSVLookup.
+$ cat disabled-plugins.txt
+builtin:Shell
+if-github-plugin:Github
+$ if-api --disabledPlugins disabled-plugins.txt
+```
+
+Note that to enable all plugins, you need to specify an empty file.
+
+```sh
+# Disable nothing.
+$ cat empty.txt
+$ if-api --disabledPlugins empty.txt
+```
+
+### `--debug`, `-d`
+
+Specifying the `--debug` option enables debug log output.
+
+### `--help` , `-h`
+
+The `--help` option provides information about all available commands in order to help you easily find the command you need.
