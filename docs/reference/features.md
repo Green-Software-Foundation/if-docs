@@ -1,3 +1,7 @@
+---
+sidebar_position: 4
+---
+
 # IF features
 
 This page simply lists the features of Impact Framework that are not plugins or CLI tools, along with a brief description, usage instruction and link to more detailed docs.

@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Command line tool
 
 A core feature of the Impact Framework is the `if-run` command line tool (CLI). This is how you trigger Impact Framework to execute a certain IMP file.
