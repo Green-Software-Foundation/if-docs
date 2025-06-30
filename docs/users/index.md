@@ -16,5 +16,8 @@ The user documentation includes:
 - [How to compare files with `if-diff`](./how-to-compare-files-with-if-diff.md)
 - [How to check parameters and units using `explain`](./how-to-use-the-explain-feature.md)
 - [How to verify IMP files with `if-check`](./how-to-verify-files-with-if-check.md)
+- [How to use Impact Framework with Docker containers](./how-to-use-containers.md)
+- [How to build custom container images](./how-to-build-container-images.md)
+- [How to deploy Impact Framework to Kubernetes](./how-to-deploy-to-kubernetes.md)
 
 If you are looking for guidance for how to _change or update_ the Impact Framework by adding new features, fixing bugs or building new plugins, you should go to our [`developers` documentation](../developers/) instead.
