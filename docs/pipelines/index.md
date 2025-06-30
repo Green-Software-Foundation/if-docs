@@ -15,5 +15,6 @@ The pipeline guides include:
 - [CPU utilization -> carbon emissions](./cpu-to-carbon.md)
 - [Basic observations -> Software Carbon Intensity](./sci.md)
 - [Grabbing cloud instance metadata from csv file](./instance-metadata.md)
+- [Teads CPU pipeline](./teads.md)
 
 You can find the IMPs themselves in your copy of IF in `manifests/examples` or find them on our [Github](https://github.com/Green-Software-Foundation/if/tree/main/manifests/examples).

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 8
 ---
 
 # Verifying IF outputs with `if-check`

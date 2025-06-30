@@ -1,5 +1,5 @@
 ---
-sidebar-position: 5
+sidebar_position: 4
 ---
 
 # How to submit plugins

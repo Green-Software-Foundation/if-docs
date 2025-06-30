@@ -1,3 +1,7 @@
+---
+sidebar_position: 2
+---
+
 # Errors
 
 IF defines a finite set of error classes. All error messages emitted by IF are attached to one of these classes.

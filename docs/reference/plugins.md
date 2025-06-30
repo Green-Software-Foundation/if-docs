@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Plugins
 
 Impact Framework works by executing pipelines of plugins over input data. Those plugins are re-useable units of code that can be thought of as Lego bricks - simple blocks of code that can be assembled into complex workflows.
