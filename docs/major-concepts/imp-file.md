@@ -55,7 +55,7 @@ Everything above the `tree` is collectively referred to as the `context`. The `t
 
 #### Metadata
 
-The global metadata includes the `name`, `description`, and `tags` that can be used to describe the nature of the IMP file. For example, you might name the file `Carbon Jan 2024` or similar. A short description might briefly outline the scope of the IMP file, e.g. `company x's carbon emissions due to web serves from Jab 24 - July 24`. Tags is an object containing the string properties `kind`, `complexity` and `category`. It can be used to group IMP files (we do not explicitly use this field for anything currently).
+The global metadata includes the `name`, `description`, and `tags` that can be used to describe the nature of the IMP file. For example, you might name the file `Carbon Jan 2024` or similar. A short description might briefly outline the scope of the IMP file, e.g. `company x's carbon emissions due to web serves from Jan 24 - July 24`. Tags is an object containing the string properties `kind`, `complexity` and `category`. It can be used to group IMP files (we do not explicitly use this field for anything currently).
 
 #### Initialize
 
@@ -71,7 +71,7 @@ initialize:
 Where required values are:
 
 - `method`: the name of the function exported by the plugin.
-- `path`: the path to the plugin code. For example, for a plugin from our standard library, this value would be `builtin`
+- `path`: the path to the plugin code. For example, for a plugin from our standard library, this value would be `builtin`.
 
 There is also an optional `config` field that can be used to set _config_ that is common to a plugin wherever it is invoked across the entire IMP file.
 
@@ -81,9 +81,9 @@ There is also the option to provide a mapping to the plugin in the initialize bl
 
 For example, your plugin might expect `cpu/energy` and your input data has the parameter `cpu-energy` returned from another plugin. Instead of using an additional plugin to rename the parameter and add a new one, you can use mapping to:
 
-a) rename the output from the first plugin so that `cpu/energy` is returned instead of the default `cpu-energy`
+a) rename the output from the first plugin so that `cpu/energy` is returned instead of the default `cpu-energy`,
 
-b) instruct the second plugin to accept `cpu-energy` instead of the default `cpu/energy`
+b) instruct the second plugin to accept `cpu-energy` instead of the default `cpu/energy`.
 
 e.g.
 
@@ -153,7 +153,7 @@ execution:
 ```
 
 - **status**: execution state: `success` (indicating that IF successfully executed this IMP) or `fail` (indicating that IF encountered a problem that halted execution).
-- **command**: exact command which was used to run the framework to execute this IMP (it may include full path to tools in place of aliases such as `run`)
+- **command**: exact command which was used to run the framework to execute this IMP (it may include full path to tools in place of aliases such as `run`).
 - **environment**: information about the environment the IMP was executed in, including the local operating system, Node.js version, time, and dependencies.
 - **error**: this field only appears if execution failed. The error message returned by IF is captured here.
 
@@ -221,9 +221,9 @@ This example has a relatively straightforward structure with a maximum of 3 leve
 Each component has some configuration, some input data, and a plugin pipeline.
 
 - `pipeline`: a list of plugins that should be executed for a specific component. This is broken down into three subsections representing distinct phases of execution that can be triggered independently using command line flags. These subsections are:
-  - `observe`: the plugins that generate input data
-  - `regroup`: configuration for regrouping input data by given keys
-  - `compute`: the plugins that operate over input data and generate output data
+  - `observe`: the plugins that generate input data,
+  - `regroup`: configuration for regrouping input data by given keys,
+  - `compute`: the plugins that operate over input data and generate output data.
 - `defaults`: fallback values that IF defaults to if they are not present in an input observation.
 - `inputs`: an array of `observation` data, with each `observation` containing usage data for a given timestep.
 
