@@ -63,7 +63,7 @@ Read our detailed guides to [writing IMP files](./how-to-write-imps.md).
 Run the pipeline by passing the path to your IMP file to the `if-run` command line tool:
 
 ```sh
-if-run --IMP <path-to-your-IMP>
+if-run -m <path-to-your-IMP>
 ```
 
 The output will be printed to the console.
