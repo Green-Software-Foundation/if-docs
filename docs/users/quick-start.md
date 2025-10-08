@@ -29,7 +29,7 @@ description:
 tags:
 initialize:
   plugins:
-    double-a-value: 
+    double-a-value:
       path: 'builtin'
       method: Coefficient
       config:
@@ -63,12 +63,12 @@ Read our detailed guides to [writing IMP files](./how-to-write-imps.md).
 Run the pipeline by passing the path to your IMP file to the `if-run` command line tool:
 
 ```sh
-if-run -m <path-to-your-IMP>
+if-run --manifest <path-to-your-IMP>
 ```
 
 The output will be printed to the console.
 
-:tada:**Congratulations** :tada:! You have just used the Impact Framework to compute an IMP file! Your challenge now is to use these principles to construct IMP files for real applications. Our docs will help! 
+:tada:**Congratulations** :tada:! You have just used the Impact Framework to compute an IMP file! Your challenge now is to use these principles to construct IMP files for real applications. Our docs will help!
 
 
 ## Next steps
@@ -84,7 +84,7 @@ You can also configure `if` to save your output data to another `yaml` file. To 
 The command is then as follows:
 
 ```sh
-if-run --IMP <path-to-your-impl> --output <save-path>
+if-run --manifest <path-to-your-impl> --output <save-path>
 ```
 
 Explore our user documentation for walkthrough guides to common Impact Framework tasks:
