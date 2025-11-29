@@ -68,7 +68,7 @@ if-run --manifest <path-to-your-IMP>
 
 The output will be printed to the console.
 
-:tada:**Congratulations** :tada:! You have just used the Impact Framework to compute an IMP file! Your challenge now is to use these principles to construct IMP files for real applications. Our docs will help!
+:tada:**Congratulations** :tada:! You have just used the Impact Framework to compute an manifest file! Your challenge now is to use these principles to construct manifest files for real applications. Our docs will help!
 
 
 ## Next steps
