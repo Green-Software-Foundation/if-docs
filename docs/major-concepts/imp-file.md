@@ -55,7 +55,7 @@ Everything above the `tree` is collectively referred to as the `context`. The `t
 
 #### Metadata
 
-The global metadata includes the `name`, `description`, and `tags` that can be used to describe the nature of the IMP file. For example, you might name the file `Carbon Jan 2024` or similar. A short description might briefly outline the scope of the IMP file, e.g. `company x's carbon emissions due to web serves from Jan 24 - July 24`. Tags is an object containing the string properties `kind`, `complexity` and `category`. It can be used to group IMP files (we do not explicitly use this field for anything currently).
+The global metadata includes the `name`, `description`, and `tags` that can be used to describe the nature of the manifest file. For example, you might name the file `Carbon Jan 2024` or similar. A short description might briefly outline the scope of the manifest file, e.g. `company x's carbon emissions due to web serves from Jan 24 - July 24`. Tags is an object containing the string properties `kind`, `complexity` and `category`. It can be used to group manifest files (we do not explicitly use this field for anything currently).
 
 #### Initialize
 
