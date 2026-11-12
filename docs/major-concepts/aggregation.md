@@ -48,6 +48,25 @@ For example, some values are constants that apply to every timestep - these shou
 
 Similarly, some values are proportions or percentages. In these cases, the right way to aggregate is usually to take an average rather than summing over a set of values.
 
+### Measuring SCI over a period
+
+By default, when time aggregation includes `sci` and the default metadata is used, Impact Framework takes a straight average of the SCI values across observations. Because each observation is weighted equally regardless of its duration, the result doesn’t always reflect the SCI for the entire period.
+
+Imagine two consecutive one-minute observations for a single system, where carbon is allocated per minute and each request is counted once:
+
+| Minute | Carbon | Requests | SCI |
+| --- | ---: | ---: | ---: |
+| 1 | 100 gCO2eq | 1 | 100 gCO2eq/request |
+| 2 | 100 gCO2eq | 100 | 1 gCO2eq/request |
+
+Averaging those two rates gives `50.5 gCO2eq/request`, while dividing the total carbon by the combined requests gives approximately `1.98 gCO2eq/request` for the full two-minute period.
+
+For this example, the period result can be calculated by running `TimeSync` before `Sci`, using a single 120-second interval and setting the time aggregation method for requests to `sum`.
+
+This approach relies on complete, non-overlapping observations covering the period for the same system and functional unit, with positive request counts and non-negative carbon values. Check the inputs separately: `TimeSync` won’t catch every issue, and setting `allow-padding` to `false` won’t prevent internal gaps from being padded. Aggregating across components may also require different denominator assumptions.
+
+The numbers here are illustrative. Running `Sci` alone doesn’t guarantee compliance with the SCI specification, which also depends on the system boundary and how operational and embodied emissions are quantified and allocated.
+
 ## Aggregation outputs
 
 The aggregation process adds new output data to your IMP file. The two types of aggregation add different outputs. The horizontal (time-series) aggregation adds a new field called `aggregated` to each node whose time series has been aggregated. In the `aggregated` block, you will find the aggregated value for each of the aggregation metrics defined in the aggregation config.
